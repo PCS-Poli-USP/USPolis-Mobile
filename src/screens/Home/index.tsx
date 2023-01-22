@@ -1,8 +1,13 @@
 import { Layout } from "@/components";
+import { useClasses } from "@/hooks/react-query/useClasses";
 import { Center, Heading, VStack } from "native-base";
 import { HomeHeader } from "./HomeHeader";
 
 export const Home = () => {
+  const { data: classes } = useClasses()
+
+  console.log(classes)
+
   return (
     <Layout>
       <VStack flex={1} bg='gray.700' pb={16}>
