@@ -1,4 +1,4 @@
-import { Center, Circle, HStack, useTheme, VStack, Text } from "native-base"
+import { Center, Circle, HStack, useTheme, VStack, Text, Heading } from "native-base"
 import FeatherIcons from '@expo/vector-icons/Feather';
 import { Layout } from "@/components/Layout";
 import { Platform } from "react-native";
@@ -17,7 +17,7 @@ export const HomeHeader = () => {
         </Circle>
         <VStack>
           <Text color='gray.100' fontSize='md'>Olá,</Text>
-          <Text color='gray.100' fontSize='md' fontFamily={'heading'}>{user?.name || ''}</Text>
+          <Heading color='gray.100' fontSize='md' fontFamily={'heading'}>{user?.name || ''}</Heading>
         </VStack>
       </HStack>
       <FeatherIcons onPress={handleLogout} name='log-out' color={colors.gray[200]} size={28} />
