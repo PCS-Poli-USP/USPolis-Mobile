@@ -2,10 +2,12 @@ import { Input as NativeBaseInput, IInputProps, FormControl } from 'native-base'
 
 type InputProps = IInputProps & {
   errorMessage?: string | null
+  variation?: 'primary' | 'secondary'
 }
 
-export const Input = ({ errorMessage, isInvalid, ...props }: InputProps) => {
+export const Input = ({ variation = 'primary', errorMessage, isInvalid, ...props }: InputProps) => {
   const invalid = isInvalid || !!errorMessage
+  const isSecondary = variation === 'secondary'
 
   return (
     <FormControl isInvalid={invalid}>
@@ -13,7 +15,8 @@ export const Input = ({ errorMessage, isInvalid, ...props }: InputProps) => {
         bg='gray.700'
         h={14}
         px={4}
-        borderWidth={0}
+        borderWidth={isSecondary ? 1 : 0}
+        borderColor={isSecondary ? 'green.500' : 'transparent'}
         fontSize='md'
         color='white'
         fontFamily='body'
