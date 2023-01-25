@@ -17,6 +17,7 @@
     "@react-navigation/native-stack": "^6.9.8",
     "axios": "^1.2.3",
     "axios-mock-adapter": "^1.21.2",
+    "date-fns": "^2.29.3",
     "expo": "~47.0.12",
     "expo-font": "~11.0.1",
     "expo-status-bar": "~1.4.2",

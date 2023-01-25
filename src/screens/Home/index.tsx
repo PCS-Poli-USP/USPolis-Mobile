@@ -8,23 +8,22 @@ import { useState } from "react";
 import { HomeClasses } from "./HomeClasses";
 
 export const Home = () => {
-  const [selectedBuilding, setSelectedBuilding] = useState('')
-  const { data: classes } = useClasses()
+  const [selectedBuilding, setSelectedBuilding] = useState("");
 
   return (
     <Layout>
-      <VStack flex={1} bg='gray.700' pb={16}>
+      <VStack flex={1} bg="gray.700" pb={16}>
         <HomeHeader />
 
         <VStack px={8}>
-          <Input 
-            mt={10} 
-            variation='secondary' 
-            placeholder='Procure por suas aulas'
+          <Input
+            mt={10}
+            variation="secondary"
+            placeholder="Procure por suas aulas"
           />
-          <BuildingFilter 
-            activeBuilding={selectedBuilding} 
-            selectBuilding={(b: string) => setSelectedBuilding(b)} 
+          <BuildingFilter
+            activeBuilding={selectedBuilding}
+            selectBuilding={(b: string) => setSelectedBuilding(b)}
           />
           <HomeClasses />
         </VStack>
