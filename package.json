@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.2",
     "@hookform/resolvers": "^2.9.10",
+    "@openspacelabs/react-native-zoomable-view": "^2.1.1",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/bottom-tabs": "^6.5.3",
     "@react-navigation/native": "^6.1.2",

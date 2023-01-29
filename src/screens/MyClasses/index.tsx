@@ -65,7 +65,6 @@ export const MyClasses = () => {
         bgColor="gray.700"
         borderColor="gray.300"
         rounded="full"
-        _pressed={{ bg: "gray.300", _icon: { color: "gray.700" } }}
         icon={<FeatherIcons name="plus" color={colors.gray[300]} size={25} />}
         onPress={() => navigation.navigate("Home")}
       />
