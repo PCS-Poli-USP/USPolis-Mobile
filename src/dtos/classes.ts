@@ -3,7 +3,7 @@ export type Schedule = {
   week_day: string;
   start_time: string;
   end_time: string;
-  building: string;
+  building: Building;
   classroom: string;
 };
 
@@ -30,6 +30,15 @@ export type ScheduledClasses = {
   week_day: string;
   start_time: string;
   end_time: string;
-  building: string;
+  building: Building;
   classroom: string;
 };
+
+export type Building =
+  | "Biênio"
+  | "Mecânica"
+  | "Produção"
+  | "Administração"
+  | "Elétrica"
+  | "Metalúrgica"
+  | "Civil";
