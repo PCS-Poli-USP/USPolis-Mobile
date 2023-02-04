@@ -41,12 +41,6 @@ export const Maps = () => {
 
   return (
     <VStack flex={1} bg="gray.700" pb={16}>
-      <Center mt={24}>
-        <Heading color="gray.100" fontSize="xxxl" fontFamily="heading">
-          USPolis
-        </Heading>
-      </Center>
-
       <Center px={8}>
         <BuildingFilter
           activeBuilding={activeBuilding}
