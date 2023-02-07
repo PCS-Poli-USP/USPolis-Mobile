@@ -8,17 +8,21 @@ import IonIcons from "@expo/vector-icons/Ionicons";
 import { Home, Maps, Profile, MyClasses } from "@/screens";
 import { useTheme } from "native-base";
 import { Platform } from "react-native";
+import { Building } from "@/dtos/classes";
 
-type AppRoutes = {
+export type AppRoutesType = {
   Home: undefined;
-  Maps: undefined;
+  Maps: {
+    building?: Building;
+    floor?: number;
+  };
   MyClasses: undefined;
   Profile: undefined;
 };
 
-export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
+export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutesType>;
 
-const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
+const { Navigator, Screen } = createBottomTabNavigator<AppRoutesType>();
 
 export const AppRoutes = () => {
   const { sizes, colors } = useTheme();
@@ -69,7 +73,7 @@ export const AppRoutes = () => {
           ),
         }}
       />
-      <Screen
+      {/* <Screen
         name="Profile"
         component={Profile}
         options={{
@@ -77,7 +81,7 @@ export const AppRoutes = () => {
             <FeatherIcons name="user" color={color} size={iconSize} />
           ),
         }}
-      />
+      /> */}
     </Navigator>
   );
 };

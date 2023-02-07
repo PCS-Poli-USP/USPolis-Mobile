@@ -5,11 +5,13 @@ export type Schedule = {
   end_time: string;
   building: Building;
   classroom: string;
+  floor: number;
 };
 
 export type IClass = {
   id: string;
   class_code: string;
+  professor: string;
   subject_code: string;
   subject_name: string;
   start_period: string;

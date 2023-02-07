@@ -37,19 +37,19 @@ export const HomeHeader = () => {
         </Circle>
         <VStack>
           <Text color="gray.100" fontSize="md">
-            Olá,
+            Olá!
           </Text>
-          <Heading color="gray.100" fontSize="md" fontFamily={"heading"}>
+          {/* <Heading color="gray.100" fontSize="md" fontFamily={"heading"}>
             {user?.name || ""}
-          </Heading>
+          </Heading> */}
         </VStack>
       </HStack>
-      <FeatherIcons
+      {/* <FeatherIcons
         onPress={handleLogout}
         name="log-out"
         color={colors.gray[200]}
         size={28}
-      />
+      /> */}
     </HStack>
   );
 };

@@ -9,6 +9,7 @@ import { HomeClasses } from "./HomeClasses";
 
 export const Home = () => {
   const [selectedBuilding, setSelectedBuilding] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
 
   return (
     <Layout>
@@ -20,12 +21,13 @@ export const Home = () => {
             mt={10}
             variation="secondary"
             placeholder="Procure por suas aulas"
+            onChangeText={(text) => setNameFilter(text)}
           />
           <BuildingFilter
             activeBuilding={selectedBuilding}
-            selectBuilding={(b: string) => setSelectedBuilding(b)}
+            selectBuilding={(b: string) => selectedBuilding === b ? setSelectedBuilding('') : setSelectedBuilding(b)}
           />
-          <HomeClasses />
+          <HomeClasses buildingFilter={selectedBuilding} nameFilter={nameFilter} />
         </VStack>
       </VStack>
     </Layout>

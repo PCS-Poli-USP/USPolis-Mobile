@@ -20,7 +20,7 @@ if (__DEV__) {
    * não quer causar um comportamento inesperado no ambiente de desenvolvimento de ninguém
    */
 
-  setupUseClasses(e => e.default)
+  // setupUseClasses(e => e.default)
 }
 
 const queryClient = new QueryClient()
