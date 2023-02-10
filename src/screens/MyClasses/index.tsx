@@ -33,19 +33,13 @@ export const MyClasses = () => {
   };
 
   return (
-    <Box flex={1} bg="gray.700" px={5} pb={5}>
+    <Box flex={1} bg="gray.700" px={5} pt={10} pb={5}>
       <ClassModalDetails
         classId={selectedClass}
         isOpen={isOpen}
         onClose={onClose}
       />
       <Layout>
-        <Center mt={24} mb={6}>
-          <Heading color="gray.100" fontSize="xxxl" fontFamily="heading">
-            Minhas aulas
-          </Heading>
-        </Center>
-
         <VStack space="8">
           {classesGroupedByWeekday.map((group) => (
             <DayClasses
