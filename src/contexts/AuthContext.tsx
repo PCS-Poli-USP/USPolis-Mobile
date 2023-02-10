@@ -21,7 +21,10 @@ type AuthContextProviderProps = {
 export const AuthContext = createContext({} as AuthContextDataProps)
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>({
+    id: '1',
+    name: ''
+  })
   const [isLoadingStorageUser, setIsLoadingStorageUser] = useState(true)
 
   const handleSignIn = (data: SignInData) => {
@@ -44,9 +47,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const loadUserData = async () => {
     try {
-      const user = await userStorage.get()
+      // const user = await userStorage.get()
+      // To remove user login page
+      const tempDefaultUser = { id: '1', name: '' }
   
-      setUser(user)
+      setUser(tempDefaultUser)
     } catch (err) {
       throw err
     } finally {

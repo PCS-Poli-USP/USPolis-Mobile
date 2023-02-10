@@ -3,15 +3,20 @@ import {
   VStack,
   Text,
   Flex,
-  Button,
   useTheme,
   Box,
   Progress,
+  Heading,
+  HStack,
 } from "native-base";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { parseISO, format, differenceInDays } from "date-fns";
 import { useSchedule } from "@/hooks/useSchedule";
+import { Button } from "../Button";
+import { TouchableOpacity } from "react-native";
+import { AppRoutesType } from "@/routes/app.routes";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 interface ClassModalDetailsProps {
   classId: string;
   isOpen: boolean;
@@ -23,6 +28,7 @@ export const ClassModalDetails = ({
   isOpen,
   onClose,
 }: ClassModalDetailsProps) => {
+  const navigation = useNavigation<NavigationProp<AppRoutesType>>()
   const { colors } = useTheme();
   const { data: classes } = useClasses();
   const { schedule, toggleClassOnSchedule } = useSchedule();
@@ -31,13 +37,21 @@ export const ClassModalDetails = ({
 
   if (!sclass) return <></>;
 
-  const progressValue =
+  const progressValue = differenceInDays(new Date(), parseISO(sclass.end_period)) > 0 ?
     (differenceInDays(new Date(), parseISO(sclass.end_period)) /
       differenceInDays(
         parseISO(sclass.start_period),
         parseISO(sclass.end_period)
       )) *
-    100;
+    100 : 0;
+
+  const navigateToMap = () => {
+    navigation.navigate('Maps', { 
+      building: sclass.schedule[0].building,
+      floor: sclass.schedule[0].floor,
+    })
+    onClose()
+  }
 
   return (
     <Modal
@@ -49,59 +63,62 @@ export const ClassModalDetails = ({
         bgColor: "gray.100",
       }}
     >
-      <Modal.Content mt="auto" mb={0} borderRadius="3xl">
+      <Modal.Content mt="auto" mb={0} borderRadius="3xl" bgColor="gray.700">
         <Modal.Header bgColor="gray.700" borderBottomColor="transparent">
           <VStack alignItems="center" space="3">
-            <Text color="white" fontSize="lg">
+            <Heading fontFamily={'heading'} color="white" fontSize="lg">
               {sclass.subject_code}
-            </Text>
-            <Text color="white" fontSize="lg">
+            </Heading>
+            <Heading fontFamily={'heading'} color="white" fontSize="lg">
               {sclass.subject_name}
-            </Text>
+            </Heading>
             <Text color="gray.200" fontSize="lg">
               Turma {sclass.class_code.slice(-2)}
             </Text>
           </VStack>
         </Modal.Header>
-        <Modal.Body bgColor="gray.700" px={8}>
-          <VStack space="5">
+        <Modal.Body bgColor="gray.700" px={8} pb={8}>
+          <VStack space="5" bgColor="gray.700">
             {sclass.schedule.map((event) => (
               <Box key={event.id}>
-                <Text color="white" mb={1}>
-                  {event.week_day}, das {event.start_time} às {event.end_time}
-                </Text>
-                <Flex
-                  direction="row"
-                  justify="space-between"
-                  align="center"
-                  bgColor="gray.500"
-                  borderRadius="md"
-                  p={3}
-                >
-                  <VStack space="1">
-                    <Text color="white">Prédio: {event.building}</Text>
-                    <Text color="white">Sala: {event.classroom}</Text>
-                  </VStack>
-                  <Button
-                    variant="link"
-                    _text={{ color: "green.500" }}
-                    endIcon={
-                      <FeatherIcons
-                        name="chevron-right"
-                        color={colors.green[500]}
-                        size={15}
-                      />
-                    }
-                  >
-                    Ver no mapa
-                  </Button>
-                </Flex>
-              </Box>
+                  <Text fontFamily={'heading'} color="white" mb={1}>
+                    {event.week_day}, das {event.start_time} às {event.end_time}
+                  </Text>
+                  <TouchableOpacity onPress={navigateToMap}>
+                    <Flex
+                      direction="row"
+                      justify="space-between"
+                      align="center"
+                      bgColor="gray.500"
+                      borderRadius="md"
+                      p={3}
+                    >
+                      <VStack space="1">
+                        <Text color="white">Prédio: {event.building}</Text>
+                        <Text color="white">Sala: {event.classroom}</Text>
+                      </VStack>
+                      <HStack alignItems={'center'}>
+                        <Text color={'green.500'} mr='1'>
+                          Ver no mapa
+                        </Text>
+                        <FeatherIcons
+                          name="chevron-right"
+                          color={colors.green[500]}
+                          size={15}
+                        />
+                      </HStack>
+                    </Flex>
+                  </TouchableOpacity>
+                </Box>
             ))}
-            <Box>
-              <Text color="gray.200">Docente:</Text>
-              <Text color="white">Clodoaldo Grotta Ragazzo</Text>
-            </Box>
+            {
+              !!sclass.professor && (
+                <Box>
+                  <Text color="gray.200">Docente:</Text>
+                  <Text color="white">{sclass.professor}</Text>
+                </Box>
+              )
+            }
             <Box>
               <Flex direction="row" justify="space-between">
                 <Box>
@@ -127,15 +144,13 @@ export const ClassModalDetails = ({
               />
             </Box>
             <Button
-              variant="outline"
-              borderColor="green.500"
-              _text={{ color: "green.500" }}
-              onPress={() => toggleClassOnSchedule(classId)}
-            >
-              {schedule.includes(classId)
+              variant={'outlined'}
+              title={schedule.includes(classId)
                 ? "Remover de minhas disciplinas"
-                : "Adicionar em minhas disciplinas"}
-            </Button>
+                : "Adicionar em minhas disciplinas"
+              }
+              onPress={() => toggleClassOnSchedule(classId)}
+            />
           </VStack>
         </Modal.Body>
       </Modal.Content>

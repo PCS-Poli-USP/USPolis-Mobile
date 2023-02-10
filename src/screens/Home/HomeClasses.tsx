@@ -10,12 +10,13 @@ import {
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { IClass } from "@/dtos";
-import { TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { getUniqueValues } from "@/utils/array";
 import { ClassModalDetails } from "@/components";
+import { replaceSpecialCharacters } from "@/utils/string";
 
 interface HomeClassesProps {
-  buildingFilter?: string;
+  buildingFilter: string;
   nameFilter?: string;
 }
 
@@ -32,10 +33,11 @@ export const HomeClasses = ({
     if (!classes) return [];
 
     let classesFiltered = [...classes];
-
     if (nameFilter) {
       classesFiltered = classesFiltered?.filter((c) =>
-        c.subject_name.includes(nameFilter)
+        replaceSpecialCharacters(c.subject_name.toLowerCase()).includes(replaceSpecialCharacters(nameFilter.toLowerCase())) ||
+        replaceSpecialCharacters((c.professor || '').toLowerCase()).includes(replaceSpecialCharacters(nameFilter.toLowerCase())) || 
+        replaceSpecialCharacters(c.subject_code.toLowerCase()).includes(replaceSpecialCharacters(nameFilter.toLowerCase()))
       );
     }
 
@@ -44,12 +46,17 @@ export const HomeClasses = ({
         const classesInBuilding = c.schedule.filter(
           (s) => s.building === buildingFilter
         );
-        return classesInBuilding;
+        return !!classesInBuilding.length;
       });
     }
 
-    return classesFiltered;
-  }, []);
+    return classesFiltered.sort((a, b) => {
+      const aDate = new Date(a.start_period);
+      const bDate = new Date(b.start_period);
+
+      return aDate.getTime() - bDate.getTime();
+    });
+  }, [classes, nameFilter, buildingFilter]);
 
   const handleClassPress = (classId: string) => {
     setSelectedClass(classId);
@@ -72,13 +79,15 @@ export const HomeClasses = ({
         </HStack>
 
         {/* Todo: return skeleton loading */}
-        {isLoadingClasses && null}
+        {isLoadingClasses && (
+          <ActivityIndicator />
+        )}
 
         {!isLoadingClasses &&
           filteredClasses.map((sclass) => (
             <HomeClassCard
               sclass={sclass}
-              key={sclass.id}
+              key={`${sclass.id}${sclass.schedule[0].id}`}
               handleClassPress={handleClassPress}
             />
           ))}

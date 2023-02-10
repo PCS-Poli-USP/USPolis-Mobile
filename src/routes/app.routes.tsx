@@ -7,17 +7,21 @@ import FeatherIcons from "@expo/vector-icons/Feather";
 import { Home, Maps, Profile, MyClasses } from "@/screens";
 import { useTheme } from "native-base";
 import { Platform } from "react-native";
+import { Building } from "@/dtos/classes";
 
-type AppRoutes = {
+export type AppRoutesType = {
   Home: undefined;
-  Maps: undefined;
+  Maps: {
+    building?: Building;
+    floor?: number;
+  };
   MyClasses: undefined;
   Profile: undefined;
 };
 
-export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
+export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutesType>;
 
-const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
+const { Navigator, Screen } = createBottomTabNavigator<AppRoutesType>();
 
 export const AppRoutes = () => {
   const { sizes, colors } = useTheme();
@@ -81,6 +85,16 @@ export const AppRoutes = () => {
           title: "Mapa dos Prédios da POLI",
         }}
       />
+      {/* <Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FeatherIcons name="user" color={color} size={iconSize} />
+          ),
+          title: "Perfil",
+        }}
+      /> */}
     </Navigator>
   );
 };

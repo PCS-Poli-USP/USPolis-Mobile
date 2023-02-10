@@ -1,7 +1,9 @@
 import { BuildingFilter } from "@/components";
 import { Building } from "@/dtos/classes";
+import { AppRoutesType } from "@/routes/app.routes";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import {
   Center,
   Heading,
@@ -14,8 +16,15 @@ import { useEffect, useMemo, useState } from "react";
 import { mapsImagePathTable } from "./utils";
 
 export const Maps = () => {
-  const [activeBuilding, setBuilding] = useState<Building>("Biênio");
-  const [activeFloor, setFloor] = useState(0);
+  const { params } = useRoute<RouteProp<AppRoutesType, 'Maps'>>()
+
+  const [activeBuilding, setBuilding] = useState<Building>(params?.building || "Biênio");
+  const [activeFloor, setFloor] = useState(params?.floor || 0);
+
+  useEffect(() => {
+    if (params?.building) setBuilding(params.building || "Biênio");
+    if (params?.floor) setFloor(params.floor || 0);
+  }, [params])
 
   const { colors } = useTheme();
 
