@@ -3,7 +3,6 @@ import {
   BottomTabNavigationProp,
 } from "@react-navigation/bottom-tabs";
 import FeatherIcons from "@expo/vector-icons/Feather";
-import IonIcons from "@expo/vector-icons/Ionicons";
 
 import { Home, Maps, Profile, MyClasses } from "@/screens";
 import { useTheme } from "native-base";
@@ -32,7 +31,6 @@ export const AppRoutes = () => {
   return (
     <Navigator
       screenOptions={{
-        headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.green[500],
         tabBarInactiveTintColor: colors.gray[200],
@@ -44,6 +42,17 @@ export const AppRoutes = () => {
           paddingTop: sizes[6],
           paddingHorizontal: sizes[8],
         },
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: colors["gray"][600],
+          shadowColor: "transparent",
+          height: 148,
+        },
+        headerTitleStyle: {
+          color: "white",
+          fontSize: 28,
+          fontWeight: "700",
+        },
       }}
     >
       <Screen
@@ -53,6 +62,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="home" color={color} size={iconSize} />
           ),
+          headerShown: false,
         }}
       />
       <Screen
@@ -62,6 +72,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="book-open" color={color} size={iconSize} />
           ),
+          title: "Minhas Aulas",
         }}
       />
       <Screen
@@ -71,6 +82,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
+          title: "Mapa dos Prédios da POLI",
         }}
       />
       {/* <Screen
@@ -80,6 +92,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="user" color={color} size={iconSize} />
           ),
+          title: "Perfil",
         }}
       /> */}
     </Navigator>
