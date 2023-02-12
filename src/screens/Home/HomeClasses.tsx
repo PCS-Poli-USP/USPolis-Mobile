@@ -34,10 +34,17 @@ export const HomeClasses = ({
 
     let classesFiltered = [...classes];
     if (nameFilter) {
-      classesFiltered = classesFiltered?.filter((c) =>
-        replaceSpecialCharacters(c.subject_name.toLowerCase()).includes(replaceSpecialCharacters(nameFilter.toLowerCase())) ||
-        replaceSpecialCharacters((c.professor || '').toLowerCase()).includes(replaceSpecialCharacters(nameFilter.toLowerCase())) || 
-        replaceSpecialCharacters(c.subject_code.toLowerCase()).includes(replaceSpecialCharacters(nameFilter.toLowerCase()))
+      classesFiltered = classesFiltered?.filter(
+        (c) =>
+          replaceSpecialCharacters(c.subject_name.toLowerCase()).includes(
+            replaceSpecialCharacters(nameFilter.toLowerCase())
+          ) ||
+          replaceSpecialCharacters((c.professor || "").toLowerCase()).includes(
+            replaceSpecialCharacters(nameFilter.toLowerCase())
+          ) ||
+          replaceSpecialCharacters(c.subject_code.toLowerCase()).includes(
+            replaceSpecialCharacters(nameFilter.toLowerCase())
+          )
       );
     }
 
@@ -79,9 +86,7 @@ export const HomeClasses = ({
         </HStack>
 
         {/* Todo: return skeleton loading */}
-        {isLoadingClasses && (
-          <ActivityIndicator />
-        )}
+        {isLoadingClasses && <ActivityIndicator />}
 
         {!isLoadingClasses &&
           filteredClasses.map((sclass) => (
