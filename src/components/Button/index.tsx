@@ -18,6 +18,9 @@ export const Button = ({ title, variant = 'solid', ...rest }: ButtonProps) => {
       borderColor='green.500'
       borderWidth={isOutlined ? 1 : 0}
       rounded='sm'
+      _disabled={{
+        bg: 'gray.400'
+      }}
       _pressed={{
         bg: isOutlined ? 'gray.500' : 'green.500'
       }}

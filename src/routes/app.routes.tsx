@@ -4,19 +4,19 @@ import {
 } from "@react-navigation/bottom-tabs";
 import FeatherIcons from "@expo/vector-icons/Feather";
 
-import { Home, Maps, Profile, MyClasses } from "@/screens";
+import { Home, Maps, About, MyClasses } from "@/screens";
 import { useTheme } from "native-base";
 import { Platform } from "react-native";
 import { Building } from "@/dtos/classes";
 
 export type AppRoutesType = {
+  About: undefined;
   Home: undefined;
   Maps: {
     building?: Building;
     floor?: number;
   };
   MyClasses: undefined;
-  Profile: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutesType>;
@@ -56,6 +56,16 @@ export const AppRoutes = () => {
       }}
     >
       <Screen
+        name="About"
+        component={About}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FeatherIcons name="info" color={color} size={iconSize} />
+          ),
+          title: "Sobre",
+        }}
+      />
+      <Screen
         name="Home"
         component={Home}
         options={{
@@ -85,16 +95,6 @@ export const AppRoutes = () => {
           title: "Mapa dos Prédios da POLI",
         }}
       />
-      {/* <Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FeatherIcons name="user" color={color} size={iconSize} />
-          ),
-          title: "Perfil",
-        }}
-      /> */}
     </Navigator>
   );
 };
