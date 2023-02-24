@@ -44,49 +44,51 @@ export const About = () => {
   }
 
   return (
-    <Layout>
-      <VStack flex={1} bg="gray.700" pb={16}>
-        <VStack px={8}>
-          <Text color="gray.200" mt={2} mb={5} textAlign={'justify'}>
-            O aplicativo é o projeto de formatura de um grupo do PCS formado por{" "}
-            <Text fontWeight={"bold"}>Jorge Habib</Text>,{" "}
-            <Text fontWeight={"bold"}>Rodrigo Aguena</Text> e{" "}
-            <Text fontWeight={"bold"}>Rodrigo Magaldi</Text>,{" "}
-            sob orientação do <Text fontWeight={"bold"}>Prof. Fábio Levy</Text> e{" "}
-            <Text fontWeight={"bold"}>Renan Ávila</Text>, criador original do USPolis.
-            {"\n"}
-            Quaisquer dúvidas, sugestões ou comentários são mais do que bem vindos!
-          </Text>
-          
-          <Text color="gray.200" fontWeight={"bold"} fontSize={16}>
-            Comentário
-          </Text>
+    <VStack flex={1} bg="gray.700" pb={16}>
+      <VStack px={8}>
+        <Text color="gray.200" mt={2} mb={5} textAlign={'justify'} marginTop={5}>
+          O aplicativo é o projeto de formatura de um grupo do PCS formado por{" "}
+          <Text fontWeight={"bold"}>Jorge Habib</Text>,{" "}
+          <Text fontWeight={"bold"}>Rodrigo Aguena</Text> e{" "}
+          <Text fontWeight={"bold"}>Rodrigo Magaldi</Text>,{" "}
+          sob orientação do <Text fontWeight={"bold"}>Prof. Fábio Levy</Text> e{" "}
+          <Text fontWeight={"bold"}>Renan Ávila</Text>, criador original do USPolis.
+          {"\n"}
+          Quaisquer dúvidas, sugestões ou comentários são mais do que bem vindos!
+        </Text>
+        
+        <Text color="gray.200" fontWeight={"bold"} fontSize={16}>
+          Comentário
+        </Text>
+        <TextArea
+          mt={2}
+          mb={5}
+          variation="secondary"
+          placeholder="Deixe seu comentário"
+          value={comment}
+          onChangeText={(text) => setComment(text)}
+        />
 
-          <TextArea
-            mt={2}
-            mb={5}
-            variation="secondary"
-            placeholder="Deixe seu comentário"
-            value={comment}
-            onChangeText={(text) => setComment(text)}
-          />
+        <Text color="gray.200" fontWeight={"bold"} fontSize={16}>
+          Seu email (opcional)
+        </Text>
+        <Input
+          mt={2}
+          mb={10}
+          variation="secondary"
+          placeholder="Seu email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
 
-          <Text color="gray.200" fontWeight={"bold"} fontSize={16}>
-            Seu email (opcional)
-          </Text>
-          <Input
-            mt={2}
-            mb={10}
-            variation="secondary"
-            placeholder="Seu email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+        <Button 
+          title="Enviar comentário"
+          onPress={handleSendComment}
+          isDisabled={comment.length === 0}
+          isLoading={isLoading}
+        />
 
-          <Button title="Enviar comentário" onPress={handleSendComment} isDisabled={comment.length === 0} isLoading={isLoading}/>
-
-        </VStack>
       </VStack>
-    </Layout>
+    </VStack>
   );
 };

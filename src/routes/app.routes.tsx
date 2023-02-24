@@ -10,13 +10,13 @@ import { Platform } from "react-native";
 import { Building } from "@/dtos/classes";
 
 export type AppRoutesType = {
-  About: undefined;
   Home: undefined;
   Maps: {
     building?: Building;
     floor?: number;
   };
   MyClasses: undefined;
+  About: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutesType>;
@@ -37,7 +37,7 @@ export const AppRoutes = () => {
         tabBarStyle: {
           backgroundColor: colors.gray[600],
           borderTopWidth: 0,
-          height: Platform.OS === "ios" ? 96 : "auto",
+          height: Platform.OS === "ios" ? 96 : 88,
           paddingBottom: sizes[10],
           paddingTop: sizes[6],
           paddingHorizontal: sizes[8],
@@ -46,25 +46,16 @@ export const AppRoutes = () => {
         headerStyle: {
           backgroundColor: colors["gray"][600],
           shadowColor: "transparent",
-          height: 148,
+          height: Platform.OS === "ios" ? 148 : 120,
+          
         },
         headerTitleStyle: {
           color: "white",
-          fontSize: 28,
+          fontSize: Platform.OS === "ios" ? 28 : 20,
           fontWeight: "700",
         },
       }}
     >
-      <Screen
-        name="About"
-        component={About}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FeatherIcons name="info" color={color} size={iconSize} />
-          ),
-          title: "Sobre",
-        }}
-      />
       <Screen
         name="Home"
         component={Home}
@@ -72,7 +63,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="home" color={color} size={iconSize} />
           ),
-          headerShown: false,
+          title: "Início",
         }}
       />
       <Screen
@@ -93,6 +84,16 @@ export const AppRoutes = () => {
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
           title: "Mapa dos Prédios da POLI",
+        }}
+      />
+      <Screen
+        name="About"
+        component={About}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FeatherIcons name="info" color={color} size={iconSize} />
+          ),
+          title: "Sobre o USPolis",
         }}
       />
     </Navigator>
