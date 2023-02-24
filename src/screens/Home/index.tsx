@@ -14,7 +14,7 @@ export const Home = () => {
   return (
     <Layout>
       <VStack flex={1} bg="gray.700" pb={16}>
-        <HomeHeader />
+        {/* <HomeHeader /> */}
 
         <VStack px={8}>
           <Input

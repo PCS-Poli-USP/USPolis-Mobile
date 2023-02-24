@@ -4,7 +4,7 @@ import {
 } from "@react-navigation/bottom-tabs";
 import FeatherIcons from "@expo/vector-icons/Feather";
 
-import { Home, Maps, Profile, MyClasses } from "@/screens";
+import { Home, Maps, About, MyClasses } from "@/screens";
 import { useTheme } from "native-base";
 import { Platform } from "react-native";
 import { Building } from "@/dtos/classes";
@@ -16,7 +16,7 @@ export type AppRoutesType = {
     floor?: number;
   };
   MyClasses: undefined;
-  Profile: undefined;
+  About: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutesType>;
@@ -37,7 +37,7 @@ export const AppRoutes = () => {
         tabBarStyle: {
           backgroundColor: colors.gray[600],
           borderTopWidth: 0,
-          height: Platform.OS === "ios" ? 96 : "auto",
+          height: Platform.OS === "ios" ? 96 : 88,
           paddingBottom: sizes[10],
           paddingTop: sizes[6],
           paddingHorizontal: sizes[8],
@@ -46,11 +46,12 @@ export const AppRoutes = () => {
         headerStyle: {
           backgroundColor: colors["gray"][600],
           shadowColor: "transparent",
-          height: 148,
+          height: Platform.OS === "ios" ? 148 : 120,
+          
         },
         headerTitleStyle: {
           color: "white",
-          fontSize: 28,
+          fontSize: Platform.OS === "ios" ? 28 : 20,
           fontWeight: "700",
         },
       }}
@@ -62,7 +63,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="home" color={color} size={iconSize} />
           ),
-          headerShown: false,
+          title: "Início",
         }}
       />
       <Screen
@@ -85,16 +86,16 @@ export const AppRoutes = () => {
           title: "Mapa dos Prédios da POLI",
         }}
       />
-      {/* <Screen
-        name="Profile"
-        component={Profile}
+      <Screen
+        name="About"
+        component={About}
         options={{
           tabBarIcon: ({ color }) => (
-            <FeatherIcons name="user" color={color} size={iconSize} />
+            <FeatherIcons name="info" color={color} size={iconSize} />
           ),
-          title: "Perfil",
+          title: "Sobre o USPolis",
         }}
-      /> */}
+      />
     </Navigator>
   );
 };
