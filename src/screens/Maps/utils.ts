@@ -19,39 +19,62 @@ import ProducaoGround from "@/assets/maps/projeto_detalhado_producao_terreo.jpg"
 import { Building } from "@/dtos/classes";
 import { ImageSourcePropType } from "react-native";
 
-export const mapsImagePathTable: Record<
-  Building,
-  Record<string, ImageSourcePropType>
-> = {
+type BuildingMaps = {
+  height: number;
+  images: Record<string, ImageSourcePropType>;
+};
+
+export const mapsImagePathTable: Record<Building, BuildingMaps> = {
   Administração: {
-    0: AdmGround,
-    1: AdmFirstFloor,
+    height: 280,
+    images: {
+      0: AdmGround,
+      1: AdmFirstFloor,
+    },
   },
   Biênio: {
-    0: BienioGround,
-    1: BienioFirstFloor,
-    2: BienioSecondFloor,
+    height: 280,
+    images: {
+      0: BienioGround,
+      1: BienioFirstFloor,
+      2: BienioSecondFloor,
+    },
   },
   Civil: {
-    0: CivilGround,
-    1: CivilFirstFloor,
+    height: 240,
+    images: {
+      0: CivilGround,
+      1: CivilFirstFloor,
+    },
   },
   Elétrica: {
-    0: EletricaGround,
-    1: EletricaFirstFloor,
-    2: EletricaSecondFloor,
-    3: EletricaThirdFloor,
+    height: 280,
+    images: {
+      0: EletricaGround,
+      1: EletricaFirstFloor,
+      2: EletricaSecondFloor,
+      3: EletricaThirdFloor,
+    },
   },
   Mecânica: {
-    0: MecanicaGround,
-    1: MecanicaFirstFloor,
+    height: 280,
+    images: {
+      0: MecanicaGround,
+      1: MecanicaFirstFloor,
+    },
   },
   Metalúrgica: {
-    0: MetalurgicaGround,
-    1: MetalurgicaFirstFloor,
+    height: 200,
+    images: {
+      0: MetalurgicaGround,
+      1: MetalurgicaFirstFloor,
+    },
   },
   Produção: {
-    0: ProducaoGround,
-    1: ProducaoFirstFloor,
+    height: 280,
+    images: {
+      0: ProducaoGround,
+      1: ProducaoFirstFloor,
+    },
   },
 };

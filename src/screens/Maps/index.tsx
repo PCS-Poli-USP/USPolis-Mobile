@@ -16,21 +16,23 @@ import { useEffect, useMemo, useState } from "react";
 import { mapsImagePathTable } from "./utils";
 
 export const Maps = () => {
-  const { params } = useRoute<RouteProp<AppRoutesType, 'Maps'>>()
+  const { params } = useRoute<RouteProp<AppRoutesType, "Maps">>();
 
-  const [activeBuilding, setBuilding] = useState<Building>(params?.building || "Biênio");
+  const [activeBuilding, setBuilding] = useState<Building>(
+    params?.building || "Biênio"
+  );
   const [activeFloor, setFloor] = useState(params?.floor || 0);
 
   useEffect(() => {
     if (params?.building) setBuilding(params.building || "Biênio");
     if (params?.floor) setFloor(params.floor || 0);
-  }, [params])
+  }, [params]);
 
   const { colors } = useTheme();
 
   const hasPreviousFloor = useMemo(
     () =>
-      Object.keys(mapsImagePathTable[activeBuilding]).some(
+      Object.keys(mapsImagePathTable[activeBuilding].images).some(
         (f) => Number(f) < activeFloor
       ),
     [activeBuilding, activeFloor]
@@ -38,7 +40,7 @@ export const Maps = () => {
 
   const hasNextFloor = useMemo(
     () =>
-      Object.keys(mapsImagePathTable[activeBuilding]).some(
+      Object.keys(mapsImagePathTable[activeBuilding].images).some(
         (f) => Number(f) > activeFloor
       ),
     [activeBuilding, activeFloor]
@@ -66,10 +68,10 @@ export const Maps = () => {
         bindToBorders={true}
       >
         <Image
-          source={mapsImagePathTable[activeBuilding][activeFloor]}
+          source={mapsImagePathTable[activeBuilding]["images"][activeFloor]}
           alt={`Mapa do ${activeBuilding}`}
           width="100%"
-          height={280}
+          height={mapsImagePathTable[activeBuilding].height}
         />
       </ReactNativeZoomableView>
       {hasPreviousFloor && (

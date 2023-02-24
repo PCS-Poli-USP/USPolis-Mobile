@@ -1,11 +1,10 @@
 import {
-  Center,
-  Heading,
   VStack,
   IconButton,
   useTheme,
   Box,
   useDisclose,
+  Text,
 } from "native-base";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
@@ -14,7 +13,7 @@ import { Layout, ClassModalDetails } from "@/components";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { useState } from "react";
 import { useSchedule } from "@/hooks/useSchedule";
-import { scheduleFactory } from "./utilts";
+import { scheduleFactory } from "./utils";
 
 export const MyClasses = () => {
   const [selectedClass, setSelectedClass] = useState("");
@@ -49,6 +48,11 @@ export const MyClasses = () => {
             />
           ))}
         </VStack>
+        {!classesGroupedByWeekday.length && (
+          <Text color="gray.300" fontSize="xl" textAlign="center" mt={8}>
+            Nenhuma aula adicionada
+          </Text>
+        )}
       </Layout>
       <IconButton
         position="absolute"
