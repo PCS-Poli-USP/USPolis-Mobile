@@ -64,7 +64,7 @@ export const MyClasses = () => {
         borderColor="gray.300"
         rounded="full"
         icon={<FeatherIcons name="plus" color={colors.gray[300]} size={25} />}
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("Home" as never)}
       />
     </Box>
   );

@@ -44,8 +44,8 @@ export const About = () => {
   }
 
   return (
-    <VStack flex={1} bg="gray.700" pb={16}>
-      <VStack px={8}>
+    <Layout>
+      <VStack flex={1} bg="gray.700" pb={16} px={8}>
         <Text color="gray.200" mt={2} mb={5} textAlign={'justify'} marginTop={5}>
           O aplicativo é o projeto de formatura de um grupo do PCS formado por{" "}
           <Text fontWeight={"bold"}>Jorge Habib</Text>,{" "}
@@ -77,6 +77,7 @@ export const About = () => {
           mb={10}
           variation="secondary"
           placeholder="Seu email"
+          keyboardType='email-address'
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
@@ -89,6 +90,6 @@ export const About = () => {
         />
 
       </VStack>
-    </VStack>
+    </Layout>
   );
 };
