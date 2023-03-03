@@ -56,8 +56,8 @@ export const MyClasses = () => {
       </Layout>
       <IconButton
         position="absolute"
-        bottom="6"
-        right="6"
+        bottom={10}
+        right={6}
         size="lg"
         variant="outline"
         bgColor="gray.700"
