@@ -18,6 +18,7 @@ import {
 import { TouchableOpacity } from "react-native";
 import { Button } from "../Button";
 import { sortEventsByScheduleTime } from "./utils";
+import { Building } from "../../dtos/classes";
 interface ClassModalDetailsProps {
   classId: string;
   isOpen: boolean;
@@ -48,10 +49,10 @@ export const ClassModalDetails = ({
         100
       : 0;
 
-  const navigateToMap = () => {
+  const navigateToMap = (building: Building, floor: number) => {
     navigation.navigate("Maps", {
-      building: sclass.schedule[0].building,
-      floor: sclass.schedule[0].floor,
+      building,
+      floor,
     });
     onClose();
   };
@@ -89,7 +90,9 @@ export const ClassModalDetails = ({
                   <Text fontFamily={"heading"} color="white" mb={1}>
                     {event.week_day}, das {event.start_time} às {event.end_time}
                   </Text>
-                  <TouchableOpacity onPress={navigateToMap}>
+                  <TouchableOpacity
+                    onPress={() => navigateToMap(event.building, event.floor)}
+                  >
                     <Flex
                       direction="row"
                       justify="space-between"
