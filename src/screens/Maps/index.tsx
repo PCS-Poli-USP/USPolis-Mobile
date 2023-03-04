@@ -78,7 +78,7 @@ export const Maps = () => {
         <IconButton
           position="absolute"
           bottom={10}
-          left={5}
+          left={6}
           size="lg"
           rounded="full"
           variant="outline"
@@ -100,7 +100,7 @@ export const Maps = () => {
         <IconButton
           position="absolute"
           bottom={10}
-          right={5}
+          right={6}
           size="lg"
           rounded="full"
           variant="outline"

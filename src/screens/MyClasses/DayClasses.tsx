@@ -15,7 +15,7 @@ export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
   const weekdayAbbreviated = format(parsedWeekDay, "EEEEEE", { locale: ptBR });
 
   return (
-    <Flex width="full" direction="row" justify="space-between" align="start">
+    <Flex width="full" direction="row" justify="space-between" align="flex-start">
       <Text
         color={
           parsedWeekDay.getDay() === new Date().getDay()

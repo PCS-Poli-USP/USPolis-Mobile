@@ -56,15 +56,15 @@ export const MyClasses = () => {
       </Layout>
       <IconButton
         position="absolute"
-        bottom="6"
-        right="6"
+        bottom={10}
+        right={6}
         size="lg"
         variant="outline"
         bgColor="gray.700"
         borderColor="gray.300"
         rounded="full"
         icon={<FeatherIcons name="plus" color={colors.gray[300]} size={25} />}
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("Home" as never)}
       />
     </Box>
   );

@@ -11,7 +11,7 @@ export const Layout = ({ children }: LayoutProps) => {
   return (
     <KeyboardAvoidingView
       flex={1}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : null}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
