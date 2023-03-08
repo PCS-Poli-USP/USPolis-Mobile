@@ -67,7 +67,7 @@ export const ClassModalDetails = ({
         bgColor: "gray.100",
       }}
     >
-      <Modal.Content mt="auto" mb={0} borderRadius="3xl" bgColor="gray.700">
+      <Modal.Content mt="auto" mb={0} borderTopRadius="3xl" borderBottomRadius="0" bgColor="gray.700">
         <Modal.Header bgColor="gray.700" borderBottomColor="transparent">
           <VStack alignItems="center" space="3">
             <Heading fontFamily={"heading"} color="white" fontSize="lg">
