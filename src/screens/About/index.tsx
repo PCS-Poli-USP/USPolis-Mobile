@@ -43,16 +43,26 @@ export const About = () => {
     }
   }
 
+  const Bold = (props: any) => <Text style={{fontWeight: 'bold'}}>{props.children}</Text>
+
   return (
     <Layout>
       <VStack flex={1} bg="gray.700" pb={16} px={8}>
         <Text color="gray.200" mt={2} mb={5} textAlign={'justify'} marginTop={5}>
-          O aplicativo é o projeto de formatura de um grupo do PCS formado por{" "}
-          <Text fontWeight={"bold"}>Jorge Habib</Text>,{" "}
-          <Text fontWeight={"bold"}>Rodrigo Aguena</Text> e{" "}
-          <Text fontWeight={"bold"}>Rodrigo Magaldi</Text>,{" "}
-          sob orientação do <Text fontWeight={"bold"}>Prof. Fábio Levy</Text> e{" "}
-          <Text fontWeight={"bold"}>Renan Ávila</Text>, criador original do USPolis.
+          O USPolis foi desenvolvido como projeto de formatura no PCS,
+          contando com um sistema de alocação automático de salas e este
+          aplicativo para sua visualização pelos alunos da faculdade.{"\n"}
+          {"\n"}
+          <Bold>Desenvolvedores:</Bold>{"\n"}
+            {`\u2022`} Jorge Habib El Khouri{"\n"}
+            {`\u2022`} Luiz Roberto Akio Higuti{"\n"}
+            {`\u2022`} Marcel Makoto Kondo{"\n"}
+            {`\u2022`} Rodrigo Kenji Aguena{"\n"}
+            {`\u2022`} Rodrigo Miksian Magaldi{"\n"}
+          {"\n"}
+          <Bold>Orientação:</Bold>{"\n"}
+            {`\u2022`} Prof. Fábio Levy Siqueira (PCS | Poli-USP){"\n"}
+            {`\u2022`} Renan Ávila (criador original do USPolis) {"\n"}
           {"\n"}
           Quaisquer dúvidas, sugestões ou comentários são mais do que bem vindos!
         </Text>
