@@ -26,10 +26,6 @@ if (__DEV__) {
 const queryClient = new QueryClient()
 
 const toastConfig = {
-  /*
-    Overwrite 'success' type,
-    by modifying the existing `BaseToast` component
-  */
   info: (props: BaseToastProps) => (
     <InfoToast
       {...props}
