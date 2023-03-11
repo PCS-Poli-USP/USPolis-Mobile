@@ -6,7 +6,7 @@ import { THEME } from '@/theme/index';
 import { Routes } from '@/routes';
 import { Contexts } from '@/contexts';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { setupUseClasses } from '@/tests/mocks/setupUseClasses';
+import Toast, { InfoToast, BaseToastProps } from 'react-native-toast-message';
 
 if (__DEV__) {
   /**
@@ -25,27 +25,53 @@ if (__DEV__) {
 
 const queryClient = new QueryClient()
 
+const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  info: (props: BaseToastProps) => (
+    <InfoToast
+      {...props}
+      style={{ borderLeftColor: '#408180' }}
+      text1Style={{
+        fontSize: 18,
+        fontWeight: "700",
+        fontFamily: 'Roboto'
+      }}
+      text2Style={{
+        fontSize: 14,
+        fontFamily: 'Roboto',
+        fontWeight: "400"
+      }}
+    />
+  ),
+};
+
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <NativeBaseProvider theme={THEME}>
-        <Contexts>
-          <StatusBar 
-            barStyle="light-content"
-            backgroundColor='transparent'
-            translucent
-          />
-          {fontsLoaded ? (
-            <Routes />
-          ) : (
-            <Center flex={1}>
-              <Loading />
-            </Center>
-          )}
-        </Contexts>
-      </NativeBaseProvider>
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <NativeBaseProvider theme={THEME}>
+          <Contexts>
+            <StatusBar 
+              barStyle="light-content"
+              backgroundColor='transparent'
+              translucent
+            />
+            {fontsLoaded ? (
+              <Routes />
+            ) : (
+              <Center flex={1}>
+                <Loading />
+              </Center>
+            )}
+          </Contexts>
+        </NativeBaseProvider>
+      </QueryClientProvider>
+      <Toast config={toastConfig}/>
+    </>
   );
 }

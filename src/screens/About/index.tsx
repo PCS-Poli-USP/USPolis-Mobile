@@ -1,4 +1,5 @@
-import { VStack, Text, useToast } from "native-base";
+import { VStack, Text } from "native-base";
+import Toast from 'react-native-toast-message';
 
 import { Layout, TextArea, Input, Button } from "@/components";
 
@@ -10,8 +11,6 @@ export const About = () => {
   const [comment, setComment] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false)
-
-  const toast = useToast();
 
   const handleSendComment = async () => {
     setIsLoading(true)
@@ -25,19 +24,19 @@ export const About = () => {
 
     try {
       await api.post('/comments', formData)
-      toast.show({
-        title: "Muito obrigado!",
-        description: "Seu comentário foi enviado.",
-        placement: "bottom"
-      })
+      Toast.show({
+        type: 'info',
+        text1: 'Muito obrigado!',
+        text2: 'Seu comentário foi enviado.'
+      });
       setComment("")
       setEmail("")
     } catch (e) {
-      toast.show({
-        title: "Ops!",
-        description: "Ocorreu um erro, tente novamente mais tarde.",
-        placement: "bottom"
-      })
+      Toast.show({
+        type: 'info',
+        text1: 'Ops!',
+        text2: 'Ocorreu um erro, tente novamente mais tarde.'
+      });
     } finally {
       setIsLoading(false)
     }

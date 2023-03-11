@@ -1,4 +1,4 @@
-import { Toast } from 'native-base'
+import Toast from 'react-native-toast-message';
 import { useCallback, useEffect } from "react";
 import { createContext, useState } from "react";
 import { scheduleStorage } from "@/storage/schedule";
@@ -38,22 +38,19 @@ export const ScheduleContextProvider = ({
     (classId: string) => {
       if (schedule.includes(classId)) {
         Toast.show({
-          id: "removed-class",
-          title: "Removida!",
-          description: "Disciplina foi removida do seu horário",
-          placement: "top",
-        })
+          type: 'info',
+          text1: 'Removida!',
+          text2: 'Disciplina removida do seu horário.'
+        });
         setSchedule((state) => state.filter((c) => c !== classId));
       } else {
         Toast.show({
-          id: "added-class",
-          title: "Adicionada!",
-          description: "Disciplina foi adicionada ao seu horário",
-          placement: "top",
-        })
+          type: 'info',
+          text1: 'Adicionada!',
+          text2: 'Disciplina adicionada ao seu horário.'
+        });
         setSchedule((state) => [...state, classId]);
       }
-      setTimeout(() => Toast.closeAll(), 4000)
     },
     [schedule]
   );

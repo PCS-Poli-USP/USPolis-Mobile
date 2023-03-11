@@ -8207,6 +8207,11 @@
     "css-select" "^5.1.0"
     "css-tree" "^1.1.3"
 
+"react-native-toast-message@^2.1.6":
+  "integrity" "sha512-VctXuq20vmRa9AE13acaNZhrLcS3FaBS2zEevS3+vhBsnVZYG0FIlWIis9tVnpnNxUb3ART+BWtwQjzSttXTng=="
+  "resolved" "https://registry.npmjs.org/react-native-toast-message/-/react-native-toast-message-2.1.6.tgz"
+  "version" "2.1.6"
+
 "react-native-web@~0.18.9":
   "integrity" "sha512-YV2gtZa1n7ulTGp+HcxH+KsAtaDPBI/dKd9oOQS31zyFHURjObLUVkKnGjkmlYAUReWfvmlU64GzyNwoZF9/tA=="
   "resolved" "https://registry.npmjs.org/react-native-web/-/react-native-web-0.18.10.tgz"
