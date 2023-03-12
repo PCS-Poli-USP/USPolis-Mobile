@@ -75,7 +75,7 @@ export const AppRoutes = () => {
           ),
           title: "Minhas Aulas",
         }}
-      />
+      /> */}
       <Screen
         name="Maps"
         component={Maps}
@@ -85,7 +85,7 @@ export const AppRoutes = () => {
           ),
           title: "Mapa dos Prédios da POLI",
         }}
-      /> */}
+      />
       <Screen
         name="About"
         component={About}

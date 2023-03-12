@@ -1,7 +1,11 @@
 import { Building as BuildingType } from "@/dtos/classes";
 import { Theme } from "@/theme/theme";
 import { createBox } from "@shopify/restyle";
-import { FlatList, TouchableOpacity, TouchableOpacityProps } from "react-native";
+import {
+  FlatList,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
 import { Box, Typography } from "../ui";
 
 interface BuildingFilterProps {
@@ -25,9 +29,8 @@ export const BuildingFilter = ({
   activeBuilding,
   selectBuilding,
 }: BuildingFilterProps) => {
-
   return (
-    <Box h={10} my={'l'}>
+    <Box height={20} my={"l"}>
       <FlatList
         horizontal
         data={buildings}
@@ -58,7 +61,7 @@ const Building = ({ name, isActive, handleSelectBuilding }: BuildingProps) => {
       borderRadius={16}
       borderColor={isActive ? "primary" : "transparent"}
       borderWidth={isActive ? 1 : 0}
-      mr={'xs'}
+      mr={"xs"}
       alignItems="center"
       justifyContent="center"
       onPress={handleSelectBuilding}
@@ -67,7 +70,7 @@ const Building = ({ name, isActive, handleSelectBuilding }: BuildingProps) => {
         color={isActive ? "primary" : "grayTwo"}
         fontSize={12}
         fontWeight="bold"
-        px={'m'}
+        px={"m"}
         textTransform={"uppercase"}
       >
         {name}
