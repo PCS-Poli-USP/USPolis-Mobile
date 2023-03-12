@@ -1,18 +1,13 @@
-import { BuildingFilter } from "@/components";
+import { Box, BuildingFilter, IconButton, VStack } from "@/components";
 import { Building } from "@/dtos/classes";
 import { AppRoutesType } from "@/routes/app.routes";
+import { Theme } from "@/theme/theme";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import {
-  Center,
-  Heading,
-  IconButton,
-  Image,
-  VStack,
-  useTheme,
-} from "native-base";
+import { useTheme } from "@shopify/restyle";
 import { useEffect, useMemo, useState } from "react";
+import { Image } from "react-native";
 import { mapsImagePathTable } from "./utils";
 
 export const Maps = () => {
@@ -28,7 +23,7 @@ export const Maps = () => {
     if (params?.floor) setFloor(params.floor || 0);
   }, [params]);
 
-  const { colors } = useTheme();
+  const { colors } = useTheme<Theme>();
 
   const hasPreviousFloor = useMemo(
     () =>
@@ -51,13 +46,13 @@ export const Maps = () => {
   }, [activeBuilding]);
 
   return (
-    <VStack flex={1} bg="gray.700" pb={16}>
-      <Center px={8}>
+    <VStack bg="graySeven" paddingBottom="l" height="100%">
+      <Box>
         <BuildingFilter
           activeBuilding={activeBuilding}
           selectBuilding={setBuilding}
         />
-      </Center>
+      </Box>
 
       <ReactNativeZoomableView
         key={`${activeBuilding}-${activeFloor}`}
@@ -69,25 +64,22 @@ export const Maps = () => {
       >
         <Image
           source={mapsImagePathTable[activeBuilding]["images"][activeFloor]}
-          alt={`Mapa do ${activeBuilding}`}
-          width="100%"
-          height={mapsImagePathTable[activeBuilding].height}
+          style={{
+            width: "100%",
+            height: mapsImagePathTable[activeBuilding].height,
+            resizeMode: "contain",
+          }}
         />
       </ReactNativeZoomableView>
+
       {hasPreviousFloor && (
         <IconButton
-          position="absolute"
-          bottom={10}
-          left={6}
-          size="lg"
-          rounded="full"
-          variant="outline"
-          bgColor="gray.700"
-          borderColor="gray.300"
+          style={{ position: "absolute", bottom: 30, left: 15 }}
+          variant="outlined"
           disabled={!hasPreviousFloor}
           icon={
             <FeatherIcons
-              color={colors.gray[300]}
+              color={colors.grayThree}
               name="arrow-down"
               size={25}
             />
@@ -98,17 +90,11 @@ export const Maps = () => {
 
       {hasNextFloor && (
         <IconButton
-          position="absolute"
-          bottom={10}
-          right={6}
-          size="lg"
-          rounded="full"
-          variant="outline"
-          bgColor="gray.700"
-          borderColor="gray.300"
+          style={{ position: "absolute", bottom: 30, right: 15 }}
+          variant="outlined"
           disabled={!hasNextFloor}
           icon={
-            <FeatherIcons color={colors.gray[300]} name="arrow-up" size={25} />
+            <FeatherIcons color={colors.grayThree} name="arrow-up" size={25} />
           }
           onPress={() => setFloor((floor) => floor + 1)}
         />

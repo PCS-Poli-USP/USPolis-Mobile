@@ -1,4 +1,6 @@
-import { KeyboardAvoidingView, ScrollView, useTheme } from "native-base";
+import { Theme } from "@/theme/theme";
+import { useTheme } from "@shopify/restyle";
+import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { Platform } from "react-native";
 
 type LayoutProps = {
@@ -6,16 +8,16 @@ type LayoutProps = {
 };
 
 export const Layout = ({ children }: LayoutProps) => {
-  const { colors } = useTheme();
+  const { colors } = useTheme<Theme>();
 
   return (
     <KeyboardAvoidingView
-      flex={1}
-      behavior={Platform.OS === "ios" ? "padding" : null}
+      style={{ flex: 1}}
+      behavior={Platform.OS === "ios" ? "padding" : "padding"}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
-        style={{ backgroundColor: colors.gray[700] }}
+        style={{ backgroundColor: colors.graySeven }}
         showsVerticalScrollIndicator={false}
       >
         {children}

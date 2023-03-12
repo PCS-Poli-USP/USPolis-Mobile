@@ -2,7 +2,7 @@
   "expo": {
     "name": "uspolis",
     "slug": "uspolis",
-    "version": "1.0.0",
+    "version": "4.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,10 +22,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "uspolis.lunadros",
+      "versionCode": 39
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4d7cbbbb-e19c-4e1e-8545-29fa9ad992d6"
+      }
     }
   }
 }

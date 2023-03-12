@@ -1,12 +1,16 @@
 import { StatusBar } from 'react-native';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto'
-import { Center, NativeBaseProvider } from 'native-base';
-import { Loading } from '@/components/index';
+import { NativeBaseProvider } from 'native-base';
+import { Box, Loading } from '@/components/index';
 import { THEME } from '@/theme/index';
 import { Routes } from '@/routes';
 import { Contexts } from '@/contexts';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Toast, { InfoToast, BaseToastProps } from 'react-native-toast-message';
+import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle'
+import { setupUseClasses } from '@/tests/mocks/setupUseClasses';
+
+import RestyleTheme from '@/theme/theme'
 
 if (__DEV__) {
   /**
@@ -48,9 +52,9 @@ export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <NativeBaseProvider theme={THEME}>
+    <QueryClientProvider client={queryClient}>
+      <RestyleThemeProvider theme={RestyleTheme}>
+        {/* <NativeBaseProvider theme={THEME}> */}
           <Contexts>
             <StatusBar 
               barStyle="light-content"
@@ -60,14 +64,14 @@ export default function App() {
             {fontsLoaded ? (
               <Routes />
             ) : (
-              <Center flex={1}>
+              <Box flex={1} alignItems="center" justifyContent="center">
                 <Loading />
-              </Center>
+              </Box>
             )}
           </Contexts>
-        </NativeBaseProvider>
-      </QueryClientProvider>
-      <Toast config={toastConfig}/>
-    </>
+        {/* </NativeBaseProvider> */}
+        <Toast config={toastConfig}/>
+      </RestyleThemeProvider>
+    </QueryClientProvider>
   );
 }

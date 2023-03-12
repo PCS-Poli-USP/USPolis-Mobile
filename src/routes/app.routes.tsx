@@ -5,9 +5,10 @@ import {
 import FeatherIcons from "@expo/vector-icons/Feather";
 
 import { Home, Maps, About, MyClasses } from "@/screens";
-import { useTheme } from "native-base";
 import { Platform } from "react-native";
 import { Building } from "@/dtos/classes";
+import { Theme } from "@/theme/theme";
+import { useTheme } from "@shopify/restyle";
 
 export type AppRoutesType = {
   Home: undefined;
@@ -24,30 +25,29 @@ export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutesType>;
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutesType>();
 
 export const AppRoutes = () => {
-  const { sizes, colors } = useTheme();
+  const { spacing, colors } = useTheme<Theme>();
 
-  const iconSize = sizes[6];
+  const iconSize = spacing.l;
 
   return (
     <Navigator
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarActiveTintColor: colors.green[500],
-        tabBarInactiveTintColor: colors.gray[200],
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.grayTwo,
         tabBarStyle: {
-          backgroundColor: colors.gray[600],
+          backgroundColor: colors.graySix,
           borderTopWidth: 0,
           height: Platform.OS === "ios" ? 96 : 88,
-          paddingBottom: sizes[10],
-          paddingTop: sizes[6],
-          paddingHorizontal: sizes[8],
+          paddingBottom: spacing.xl,
+          paddingTop: spacing.l,
+          paddingHorizontal: spacing.l,
         },
         headerShown: true,
         headerStyle: {
-          backgroundColor: colors["gray"][600],
+          backgroundColor: colors.graySix,
           shadowColor: "transparent",
           height: Platform.OS === "ios" ? 148 : 120,
-          
         },
         headerTitleStyle: {
           color: "white",

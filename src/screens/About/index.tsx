@@ -1,7 +1,6 @@
-import { VStack, Text } from "native-base";
 import Toast from 'react-native-toast-message';
 
-import { Layout, TextArea, Input, Button } from "@/components";
+import { Layout, TextArea, Input, Button, VStack, Typography } from "@/components";
 
 import { useState } from "react";
 import { IComment } from "@/dtos";
@@ -10,16 +9,16 @@ import api from "@/services/api";
 export const About = () => {
   const [comment, setComment] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSendComment = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const formData: IComment = {
-      comment
-    }
-    
+      comment,
+    };
+
     if (email.length > 0) {
-      formData.email = email
+      formData.email = email;
     }
 
     try {
@@ -38,16 +37,16 @@ export const About = () => {
         text2: 'Ocorreu um erro, tente novamente mais tarde.'
       });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const Bold = (props: any) => <Text style={{fontWeight: 'bold'}}>{props.children}</Text>
+  const Bold = (props: any) => <Typography fontWeight='bold'>{props.children}</Typography>
 
   return (
     <Layout>
-      <VStack flex={1} bg="gray.700" pb={16} px={8}>
-        <Text color="gray.200" mt={2} mb={5} textAlign={'justify'} marginTop={5}>
+      <VStack flex={1} backgroundColor="graySeven" paddingBottom={'m'} paddingHorizontal={'m'}>
+        <Typography color="grayTwo" mt={'xs'} mb={'s'} textAlign={'justify'} marginTop={'m'}>
           O USPolis foi desenvolvido como projeto de formatura no PCS,
           contando com um sistema de alocação automático de salas e este
           aplicativo para sua visualização pelos alunos da faculdade.{"\n"}
@@ -64,40 +63,37 @@ export const About = () => {
             {`\u2022`} Renan Ávila (criador original do USPolis) {"\n"}
           {"\n"}
           Quaisquer dúvidas, sugestões ou comentários são mais do que bem vindos!
-        </Text>
+        </Typography>
         
-        <Text color="gray.200" fontWeight={"bold"} fontSize={16}>
+        <Typography color="grayTwo" fontWeight={"bold"} fontSize={16}>
           Comentário
-        </Text>
+        </Typography>
         <TextArea
-          mt={2}
-          mb={5}
+          marginTop="s"
+          marginBottom="m"
           variation="secondary"
           placeholder="Deixe seu comentário"
           value={comment}
           onChangeText={(text) => setComment(text)}
         />
-
-        <Text color="gray.200" fontWeight={"bold"} fontSize={16}>
+        <Typography color="grayTwo" variant="heading" fontSize={16}>
           Seu email (opcional)
-        </Text>
+        </Typography>
         <Input
-          mt={2}
-          mb={10}
+          marginTop="s"
+          marginBottom="m"
           variation="secondary"
           placeholder="Seu email"
-          keyboardType='email-address'
+          keyboardType="email-address"
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
-
-        <Button 
+        <Button
           title="Enviar comentário"
           onPress={handleSendComment}
-          isDisabled={comment.length === 0}
+          disabled={!comment.length}
           isLoading={isLoading}
         />
-
       </VStack>
     </Layout>
   );

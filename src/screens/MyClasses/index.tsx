@@ -1,25 +1,20 @@
-import {
-  VStack,
-  IconButton,
-  useTheme,
-  Box,
-  useDisclose,
-  Text,
-} from "native-base";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 import { DayClasses } from "./DayClasses";
-import { Layout, ClassModalDetails } from "@/components";
+import { Layout, ClassModalDetails, Box, VStack, Typography, Pressable } from "@/components";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { useState } from "react";
 import { useSchedule } from "@/hooks/useSchedule";
 import { scheduleFactory } from "./utils";
+import { useTheme } from "@shopify/restyle";
+import { Theme } from "@/theme/theme";
+import { IClass } from "@/dtos";
 
 export const MyClasses = () => {
-  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedClass, setSelectedClass] = useState<IClass | undefined>();
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false)
 
-  const { colors } = useTheme();
-  const { onOpen, isOpen, onClose } = useDisclose();
+  const { colors } = useTheme<Theme>();
   const { data: classes } = useClasses();
   const { schedule } = useSchedule();
   const navigation = useNavigation();
@@ -27,19 +22,20 @@ export const MyClasses = () => {
   const classesGroupedByWeekday = scheduleFactory(schedule, classes);
 
   const onOpenModal = (classId: string) => {
-    setSelectedClass(classId);
-    onOpen();
+    const sclass = classes?.find((c) => c.id === classId)
+    setSelectedClass(sclass);
+    setIsClassModalOpen(true);
   };
 
   return (
-    <Box flex={1} bg="gray.700" px={5} pt={10} pb={5}>
-      <ClassModalDetails
-        classId={selectedClass}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+    <Box flex={1} backgroundColor="graySeven" paddingHorizontal="s" paddingTop={'m'} paddingBottom={'s'}>
       <Layout>
-        <VStack space="8">
+        <ClassModalDetails
+          sclass={selectedClass}
+          isOpen={isClassModalOpen}
+          onClose={() => setIsClassModalOpen(false)}
+        />
+        <VStack>
           {classesGroupedByWeekday.map((group) => (
             <DayClasses
               onOpenModal={onOpenModal}
@@ -49,23 +45,27 @@ export const MyClasses = () => {
           ))}
         </VStack>
         {!classesGroupedByWeekday.length && (
-          <Text color="gray.300" fontSize="xl" textAlign="center" mt={8}>
+          <Typography color="grayThree" fontSize={14} textAlign="center" marginTop={'m'}>
             Nenhuma aula adicionada
-          </Text>
+          </Typography>
         )}
       </Layout>
-      <IconButton
+      <Pressable
         position="absolute"
         bottom={10}
         right={6}
-        size="lg"
-        variant="outline"
-        bgColor="gray.700"
-        borderColor="gray.300"
-        rounded="full"
-        icon={<FeatherIcons name="plus" color={colors.gray[300]} size={25} />}
+        padding={'m'}
+        borderWidth={1}
+        backgroundColor="graySeven"
+        alignItems="center"
+        justifyContent="center"
+        borderColor="grayThree"
+        borderRadius={9999}
         onPress={() => navigation.navigate("Home" as never)}
-      />
+
+      >
+        <FeatherIcons name="plus" color={colors.grayThree} size={25} />
+      </Pressable>
     </Box>
   );
 };
