@@ -52,6 +52,7 @@ const theme = createTheme({
     graySeven: palette.colors.gray[700],
     white: palette.colors.white,
     red: palette.colors.red[500],
+    transparent: 'transparent',
   },
   textVariants: {
     heading: {
@@ -77,6 +78,7 @@ const theme = createTheme({
     m: 16,
     l: 24,
     xl: 40,
+    auto: 'auto',
   },
 });
 

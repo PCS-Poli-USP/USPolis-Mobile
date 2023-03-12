@@ -1,16 +1,17 @@
 import { BuildingFilter } from "@/components";
 import { Building } from "@/dtos/classes";
 import { AppRoutesType } from "@/routes/app.routes";
+import { Theme } from "@/theme/theme";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { useTheme } from "@shopify/restyle";
 import {
   Center,
   Heading,
   IconButton,
   Image,
   VStack,
-  useTheme,
 } from "native-base";
 import { useEffect, useMemo, useState } from "react";
 import { mapsImagePathTable } from "./utils";
@@ -28,7 +29,7 @@ export const Maps = () => {
     if (params?.floor) setFloor(params.floor || 0);
   }, [params]);
 
-  const { colors } = useTheme();
+  const { colors } = useTheme<Theme>();
 
   const hasPreviousFloor = useMemo(
     () =>
@@ -87,7 +88,7 @@ export const Maps = () => {
           disabled={!hasPreviousFloor}
           icon={
             <FeatherIcons
-              color={colors.gray[300]}
+              color={colors.grayThree}
               name="arrow-down"
               size={25}
             />
@@ -108,7 +109,7 @@ export const Maps = () => {
           borderColor="gray.300"
           disabled={!hasNextFloor}
           icon={
-            <FeatherIcons color={colors.gray[300]} name="arrow-up" size={25} />
+            <FeatherIcons color={colors.grayThree} name="arrow-up" size={25} />
           }
           onPress={() => setFloor((floor) => floor + 1)}
         />

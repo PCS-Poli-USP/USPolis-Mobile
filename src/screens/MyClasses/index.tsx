@@ -1,7 +1,6 @@
 import {
   VStack,
   IconButton,
-  useTheme,
   Box,
   useDisclose,
   Text,
@@ -14,11 +13,13 @@ import { useClasses } from "@/hooks/react-query/useClasses";
 import { useState } from "react";
 import { useSchedule } from "@/hooks/useSchedule";
 import { scheduleFactory } from "./utils";
+import { useTheme } from "@shopify/restyle";
+import { Theme } from "@/theme/theme";
 
 export const MyClasses = () => {
   const [selectedClass, setSelectedClass] = useState("");
 
-  const { colors } = useTheme();
+  const { colors } = useTheme<Theme>();
   const { onOpen, isOpen, onClose } = useDisclose();
   const { data: classes } = useClasses();
   const { schedule } = useSchedule();
@@ -63,7 +64,7 @@ export const MyClasses = () => {
         bgColor="gray.700"
         borderColor="gray.300"
         rounded="full"
-        icon={<FeatherIcons name="plus" color={colors.gray[300]} size={25} />}
+        icon={<FeatherIcons name="plus" color={colors.grayThree} size={25} />}
         onPress={() => navigation.navigate("Home" as never)}
       />
     </Box>

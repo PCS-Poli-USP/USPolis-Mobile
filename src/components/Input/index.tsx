@@ -1,42 +1,34 @@
-import { Input as NativeBaseInput, IInputProps, FormControl } from 'native-base'
+import { Theme } from '@/theme/theme';
+import { createBox } from '@shopify/restyle';
+import { TextInput, TextInputProps } from 'react-native';
+import { Box, Typography } from '../ui';
 
-type InputProps = IInputProps & {
+type InputProps = TextInputProps & {
   errorMessage?: string | null
   variation?: 'primary' | 'secondary'
-}
+  isInvalid?: boolean
+} & React.ComponentProps<typeof StyledInput>
+
+const StyledInput = createBox<Theme, TextInputProps>(TextInput);
 
 export const Input = ({ variation = 'primary', errorMessage, isInvalid, ...props }: InputProps) => {
   const invalid = isInvalid || !!errorMessage
   const isSecondary = variation === 'secondary'
 
   return (
-    <FormControl isInvalid={invalid}>
-      <NativeBaseInput 
-        bg='gray.700'
-        h={14}
-        px={4}
-        borderWidth={isSecondary ? 1 : 0}
-        borderColor={isSecondary ? 'green.500' : 'transparent'}
-        fontSize='md'
-        color='white'
-        fontFamily='body'
-        isInvalid={invalid}
+    <Box>
+      <StyledInput 
+        backgroundColor={invalid ? 'graySeven' : 'graySeven'}
+        height={32}
+        px={'s'}
+        borderWidth={invalid ? 1 : isSecondary ? 1 : 0}
+        borderColor={invalid ? "red" : isSecondary ? 'primary' : 'transparent'}
         placeholderTextColor={'gray.300'}
-        _invalid={{
-          bg: 'gray.700',
-          borderWidth: 1,
-          borderColor: 'red.500',
-        }}
-        _focus={{
-          bg: 'gray.700',
-          borderWidth: 1,
-          borderColor: 'green.500'
-        }}
         {...props}
       />
-      <FormControl.ErrorMessage>
+      <Typography fontSize={10} color="red">
         {errorMessage}
-      </FormControl.ErrorMessage>
-    </FormControl>
+      </Typography>
+    </Box>
   )
 }

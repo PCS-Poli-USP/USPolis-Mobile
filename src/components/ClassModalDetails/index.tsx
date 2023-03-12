@@ -4,21 +4,15 @@ import { AppRoutesType } from "@/routes/app.routes";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { differenceInDays, format, parseISO } from "date-fns";
-import {
-  Box,
-  Flex,
-  HStack,
-  Heading,
-  Modal,
-  Progress,
-  Text,
-  VStack,
-  useTheme,
-} from "native-base";
 import { TouchableOpacity } from "react-native";
 import { Button } from "../Button";
 import { sortEventsByScheduleTime } from "./utils";
 import { Building } from "../../dtos/classes";
+import { Theme } from "@/theme/theme";
+import { useTheme } from "@shopify/restyle";
+import Modal from 'react-native-modal';
+import { Box, HStack, Typography, VStack } from "../ui";
+
 interface ClassModalDetailsProps {
   classId: string;
   isOpen: boolean;
@@ -31,7 +25,7 @@ export const ClassModalDetails = ({
   onClose,
 }: ClassModalDetailsProps) => {
   const navigation = useNavigation<NavigationProp<AppRoutesType>>();
-  const { colors } = useTheme();
+  const { colors } = useTheme<Theme>();
   const { data: classes } = useClasses();
   const { schedule, toggleClassOnSchedule } = useSchedule();
 
@@ -58,109 +52,110 @@ export const ClassModalDetails = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      animationPreset="slide"
-      size="full"
-      _backdrop={{
-        bgColor: "gray.100",
-      }}
-    >
-      <Modal.Content mt="auto" mb={0} borderRadius="3xl" bgColor="gray.700">
-        <Modal.Header bgColor="gray.700" borderBottomColor="transparent">
-          <VStack alignItems="center" space="3">
-            <Heading fontFamily={"heading"} color="white" fontSize="lg">
-              {sclass.subject_code}
-            </Heading>
-            <Heading fontFamily={"heading"} color="white" fontSize="lg">
-              {sclass.subject_name}
-            </Heading>
-            <Text color="gray.200" fontSize="lg">
-              Turma {sclass.class_code.slice(-2)}
-            </Text>
-          </VStack>
-        </Modal.Header>
-        <Modal.Body bgColor="gray.700" px={8} pb={8}>
-          <VStack space="5" bgColor="gray.700">
-            {sclass.schedule
-              .sort(sortEventsByScheduleTime)
-              .map((event, index) => (
-                <Box key={`${event.id}-${index}`}>
-                  <Text fontFamily={"heading"} color="white" mb={1}>
-                    {event.week_day}, das {event.start_time} às {event.end_time}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => navigateToMap(event.building, event.floor)}
-                  >
-                    <Flex
-                      direction="row"
-                      justify="space-between"
-                      align="center"
-                      bgColor="gray.500"
-                      borderRadius="md"
-                      p={3}
+    <Box flex={1}>
+      <Modal
+        isVisible={isOpen}
+        backdropColor={colors.grayOne}
+        swipeDirection={'down'}
+        onBackdropPress={onClose}
+        onSwipeComplete={onClose}
+        coverScreen
+      >
+        <Box width={'100%'} borderRadius={8} backgroundColor="graySeven">
+          <Box backgroundColor="graySeven" borderBottomColor="transparent">
+            <VStack alignItems="center" gap="s">
+              <Typography variant={"heading"} color="white" fontSize={14}>
+                {sclass.subject_code}
+              </Typography>
+              <Typography variant={"heading"} color="white" fontSize={14}>
+                {sclass.subject_name}
+              </Typography>
+              <Typography color="grayTwo" fontSize={14}>
+                Turma {sclass.class_code.slice(-2)}
+              </Typography>
+            </VStack>
+          </Box>
+          <Box backgroundColor="graySeven" paddingHorizontal={'m'} paddingBottom={'s'}>
+            <VStack gap="s" backgroundColor="graySeven">
+              {sclass.schedule
+                .sort(sortEventsByScheduleTime)
+                .map((event, index) => (
+                  <Box key={`${event.id}-${index}`}>
+                    <Typography variant={"heading"} color="white" mb={'xs'}>
+                      {event.week_day}, das {event.start_time} às {event.end_time}
+                    </Typography>
+                    <TouchableOpacity
+                      onPress={() => navigateToMap(event.building, event.floor)}
                     >
-                      <VStack space="1">
-                        <Text color="white">Prédio: {event.building}</Text>
-                        <Text color="white">Sala: {event.classroom}</Text>
-                      </VStack>
-                      <HStack alignItems={"center"}>
-                        <Text color={"green.500"} mr="1">
-                          Ver no mapa
-                        </Text>
-                        <FeatherIcons
-                          name="chevron-right"
-                          color={colors.green[500]}
-                          size={15}
-                        />
-                      </HStack>
-                    </Flex>
-                  </TouchableOpacity>
+                      <Box
+                        flexDirection="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        backgroundColor="grayFive"
+                        borderRadius={8}
+                        padding={'s'}
+                      >
+                        <VStack gap={"xs"}>
+                          <Typography color="white">Prédio: {event.building}</Typography>
+                          <Typography color="white">Sala: {event.classroom}</Typography>
+                        </VStack>
+                        <HStack alignItems={"center"}>
+                          <Typography color={"primary"} marginRight='s'>
+                            Ver no mapa
+                          </Typography>
+                          <FeatherIcons
+                            name="chevron-right"
+                            color={colors.primary}
+                            size={15}
+                          />
+                        </HStack>
+                      </Box>
+                    </TouchableOpacity>
+                  </Box>
+                ))}
+              {!!sclass.professor && (
+                <Box>
+                  <Typography color="grayTwo">Docente:</Typography>
+                  <Typography color="white">{sclass.professor}</Typography>
                 </Box>
-              ))}
-            {!!sclass.professor && (
+              )}
               <Box>
-                <Text color="gray.200">Docente:</Text>
-                <Text color="white">{sclass.professor}</Text>
+                <Box flexDirection="row" justifyContent="space-between">
+                  <Box>
+                    <Typography color="grayTwo">Início</Typography>
+                    <Typography color="white">
+                      {format(parseISO(sclass.start_period), "dd/MM/yyyy")}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography color="grayTwo">Fim</Typography>
+                    <Typography color="white">
+                      {format(parseISO(sclass.end_period), "dd/MM/yyyy")}
+                    </Typography>
+                  </Box>
+                </Box>
+                {/* <Progress
+                  value={progressValue}
+                  size="md"
+                  mt={1}
+                  _filledTrack={{
+                    bg: "green.700",
+                  }}
+                /> */}
               </Box>
-            )}
-            <Box>
-              <Flex direction="row" justify="space-between">
-                <Box>
-                  <Text color="gray.200">Início</Text>
-                  <Text color="white">
-                    {format(parseISO(sclass.start_period), "dd/MM/yyyy")}
-                  </Text>
-                </Box>
-                <Box>
-                  <Text color="gray.200">Fim</Text>
-                  <Text color="white">
-                    {format(parseISO(sclass.end_period), "dd/MM/yyyy")}
-                  </Text>
-                </Box>
-              </Flex>
-              <Progress
-                value={progressValue}
-                size="md"
-                mt={1}
-                _filledTrack={{
-                  bg: "green.700",
-                }}
+              <Button
+                variant={"outlined"}
+                title={
+                  schedule.includes(classId)
+                    ? "Remover de minhas disciplinas"
+                    : "Adicionar em minhas disciplinas"
+                }
+                onPress={() => toggleClassOnSchedule(classId)}
               />
-            </Box>
-            <Button
-              variant={"outlined"}
-              title={
-                schedule.includes(classId)
-                  ? "Remover de minhas disciplinas"
-                  : "Adicionar em minhas disciplinas"
-              }
-              onPress={() => toggleClassOnSchedule(classId)}
-            />
-          </VStack>
-        </Modal.Body>
-      </Modal.Content>
-    </Modal>
+            </VStack>
+          </Box>
+        </Box>
+      </Modal>
+    </Box>
   );
 };

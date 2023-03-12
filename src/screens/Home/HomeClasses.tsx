@@ -1,12 +1,9 @@
 import { useMemo, useState } from "react";
-import {
-  useDisclose,
-} from "native-base";
 import { ClassModalDetails, HStack, Typography, VStack } from "@/components";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { IClass } from "@/dtos";
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
 import { getUniqueValues } from "@/utils/array";
 import { replaceSpecialCharacters } from "@/utils/string";
 import { useTheme } from "@shopify/restyle";
@@ -22,8 +19,8 @@ export const HomeClasses = ({
   nameFilter,
 }: HomeClassesProps) => {
   const [selectedClass, setSelectedClass] = useState("");
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
 
-  const { isOpen, onClose, onOpen } = useDisclose();
   const { data: classes, isLoading: isLoadingClasses } = useClasses();
 
   const filteredClasses = useMemo(() => {
@@ -63,39 +60,39 @@ export const HomeClasses = ({
   }, [classes, nameFilter, buildingFilter]);
 
   const handleClassPress = (classId: string) => {
-    console.log('press 1')
     setSelectedClass(classId);
-    console.log('press 2')
-    onOpen();
-    console.log('press 3')
+    setIsClassModalOpen(true);
   };
 
   return (
     <>
       <ClassModalDetails
         classId={selectedClass}
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isClassModalOpen}
+        onClose={() => setIsClassModalOpen(false)}
       />
       <VStack>
         <HStack flex={1} justifyContent={"space-between"} marginBottom={'xs'}>
           <Typography color="grayTwo" fontWeight={"bold"}>
             Aulas
           </Typography>
-          <Typography color="grayTwo">{filteredClasses.length}</Typography>
+          <Typography color="grayTwo">{filteredClasses?.length}</Typography>
         </HStack>
 
         {/* Todo: return skeleton loading */}
         {isLoadingClasses && <ActivityIndicator />}
 
         {!isLoadingClasses &&
-          filteredClasses.map((sclass, index) => (
+        <FlatList 
+          data={filteredClasses}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+          renderItem={({ item, index }) => (
             <HomeClassCard
-              sclass={sclass}
-              key={`${sclass.id}${sclass.schedule[0].id}${index}`}
+              sclass={item}
               handleClassPress={handleClassPress}
             />
-          ))}
+          )}
+        />}
       </VStack>
     </>
   );
@@ -132,7 +129,7 @@ export const HomeClassCard = ({
         alignItems="center"
         backgroundColor={"grayFive"}
         borderRadius={8}
-        padding="xs"
+        padding="m"
         marginBottom="xs"
       >
         <VStack flex={1} marginRight={'xs'}>
