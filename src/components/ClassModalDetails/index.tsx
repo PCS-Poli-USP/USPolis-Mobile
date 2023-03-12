@@ -57,14 +57,15 @@ export const ClassModalDetails = ({
         onBackdropPress={onClose}
         onSwipeComplete={onClose}
         coverScreen
+        style={{ margin: 0 }}
       >
-        <Box width={'100%'} borderRadius={8} backgroundColor="graySeven">
+        <Box width={'100%'} borderTopLeftRadius={8} borderTopRightRadius={8} backgroundColor="graySeven" position="absolute" bottom={0} paddingHorizontal={'s'} paddingVertical="l">
           <Box backgroundColor="graySeven" borderBottomColor="transparent">
-            <VStack alignItems="center" gap="s">
-              <Typography variant={"heading"} color="white" fontSize={14}>
+            <VStack alignItems="center" marginBottom={'m'}>
+              <Typography variant={"heading"} color="white" fontSize={20} marginBottom={'s'}>
                 {sclass.subject_code}
               </Typography>
-              <Typography variant={"heading"} color="white" fontSize={14}>
+              <Typography variant={"heading"} color="white" fontSize={18} marginBottom={'s'}>
                 {sclass.subject_name}
               </Typography>
               <Typography color="grayTwo" fontSize={14}>
@@ -73,11 +74,11 @@ export const ClassModalDetails = ({
             </VStack>
           </Box>
           <Box backgroundColor="graySeven" paddingHorizontal={'m'} paddingBottom={'s'}>
-            <VStack gap="s" backgroundColor="graySeven">
+            <VStack backgroundColor="graySeven" marginBottom="m">
               {sclass.schedule
                 .sort(sortEventsByScheduleTime)
                 .map((event, index) => (
-                  <Box key={`${event.id}-${index}`}>
+                  <Box key={`${event.id}-${index}`} marginBottom={'s'}>
                     <Typography variant={"heading"} color="white" mb={'xs'}>
                       {event.week_day}, das {event.start_time} às {event.end_time}
                     </Typography>
@@ -111,12 +112,12 @@ export const ClassModalDetails = ({
                   </Box>
                 ))}
               {!!sclass.professor && (
-                <Box>
+                <Box marginBottom="m">
                   <Typography color="grayTwo">Docente:</Typography>
                   <Typography color="white">{sclass.professor}</Typography>
                 </Box>
               )}
-              <Box>
+              <Box marginBottom="m">
                 <Box flexDirection="row" justifyContent="space-between">
                   <Box>
                     <Typography color="grayTwo">Início</Typography>

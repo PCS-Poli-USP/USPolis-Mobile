@@ -3,9 +3,8 @@ import { ClassModalDetails, HStack, Typography, VStack } from "@/components";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { IClass } from "@/dtos";
-import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { getUniqueValues } from "@/utils/array";
-import { replaceSpecialCharacters } from "@/utils/string";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
 import { getFilteredClasses } from "./utils";
@@ -19,9 +18,6 @@ export const HomeClasses = ({
   buildingFilter,
   nameFilter,
 }: HomeClassesProps) => {
-  const [selectedClass, setSelectedClass] = useState<IClass | null>(null);
-  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
-
   const { data: classes, isLoading: isLoadingClasses } = useClasses();
   const [filteredClasses, setFilteredClasses] = useState<IClass[]>([])
 
@@ -42,54 +38,39 @@ export const HomeClasses = ({
     }, 2)
   }, [classes, nameFilter, buildingFilter])
 
-  const handleClassPress = (sclass: IClass) => {
-    setSelectedClass(sclass);
-    setIsClassModalOpen(true);
-  };
-
   return (
-    <>
-      <ClassModalDetails
-        sclass={selectedClass}
-        isOpen={isClassModalOpen}
-        onClose={() => setIsClassModalOpen(false)}
-      />
-      <VStack>
-        <HStack flex={1} justifyContent={"space-between"} marginBottom={'xs'}>
-          <Typography color="grayTwo" fontWeight={"bold"}>
-            Aulas
-          </Typography>
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Typography color="grayTwo">{filteredClasses?.length}</Typography>
-          )}
-        </HStack>
+    <VStack>
+      <HStack flex={1} justifyContent={"space-between"} marginBottom={'xs'}>
+        <Typography color="grayTwo" fontWeight={"bold"}>
+          Aulas
+        </Typography>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Typography color="grayTwo">{filteredClasses?.length}</Typography>
+        )}
+      </HStack>
 
-        {/* Todo: return skeleton loading */}
-        {(isLoading || isLoadingClasses) && <ActivityIndicator />}
+      {/* Todo: return skeleton loading */}
+      {(isLoading || isLoadingClasses) && <ActivityIndicator />}
 
-        {!isLoadingClasses && !isLoading && 
-          filteredClasses.map((item, index) => (
-            <HomeClassCard
-              sclass={item}
-              key={`${item.id}-${index}`}
-              handleClassPress={handleClassPress}
-            />
-        ))}
-      </VStack>
-    </>
+      {!isLoadingClasses && !isLoading && 
+        filteredClasses.map((item, index) => (
+          <HomeClassCard
+            sclass={item}
+            key={`${item.id}-${index}`}
+          />
+      ))}
+    </VStack>
   );
 };
 
 interface HomeClassCardProps {
   sclass: IClass;
-  handleClassPress: (classId: string) => void;
 }
 
 export const HomeClassCard = ({
   sclass,
-  handleClassPress,
 }: HomeClassCardProps) => {
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const { colors } = useTheme<Theme>();

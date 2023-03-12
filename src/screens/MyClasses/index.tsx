@@ -8,9 +8,10 @@ import { useSchedule } from "@/hooks/useSchedule";
 import { scheduleFactory } from "./utils";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
+import { IClass } from "@/dtos";
 
 export const MyClasses = () => {
-  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedClass, setSelectedClass] = useState<IClass | undefined>();
   const [isClassModalOpen, setIsClassModalOpen] = useState(false)
 
   const { colors } = useTheme<Theme>();
@@ -21,19 +22,20 @@ export const MyClasses = () => {
   const classesGroupedByWeekday = scheduleFactory(schedule, classes);
 
   const onOpenModal = (classId: string) => {
-    setSelectedClass(classId);
+    const sclass = classes?.find((c) => c.id === classId)
+    setSelectedClass(sclass);
     setIsClassModalOpen(true);
   };
 
   return (
     <Box flex={1} backgroundColor="graySeven" paddingHorizontal="s" paddingTop={'m'} paddingBottom={'s'}>
-      <ClassModalDetails
-        classId={selectedClass}
-        isOpen={isClassModalOpen}
-        onClose={() => setIsClassModalOpen(false)}
-      />
       <Layout>
-        <VStack gap={'s'}>
+        <ClassModalDetails
+          sclass={selectedClass}
+          isOpen={isClassModalOpen}
+          onClose={() => setIsClassModalOpen(false)}
+        />
+        <VStack>
           {classesGroupedByWeekday.map((group) => (
             <DayClasses
               onOpenModal={onOpenModal}

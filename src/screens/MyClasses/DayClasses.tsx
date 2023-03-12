@@ -15,27 +15,28 @@ export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
   const weekdayAbbreviated = format(parsedWeekDay, "EEEEEE", { locale: ptBR });
 
   return (
-    <Box width="full" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
+    <Box height={'100%'} width="100%" flexDirection="row" justifyContent="space-between">
       <Typography
         color={
           parsedWeekDay.getDay() === new Date().getDay()
             ? "primary"
             : "grayTwo"
         }
-        fontSize={10}
+        fontSize={12}
       >
         {weekdayAbbreviated.toUpperCase()}.
       </Typography>
-      <VStack width="4/5" gap={'s'}>
+      <VStack width="80%" marginBottom={'s'}>
         {classesGroup.classes.map((sclass, index) => (
           <Pressable
             onPress={() => onOpenModal(sclass.class_id)}
             backgroundColor="grayFive"
             borderRadius={8}
-            padding={'s'}
+            marginBottom="s"
+            padding={'m'}
             key={index}
           >
-            <Typography variant="heading" color="white" fontSize={12} mb={'s'}>
+            <Typography variant="heading" color="white" fontSize={14} mb={'s'}>
               {sclass.class_subject_code} - {sclass.class_subject_name}
             </Typography>
             <Box flexDirection="row" justifyContent="space-between">
@@ -43,7 +44,7 @@ export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
                 {sclass.start_time} - {sclass.end_time}
               </Typography>
               <HStack gap={'s'}>
-                <Typography color="grayTwo">{sclass.building}</Typography>
+                <Typography color="grayTwo" marginRight={'s'}>{sclass.building}</Typography>
                 <Typography color="white">{sclass.classroom}</Typography>
               </HStack>
             </Box>
