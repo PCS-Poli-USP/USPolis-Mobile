@@ -1,11 +1,11 @@
 import { StatusBar } from 'react-native';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto'
-import { NativeBaseProvider } from 'native-base';
 import { Box, Loading } from '@/components/index';
 import { THEME } from '@/theme/index';
 import { Routes } from '@/routes';
 import { Contexts } from '@/contexts';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import Toast, { InfoToast, BaseToastProps } from 'react-native-toast-message';
 import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle'
 import { setupUseClasses } from '@/tests/mocks/setupUseClasses';
 
@@ -28,28 +28,46 @@ if (__DEV__) {
 
 const queryClient = new QueryClient()
 
+const toastConfig = {
+  info: (props: BaseToastProps) => (
+    <InfoToast
+      {...props}
+      style={{ borderLeftColor: '#408180' }}
+      text1Style={{
+        fontSize: 18,
+        fontWeight: "700",
+        fontFamily: 'Roboto'
+      }}
+      text2Style={{
+        fontSize: 14,
+        fontFamily: 'Roboto',
+        fontWeight: "400"
+      }}
+    />
+  ),
+};
+
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
 
   return (
     <QueryClientProvider client={queryClient}>
       <RestyleThemeProvider theme={RestyleTheme}>
-        {/* <NativeBaseProvider theme={THEME}> */}
-          <Contexts>
-            <StatusBar 
-              barStyle="light-content"
-              backgroundColor='transparent'
-              translucent
-            />
-            {fontsLoaded ? (
-              <Routes />
-            ) : (
-              <Box flex={1} alignItems="center" justifyContent="center">
-                <Loading />
-              </Box>
-            )}
-          </Contexts>
-        {/* </NativeBaseProvider> */}
+        <Contexts>
+          <StatusBar 
+            barStyle="light-content"
+            backgroundColor='transparent'
+            translucent
+          />
+          {fontsLoaded ? (
+            <Routes />
+          ) : (
+            <Box flex={1} alignItems="center" justifyContent="center">
+              <Loading />
+            </Box>
+          )}
+        </Contexts>
+        <Toast config={toastConfig}/>
       </RestyleThemeProvider>
     </QueryClientProvider>
   );

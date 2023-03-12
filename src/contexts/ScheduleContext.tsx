@@ -1,3 +1,4 @@
+import Toast from 'react-native-toast-message';
 import { useCallback, useEffect } from "react";
 import { createContext, useState } from "react";
 import { scheduleStorage } from "@/storage/schedule";
@@ -35,9 +36,21 @@ export const ScheduleContextProvider = ({
 
   const toggleClassOnSchedule = useCallback(
     (classId: string) => {
-      if (schedule.includes(classId))
+      if (schedule.includes(classId)) {
+        Toast.show({
+          type: 'info',
+          text1: 'Removida!',
+          text2: 'Disciplina removida do seu horário.'
+        });
         setSchedule((state) => state.filter((c) => c !== classId));
-      else setSchedule((state) => [...state, classId]);
+      } else {
+        Toast.show({
+          type: 'info',
+          text1: 'Adicionada!',
+          text2: 'Disciplina adicionada ao seu horário.'
+        });
+        setSchedule((state) => [...state, classId]);
+      }
     },
     [schedule]
   );
