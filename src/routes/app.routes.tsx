@@ -66,7 +66,7 @@ export const AppRoutes = () => {
           title: "Início",
         }}
       />
-      {/* <Screen
+      <Screen
         name="MyClasses"
         component={MyClasses}
         options={{
@@ -75,7 +75,7 @@ export const AppRoutes = () => {
           ),
           title: "Minhas Aulas",
         }}
-      /> */}
+      />
       <Screen
         name="Maps"
         component={Maps}

@@ -1,14 +1,7 @@
-import {
-  VStack,
-  IconButton,
-  Box,
-  useDisclose,
-  Text,
-} from "native-base";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 import { DayClasses } from "./DayClasses";
-import { Layout, ClassModalDetails } from "@/components";
+import { Layout, ClassModalDetails, Box, VStack, Typography, Pressable } from "@/components";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { useState } from "react";
 import { useSchedule } from "@/hooks/useSchedule";
@@ -18,9 +11,9 @@ import { Theme } from "@/theme/theme";
 
 export const MyClasses = () => {
   const [selectedClass, setSelectedClass] = useState("");
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false)
 
   const { colors } = useTheme<Theme>();
-  const { onOpen, isOpen, onClose } = useDisclose();
   const { data: classes } = useClasses();
   const { schedule } = useSchedule();
   const navigation = useNavigation();
@@ -29,18 +22,18 @@ export const MyClasses = () => {
 
   const onOpenModal = (classId: string) => {
     setSelectedClass(classId);
-    onOpen();
+    setIsClassModalOpen(true);
   };
 
   return (
-    <Box flex={1} bg="gray.700" px={5} pt={10} pb={5}>
+    <Box flex={1} backgroundColor="graySeven" paddingHorizontal="s" paddingTop={'m'} paddingBottom={'s'}>
       <ClassModalDetails
         classId={selectedClass}
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isClassModalOpen}
+        onClose={() => setIsClassModalOpen(false)}
       />
       <Layout>
-        <VStack space="8">
+        <VStack gap={'s'}>
           {classesGroupedByWeekday.map((group) => (
             <DayClasses
               onOpenModal={onOpenModal}
@@ -50,23 +43,27 @@ export const MyClasses = () => {
           ))}
         </VStack>
         {!classesGroupedByWeekday.length && (
-          <Text color="gray.300" fontSize="xl" textAlign="center" mt={8}>
+          <Typography color="grayThree" fontSize={14} textAlign="center" marginTop={'m'}>
             Nenhuma aula adicionada
-          </Text>
+          </Typography>
         )}
       </Layout>
-      <IconButton
+      <Pressable
         position="absolute"
         bottom={10}
         right={6}
-        size="lg"
-        variant="outline"
-        bgColor="gray.700"
-        borderColor="gray.300"
-        rounded="full"
-        icon={<FeatherIcons name="plus" color={colors.grayThree} size={25} />}
+        padding={'m'}
+        borderWidth={1}
+        backgroundColor="graySeven"
+        alignItems="center"
+        justifyContent="center"
+        borderColor="grayThree"
+        borderRadius={9999}
         onPress={() => navigation.navigate("Home" as never)}
-      />
+
+      >
+        <FeatherIcons name="plus" color={colors.grayThree} size={25} />
+      </Pressable>
     </Box>
   );
 };

@@ -8,27 +8,29 @@ export const Home = () => {
   const [nameFilter, setNameFilter] = useState("");
 
   return (
-    <VStack flex={1} backgroundColor="graySeven" paddingBottom={"m"}>
-      <VStack paddingHorizontal="l">
-        <Input
-          marginTop={"l"}
-          variation="secondary"
-          placeholder="Procure por suas aulas"
-          onChangeText={(text) => setNameFilter(text)}
-        />
-        <BuildingFilter
-          activeBuilding={selectedBuilding}
-          selectBuilding={(b: string) =>
-            selectedBuilding === b
-              ? setSelectedBuilding("")
-              : setSelectedBuilding(b)
-          }
-        />
-        <HomeClasses
-          buildingFilter={selectedBuilding}
-          nameFilter={nameFilter}
-        />
+    <Layout>
+      <VStack flex={1} backgroundColor="graySeven" paddingBottom={"m"}>
+        <VStack paddingHorizontal="l">
+          <Input
+            marginTop={"l"}
+            variation="secondary"
+            placeholder="Procure por suas aulas"
+            onChangeText={(text) => setNameFilter(text)}
+          />
+          <BuildingFilter
+            activeBuilding={selectedBuilding}
+            selectBuilding={(b: string) =>
+              selectedBuilding === b
+                ? setSelectedBuilding("")
+                : setSelectedBuilding(b)
+            }
+          />
+          <HomeClasses
+            buildingFilter={selectedBuilding}
+            nameFilter={nameFilter}
+          />
+        </VStack>
       </VStack>
-    </VStack>
+    </Layout>
   );
 };

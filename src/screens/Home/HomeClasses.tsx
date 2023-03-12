@@ -19,7 +19,7 @@ export const HomeClasses = ({
   buildingFilter,
   nameFilter,
 }: HomeClassesProps) => {
-  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedClass, setSelectedClass] = useState<IClass | null>(null);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
 
   const { data: classes, isLoading: isLoadingClasses } = useClasses();
@@ -42,15 +42,15 @@ export const HomeClasses = ({
     }, 2)
   }, [classes, nameFilter, buildingFilter])
 
-  const handleClassPress = (classId: string) => {
-    setSelectedClass(classId);
+  const handleClassPress = (sclass: IClass) => {
+    setSelectedClass(sclass);
     setIsClassModalOpen(true);
   };
 
   return (
     <>
       <ClassModalDetails
-        classId={selectedClass}
+        sclass={selectedClass}
         isOpen={isClassModalOpen}
         onClose={() => setIsClassModalOpen(false)}
       />
@@ -91,6 +91,7 @@ export const HomeClassCard = ({
   sclass,
   handleClassPress,
 }: HomeClassCardProps) => {
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const { colors } = useTheme<Theme>();
 
   const classRooms = useMemo(() => {
@@ -108,35 +109,42 @@ export const HomeClassCard = ({
   }, [sclass]);
 
   return (
-    <TouchableOpacity onPress={() => handleClassPress(sclass.id)}>
-      <HStack
-        alignItems="center"
-        backgroundColor={"grayFive"}
-        borderRadius={8}
-        padding="m"
-        marginBottom="s"
-      >
-        <VStack flex={1} marginRight={'xs'}>
-          <Typography
-            marginBottom={'xxs'}
-            fontSize={18}
-            color="white"
-            variant={"heading"}
-            fontWeight="bold"
-            numberOfLines={1}
-          >
-            {sclass.subject_code} - {sclass.subject_name}
-          </Typography>
+    <>
+      <TouchableOpacity onPress={() => setIsClassModalOpen(true)}>
+        <HStack
+          alignItems="center"
+          backgroundColor={"grayFive"}
+          borderRadius={8}
+          padding="m"
+          marginBottom="s"
+        >
+          <VStack flex={1} marginRight={'xs'}>
+            <Typography
+              marginBottom={'xxs'}
+              fontSize={18}
+              color="white"
+              variant={"heading"}
+              fontWeight="bold"
+              numberOfLines={1}
+            >
+              {sclass.subject_code} - {sclass.subject_name}
+            </Typography>
 
-          <Typography color="grayTwo" marginBottom={'xxs'} numberOfLines={2}>
-            Turma {sclass.class_code.slice(-2)} - {buildings}
-          </Typography>
-          <Typography color="grayOne" numberOfLines={2} variant="heading">
-            {classRooms}
-          </Typography>
-        </VStack>
-        <FeatherIcons name="chevron-right" color={colors.grayThree} size={24} />
-      </HStack>
-    </TouchableOpacity>
+            <Typography color="grayTwo" marginBottom={'xxs'} numberOfLines={2}>
+              Turma {sclass.class_code.slice(-2)} - {buildings}
+            </Typography>
+            <Typography color="grayOne" numberOfLines={2} variant="heading">
+              {classRooms}
+            </Typography>
+          </VStack>
+          <FeatherIcons name="chevron-right" color={colors.grayThree} size={24} />
+        </HStack>
+      </TouchableOpacity>
+      <ClassModalDetails
+        sclass={sclass}
+        isOpen={isClassModalOpen}
+        onClose={() => setIsClassModalOpen(false)}
+      />
+    </>
   );
 };

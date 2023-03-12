@@ -7,29 +7,26 @@ import { differenceInDays, format, parseISO } from "date-fns";
 import { TouchableOpacity } from "react-native";
 import { Button } from "../Button";
 import { sortEventsByScheduleTime } from "./utils";
-import { Building } from "../../dtos/classes";
+import { Building, IClass } from "../../dtos/classes";
 import { Theme } from "@/theme/theme";
 import { useTheme } from "@shopify/restyle";
 import Modal from 'react-native-modal';
 import { Box, HStack, Typography, VStack } from "../ui";
 
 interface ClassModalDetailsProps {
-  classId: string;
+  sclass?: IClass | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const ClassModalDetails = ({
-  classId,
+  sclass,
   isOpen,
   onClose,
 }: ClassModalDetailsProps) => {
   const navigation = useNavigation<NavigationProp<AppRoutesType>>();
   const { colors } = useTheme<Theme>();
-  const { data: classes } = useClasses();
   const { schedule, toggleClassOnSchedule } = useSchedule();
-
-  const sclass = classes?.find((c) => c.id === classId);
 
   if (!sclass) return <></>;
 
@@ -146,11 +143,11 @@ export const ClassModalDetails = ({
               <Button
                 variant={"outlined"}
                 title={
-                  schedule.includes(classId)
+                  schedule.includes(sclass.id)
                     ? "Remover de minhas disciplinas"
                     : "Adicionar em minhas disciplinas"
                 }
-                onPress={() => toggleClassOnSchedule(classId)}
+                onPress={() => toggleClassOnSchedule(sclass.id)}
               />
             </VStack>
           </Box>

@@ -1,5 +1,5 @@
+import { Box, HStack, Pressable, Typography, VStack } from "@/components";
 import { ClassesGroupedByWeekday } from "@/dtos/classes";
-import { Flex, Text, HStack, VStack, Pressable, Heading } from "native-base";
 import { parse, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 interface DayClassesProps {
@@ -15,41 +15,41 @@ export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
   const weekdayAbbreviated = format(parsedWeekDay, "EEEEEE", { locale: ptBR });
 
   return (
-    <Flex width="full" direction="row" justify="space-between" align="flex-start">
-      <Text
+    <Box width="full" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
+      <Typography
         color={
           parsedWeekDay.getDay() === new Date().getDay()
-            ? "green.500"
-            : "gray.200"
+            ? "primary"
+            : "grayTwo"
         }
-        fontSize="sm"
+        fontSize={10}
       >
         {weekdayAbbreviated.toUpperCase()}.
-      </Text>
-      <VStack width="4/5" space="2.5">
+      </Typography>
+      <VStack width="4/5" gap={'s'}>
         {classesGroup.classes.map((sclass, index) => (
           <Pressable
             onPress={() => onOpenModal(sclass.class_id)}
-            bgColor="gray.500"
-            rounded="lg"
-            p="5"
+            backgroundColor="grayFive"
+            borderRadius={8}
+            padding={'s'}
             key={index}
           >
-            <Heading color="white" fontSize="md" mb="4">
+            <Typography variant="heading" color="white" fontSize={12} mb={'s'}>
               {sclass.class_subject_code} - {sclass.class_subject_name}
-            </Heading>
-            <Flex direction="row" justify="space-between">
-              <Text color="gray.200">
+            </Typography>
+            <Box flexDirection="row" justifyContent="space-between">
+              <Typography color="grayTwo">
                 {sclass.start_time} - {sclass.end_time}
-              </Text>
-              <HStack space="2.5">
-                <Text color="gray.200">{sclass.building}</Text>
-                <Text color="white">{sclass.classroom}</Text>
+              </Typography>
+              <HStack gap={'s'}>
+                <Typography color="grayTwo">{sclass.building}</Typography>
+                <Typography color="white">{sclass.classroom}</Typography>
               </HStack>
-            </Flex>
+            </Box>
           </Pressable>
         ))}
       </VStack>
-    </Flex>
+    </Box>
   );
 };

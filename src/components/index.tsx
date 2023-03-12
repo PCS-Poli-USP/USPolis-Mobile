@@ -6,7 +6,7 @@ import { IconButton } from "./IconButton";
 import { Layout } from "./Layout";
 import { BuildingFilter } from "./BuildingFilter";
 import { ClassModalDetails } from "./ClassModalDetails";
-import { Box, HStack, Typography, VStack } from "./ui";
+import { Box, HStack, Typography, VStack, Pressable } from "./ui";
 
 export {
   BuildingFilter,
@@ -21,4 +21,5 @@ export {
   HStack,
   Typography,
   VStack,
+  Pressable,
 };

@@ -1,3 +1,4 @@
+import { Pressable } from './Pressable'
 import { Box } from './Box'
 import { HStack } from './HStack'
 import { Typography } from './Typography'
@@ -7,5 +8,6 @@ export {
   Box,
   HStack,
   Typography,
-  VStack
+  VStack,
+  Pressable
 }
