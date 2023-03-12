@@ -5,11 +5,15 @@ import { Layout, TextArea, Input, Button, VStack, Typography } from "@/component
 import { useState } from "react";
 import { IComment } from "@/dtos";
 import api from "@/services/api";
+import { Theme } from "@/theme/theme";
+import { useTheme } from '@shopify/restyle';
 
 export const About = () => {
   const [comment, setComment] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { colors } = useTheme<Theme>();
 
   const handleSendComment = async () => {
     setIsLoading(true);
@@ -73,8 +77,11 @@ export const About = () => {
           marginBottom="m"
           variation="secondary"
           placeholder="Deixe seu comentário"
+          placeholderTextColor={colors.grayThree}
           value={comment}
           onChangeText={(text) => setComment(text)}
+          textAlignVertical="top"
+          paddingTop="s"
         />
         <Typography color="grayTwo" variant="heading" fontSize={16}>
           Seu email (opcional)

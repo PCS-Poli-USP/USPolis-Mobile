@@ -1,4 +1,3 @@
-import { useClasses } from "@/hooks/react-query/useClasses";
 import { useSchedule } from "@/hooks/useSchedule";
 import { AppRoutesType } from "@/routes/app.routes";
 import FeatherIcons from "@expo/vector-icons/Feather";
@@ -53,6 +52,7 @@ export const ClassModalDetails = ({
       <Modal
         isVisible={isOpen}
         backdropColor={colors.grayOne}
+        backdropOpacity={0.2}
         swipeDirection={'down'}
         onBackdropPress={onClose}
         onSwipeComplete={onClose}
