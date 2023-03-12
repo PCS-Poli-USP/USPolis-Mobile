@@ -9,6 +9,7 @@ import { scheduleFactory } from "./utils";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
 import { IClass } from "@/dtos";
+import { ClassesGroupedByWeekday } from "@/dtos/classes";
 
 export const MyClasses = () => {
   const [selectedClass, setSelectedClass] = useState<IClass | undefined>();
@@ -35,8 +36,8 @@ export const MyClasses = () => {
           isOpen={isClassModalOpen}
           onClose={() => setIsClassModalOpen(false)}
         />
-        <VStack>
-          {classesGroupedByWeekday.map((group) => (
+        <VStack height={"100%"}>
+          {classesGroupedByWeekday.map((group: ClassesGroupedByWeekday) => (
             <DayClasses
               onOpenModal={onOpenModal}
               key={group.week_day}
@@ -62,7 +63,6 @@ export const MyClasses = () => {
         borderColor="grayThree"
         borderRadius={9999}
         onPress={() => navigation.navigate("Home" as never)}
-
       >
         <FeatherIcons name="plus" color={colors.grayThree} size={25} />
       </Pressable>

@@ -3,7 +3,7 @@ import { ClassModalDetails, HStack, Typography, VStack } from "@/components";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { IClass } from "@/dtos";
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Pressable } from "react-native";
 import { getUniqueValues } from "@/utils/array";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
@@ -91,7 +91,7 @@ export const HomeClassCard = ({
 
   return (
     <>
-      <TouchableOpacity onPress={() => setIsClassModalOpen(true)}>
+      <Pressable onPress={() => setIsClassModalOpen(true)}>
         <HStack
           alignItems="center"
           backgroundColor={"grayFive"}
@@ -120,7 +120,7 @@ export const HomeClassCard = ({
           </VStack>
           <FeatherIcons name="chevron-right" color={colors.grayThree} size={24} />
         </HStack>
-      </TouchableOpacity>
+      </Pressable>
       <ClassModalDetails
         sclass={sclass}
         isOpen={isClassModalOpen}

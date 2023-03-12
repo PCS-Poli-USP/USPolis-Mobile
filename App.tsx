@@ -1,13 +1,11 @@
 import { StatusBar } from 'react-native';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto'
 import { Box, Loading } from '@/components/index';
-import { THEME } from '@/theme/index';
 import { Routes } from '@/routes';
 import { Contexts } from '@/contexts';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Toast, { InfoToast, BaseToastProps } from 'react-native-toast-message';
 import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle'
-import { setupUseClasses } from '@/tests/mocks/setupUseClasses';
 
 import RestyleTheme from '@/theme/theme'
 

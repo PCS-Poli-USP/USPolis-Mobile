@@ -1,17 +1,15 @@
 import { Theme } from "@/theme/theme";
 import { createBox } from "@shopify/restyle";
-import { TouchableOpacityProps, TouchableOpacity } from "react-native";
-import { Typography } from "../ui";
-import { Loading } from "../Loading/index";
+import { PressableProps, Pressable as NativePressable } from "react-native";
 
 type ButtonVariantType = "outlined" | "solid";
 
-type ButtonProps = TouchableOpacityProps & {
+type ButtonProps = PressableProps & {
   icon: React.ReactNode;
   variant?: ButtonVariantType;
 };
 
-const Pressable = createBox<Theme, TouchableOpacityProps>(TouchableOpacity);
+const Pressable = createBox<Theme, PressableProps>(NativePressable);
 
 export const IconButton = ({
   icon,

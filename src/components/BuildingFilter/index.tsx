@@ -3,8 +3,8 @@ import { Theme } from "@/theme/theme";
 import { createBox } from "@shopify/restyle";
 import {
   FlatList,
-  TouchableOpacity,
-  TouchableOpacityProps,
+  Pressable as NativePressable,
+  PressableProps,
 } from "react-native";
 import { Box, Typography } from "../ui";
 
@@ -23,7 +23,7 @@ const buildings: BuildingType[] = [
   "Mecânica",
 ];
 
-const Pressable = createBox<Theme, TouchableOpacityProps>(TouchableOpacity);
+const Pressable = createBox<Theme, PressableProps>(NativePressable);
 
 export const BuildingFilter = ({
   activeBuilding,

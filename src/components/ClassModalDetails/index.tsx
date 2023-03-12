@@ -3,7 +3,7 @@ import { AppRoutesType } from "@/routes/app.routes";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { differenceInDays, format, parseISO } from "date-fns";
-import { TouchableOpacity } from "react-native";
+import { Pressable } from "react-native";
 import { Button } from "../Button";
 import { sortEventsByScheduleTime } from "./utils";
 import { Building, IClass } from "../../dtos/classes";
@@ -82,7 +82,7 @@ export const ClassModalDetails = ({
                     <Typography variant={"heading"} color="white" mb={'xs'}>
                       {event.week_day}, das {event.start_time} às {event.end_time}
                     </Typography>
-                    <TouchableOpacity
+                    <Pressable
                       onPress={() => navigateToMap(event.building, event.floor)}
                     >
                       <Box
@@ -108,7 +108,7 @@ export const ClassModalDetails = ({
                           />
                         </HStack>
                       </Box>
-                    </TouchableOpacity>
+                    </Pressable>
                   </Box>
                 ))}
               {!!sclass.professor && (
