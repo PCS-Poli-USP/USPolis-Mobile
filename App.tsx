@@ -6,7 +6,10 @@ import { THEME } from '@/theme/index';
 import { Routes } from '@/routes';
 import { Contexts } from '@/contexts';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle'
 import { setupUseClasses } from '@/tests/mocks/setupUseClasses';
+
+import RestyleTheme from '@/theme/theme'
 
 if (__DEV__) {
   /**
@@ -30,22 +33,24 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NativeBaseProvider theme={THEME}>
-        <Contexts>
-          <StatusBar 
-            barStyle="light-content"
-            backgroundColor='transparent'
-            translucent
-          />
-          {fontsLoaded ? (
-            <Routes />
-          ) : (
-            <Center flex={1}>
-              <Loading />
-            </Center>
-          )}
-        </Contexts>
-      </NativeBaseProvider>
+      <RestyleThemeProvider theme={RestyleTheme}>
+        <NativeBaseProvider theme={THEME}>
+          <Contexts>
+            <StatusBar 
+              barStyle="light-content"
+              backgroundColor='transparent'
+              translucent
+            />
+            {fontsLoaded ? (
+              <Routes />
+            ) : (
+              <Center flex={1}>
+                <Loading />
+              </Center>
+            )}
+          </Contexts>
+        </NativeBaseProvider>
+      </RestyleThemeProvider>
     </QueryClientProvider>
   );
 }

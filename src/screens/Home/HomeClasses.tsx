@@ -1,19 +1,16 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import {
-  HStack,
-  VStack,
-  Text,
-  Heading,
-  useTheme,
   useDisclose,
 } from "native-base";
+import { ClassModalDetails, HStack, Typography, VStack } from "@/components";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useClasses } from "@/hooks/react-query/useClasses";
 import { IClass } from "@/dtos";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { getUniqueValues } from "@/utils/array";
-import { ClassModalDetails } from "@/components";
 import { replaceSpecialCharacters } from "@/utils/string";
+import { useTheme } from "@shopify/restyle";
+import { Theme } from "@/theme/theme";
 
 interface HomeClassesProps {
   buildingFilter: string;
@@ -66,8 +63,11 @@ export const HomeClasses = ({
   }, [classes, nameFilter, buildingFilter]);
 
   const handleClassPress = (classId: string) => {
+    console.log('press 1')
     setSelectedClass(classId);
+    console.log('press 2')
     onOpen();
+    console.log('press 3')
   };
 
   return (
@@ -78,21 +78,21 @@ export const HomeClasses = ({
         onClose={onClose}
       />
       <VStack>
-        <HStack flex={1} justifyContent={"space-between"} mb={4}>
-          <Text color="gray.200" fontWeight={"bold"}>
+        <HStack flex={1} justifyContent={"space-between"} marginBottom={'xs'}>
+          <Typography color="grayTwo" fontWeight={"bold"}>
             Aulas
-          </Text>
-          <Text color="gray.200">{filteredClasses.length}</Text>
+          </Typography>
+          <Typography color="grayTwo">{filteredClasses.length}</Typography>
         </HStack>
 
         {/* Todo: return skeleton loading */}
         {isLoadingClasses && <ActivityIndicator />}
 
         {!isLoadingClasses &&
-          filteredClasses.map((sclass) => (
+          filteredClasses.map((sclass, index) => (
             <HomeClassCard
               sclass={sclass}
-              key={`${sclass.id}${sclass.schedule[0].id}`}
+              key={`${sclass.id}${sclass.schedule[0].id}${index}`}
               handleClassPress={handleClassPress}
             />
           ))}
@@ -110,7 +110,7 @@ export const HomeClassCard = ({
   sclass,
   handleClassPress,
 }: HomeClassCardProps) => {
-  const { colors } = useTheme();
+  const { colors } = useTheme<Theme>();
 
   const classRooms = useMemo(() => {
     const classes = sclass.schedule.map((s) => s.classroom);
@@ -130,32 +130,31 @@ export const HomeClassCard = ({
     <TouchableOpacity onPress={() => handleClassPress(sclass.id)}>
       <HStack
         alignItems="center"
-        bg="gray.500"
-        rounded="md"
-        px={4}
-        py={4}
-        mb={3}
+        backgroundColor={"grayFive"}
+        borderRadius={8}
+        padding="xs"
+        marginBottom="xs"
       >
-        <VStack flex={1} mr={3}>
-          <Heading
-            mb={1}
-            fontSize="lg"
+        <VStack flex={1} marginRight={'xs'}>
+          <Typography
+            marginBottom={'xxs'}
+            fontSize={18}
             color="white"
-            fontFamily={"heading"}
+            variant={"heading"}
             fontWeight="bold"
             numberOfLines={1}
           >
             {sclass.subject_code} - {sclass.subject_name}
-          </Heading>
+          </Typography>
 
-          <Text color="gray.200" mb={1} numberOfLines={2}>
+          <Typography color="grayTwo" marginBottom={'xxs'} numberOfLines={2}>
             Turma {sclass.class_code.slice(-2)} - {buildings}
-          </Text>
-          <Text color="gray.100" numberOfLines={2} fontFamily={"heading"}>
+          </Typography>
+          <Typography color="grayOne" numberOfLines={2} variant="heading">
             {classRooms}
-          </Text>
+          </Typography>
         </VStack>
-        <FeatherIcons name="chevron-right" color={colors.gray[300]} size={24} />
+        <FeatherIcons name="chevron-right" color={colors.grayThree} size={24} />
       </HStack>
     </TouchableOpacity>
   );

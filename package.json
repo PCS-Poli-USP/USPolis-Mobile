@@ -16,6 +16,7 @@
     "@react-navigation/bottom-tabs": "^6.5.3",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
+    "@shopify/restyle": "^2.4.1",
     "axios": "^1.2.3",
     "axios-mock-adapter": "^1.21.2",
     "date-fns": "^2.29.3",
