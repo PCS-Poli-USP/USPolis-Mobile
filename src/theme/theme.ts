@@ -1,4 +1,4 @@
-import { createTheme } from '@shopify/restyle';
+import { createTheme } from "@shopify/restyle";
 
 const palette = {
   colors: {
@@ -52,14 +52,14 @@ const theme = createTheme({
     graySeven: palette.colors.gray[700],
     white: palette.colors.white,
     red: palette.colors.red[500],
-    transparent: 'transparent',
+    transparent: "transparent",
   },
   textVariants: {
     heading: {
-      fontFamily: 'Roboto_700Bold',
+      fontFamily: "Roboto_700Bold",
     },
     defaults: {
-      fontFamily: 'Roboto_400Regular',
+      fontFamily: "Roboto_400Regular",
     },
   },
   fontSizes: {
@@ -78,7 +78,7 @@ const theme = createTheme({
     m: 16,
     l: 24,
     xl: 40,
-    auto: 'auto',
+    auto: "auto",
   },
 });
 

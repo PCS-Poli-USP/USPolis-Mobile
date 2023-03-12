@@ -48,7 +48,6 @@ export const AppRoutes = () => {
           backgroundColor: colors.graySix,
           shadowColor: "transparent",
           height: Platform.OS === "ios" ? 148 : 120,
-          
         },
         headerTitleStyle: {
           color: "white",
@@ -76,8 +75,8 @@ export const AppRoutes = () => {
           ),
           title: "Minhas Aulas",
         }}
-      /> */}
-      {/* <Screen
+      />
+      <Screen
         name="Maps"
         component={Maps}
         options={{
@@ -86,7 +85,7 @@ export const AppRoutes = () => {
           ),
           title: "Mapa dos Prédios da POLI",
         }}
-      />
+      /> */}
       <Screen
         name="About"
         component={About}
@@ -96,7 +95,7 @@ export const AppRoutes = () => {
           ),
           title: "Sobre o USPolis",
         }}
-      /> */}
+      />
     </Navigator>
   );
 };
