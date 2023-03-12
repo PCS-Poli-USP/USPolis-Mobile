@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ClassModalDetails, HStack, Typography, VStack } from "@/components";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { useClasses } from "@/hooks/react-query/useClasses";
@@ -8,6 +8,7 @@ import { getUniqueValues } from "@/utils/array";
 import { replaceSpecialCharacters } from "@/utils/string";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
+import { getFilteredClasses } from "./utils";
 
 interface HomeClassesProps {
   buildingFilter: string;
@@ -22,42 +23,24 @@ export const HomeClasses = ({
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
 
   const { data: classes, isLoading: isLoadingClasses } = useClasses();
+  const [filteredClasses, setFilteredClasses] = useState<IClass[]>([])
 
-  const filteredClasses = useMemo(() => {
-    if (!classes) return [];
+  const [isLoading, setIsLoading] = useState(false)
 
-    let classesFiltered = [...classes];
-    if (nameFilter) {
-      classesFiltered = classesFiltered?.filter(
-        (c) =>
-          replaceSpecialCharacters(c.subject_name.toLowerCase()).includes(
-            replaceSpecialCharacters(nameFilter.toLowerCase())
-          ) ||
-          replaceSpecialCharacters((c.professor || "").toLowerCase()).includes(
-            replaceSpecialCharacters(nameFilter.toLowerCase())
-          ) ||
-          replaceSpecialCharacters(c.subject_code.toLowerCase()).includes(
-            replaceSpecialCharacters(nameFilter.toLowerCase())
-          )
-      );
-    }
+  useEffect(() => {
+    setIsLoading(true)
 
-    if (buildingFilter) {
-      classesFiltered = classesFiltered?.filter((c) => {
-        const classesInBuilding = c.schedule.filter(
-          (s) => s.building === buildingFilter
-        );
-        return !!classesInBuilding.length;
-      });
-    }
-
-    return classesFiltered.sort((a, b) => {
-      const aDate = new Date(a.start_period);
-      const bDate = new Date(b.start_period);
-
-      return aDate.getTime() - bDate.getTime();
-    });
-  }, [classes, nameFilter, buildingFilter]);
+    setTimeout(() => {
+      const filteredClasses = getFilteredClasses({
+        classes: classes || [],
+        buildingFilter,
+        nameFilter: nameFilter || '',
+      })
+  
+      setFilteredClasses(filteredClasses)
+      setIsLoading(false)
+    }, 2)
+  }, [classes, nameFilter, buildingFilter])
 
   const handleClassPress = (classId: string) => {
     setSelectedClass(classId);
@@ -76,23 +59,24 @@ export const HomeClasses = ({
           <Typography color="grayTwo" fontWeight={"bold"}>
             Aulas
           </Typography>
-          <Typography color="grayTwo">{filteredClasses?.length}</Typography>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Typography color="grayTwo">{filteredClasses?.length}</Typography>
+          )}
         </HStack>
 
         {/* Todo: return skeleton loading */}
-        {isLoadingClasses && <ActivityIndicator />}
+        {(isLoading || isLoadingClasses) && <ActivityIndicator />}
 
-        {!isLoadingClasses &&
-        <FlatList 
-          data={filteredClasses}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
-          renderItem={({ item, index }) => (
+        {!isLoadingClasses && !isLoading && 
+          filteredClasses.map((item, index) => (
             <HomeClassCard
               sclass={item}
+              key={`${item.id}-${index}`}
               handleClassPress={handleClassPress}
             />
-          )}
-        />}
+        ))}
       </VStack>
     </>
   );
@@ -130,7 +114,7 @@ export const HomeClassCard = ({
         backgroundColor={"grayFive"}
         borderRadius={8}
         padding="m"
-        marginBottom="xs"
+        marginBottom="s"
       >
         <VStack flex={1} marginRight={'xs'}>
           <Typography

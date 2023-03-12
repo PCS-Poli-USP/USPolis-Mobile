@@ -9,9 +9,9 @@ export const Home = () => {
 
   return (
     <VStack flex={1} backgroundColor="graySeven" paddingBottom={"m"}>
-      <VStack paddingHorizontal="m">
+      <VStack paddingHorizontal="l">
         <Input
-          marginTop={"s"}
+          marginTop={"l"}
           variation="secondary"
           placeholder="Procure por suas aulas"
           onChangeText={(text) => setNameFilter(text)}

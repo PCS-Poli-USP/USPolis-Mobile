@@ -30,7 +30,7 @@ export const BuildingFilter = ({
   selectBuilding,
 }: BuildingFilterProps) => {
   return (
-    <Box height={20} my={"l"}>
+    <Box  my={"l"}>
       <FlatList
         horizontal
         data={buildings}
@@ -58,9 +58,10 @@ const Building = ({ name, isActive, handleSelectBuilding }: BuildingProps) => {
   return (
     <Pressable
       backgroundColor="graySix"
-      borderRadius={16}
+      padding={'s'}
       borderColor={isActive ? "primary" : "transparent"}
       borderWidth={isActive ? 1 : 0}
+      borderRadius={4}
       mr={"xs"}
       alignItems="center"
       justifyContent="center"
