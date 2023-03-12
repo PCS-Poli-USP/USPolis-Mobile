@@ -1,17 +1,15 @@
-import { Center, Heading, VStack } from "native-base";
+import { Box, Typography, VStack } from "@/components";
 
 export const Profile = () => {
   return (
-    <VStack flex={1} bg='gray.700' px={8} pb={16}>
-      <Center my={24}>
-        <Heading color='gray.100' fontSize='xxxl' ml={4} fontFamily='heading'>USPolis</Heading>
-      </Center>
+    <VStack flex={1} backgroundColor='graySeven' paddingHorizontal="m" paddingBottom={'l'}>
+      <Box marginVertical="l" alignItems="center" justifyContent="center">
+        <Typography variant={'heading'} color='grayOne' fontSize={24} ml={'s'}>USPolis</Typography>
+      </Box>
 
-      <Center>
-        <Heading color='gray.100' fontSize='xl' ml={4} fontFamily='heading' mb={4}>Perfil</Heading>
-      </Center>
-
-      <Center></Center>
+      <Box marginVertical="l" alignItems="center" justifyContent="center">
+        <Typography variant={'heading'} color='grayOne' fontSize={18} ml={'s'}>Perfil</Typography>
+      </Box>
     </VStack>
   );
 };
