@@ -1,5 +1,12 @@
-import { Box, Center, FlatList, Pressable, Text } from "native-base";
 import { Building as BuildingType } from "@/dtos/classes";
+import { Theme } from "@/theme/theme";
+import { createBox } from "@shopify/restyle";
+import {
+  FlatList,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
+import { Box, Typography } from "../ui";
 
 interface BuildingFilterProps {
   activeBuilding: string;
@@ -16,13 +23,14 @@ const buildings: BuildingType[] = [
   "Mecânica",
 ];
 
+const Pressable = createBox<Theme, TouchableOpacityProps>(TouchableOpacity);
+
 export const BuildingFilter = ({
   activeBuilding,
   selectBuilding,
 }: BuildingFilterProps) => {
-
   return (
-    <Box h={10} my={10}>
+    <Box  my={"l"}>
       <FlatList
         horizontal
         data={buildings}
@@ -49,27 +57,25 @@ interface BuildingProps {
 const Building = ({ name, isActive, handleSelectBuilding }: BuildingProps) => {
   return (
     <Pressable
-      bg="gray.600"
-      rounded="md"
-      mr={3}
+      backgroundColor="graySix"
+      padding={'s'}
+      borderColor={isActive ? "primary" : "transparent"}
+      borderWidth={isActive ? 1 : 0}
+      borderRadius={4}
+      mr={"xs"}
       alignItems="center"
       justifyContent="center"
-      _pressed={{
-        borderColor: "green.500",
-        borderWidth: 1,
-      }}
-      isPressed={isActive}
       onPress={handleSelectBuilding}
     >
-      <Text
-        color={isActive ? "green.500" : "gray.200"}
-        fontSize="xs"
+      <Typography
+        color={isActive ? "primary" : "grayTwo"}
+        fontSize={12}
         fontWeight="bold"
-        px={8}
+        px={"m"}
         textTransform={"uppercase"}
       >
         {name}
-      </Text>
+      </Typography>
     </Pressable>
   );
 };

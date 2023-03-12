@@ -1,7 +1,7 @@
-import { Spinner } from "native-base"
+import { ActivityIndicator } from "react-native"
 
 export const Loading = () => {
   return (
-    <Spinner />
+    <ActivityIndicator />
   )
 }

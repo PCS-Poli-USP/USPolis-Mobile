@@ -1,9 +1,5 @@
-import { Center, Heading, VStack } from "native-base";
-import { useClasses } from "@/hooks/react-query/useClasses";
+import { Layout, BuildingFilter, Input, VStack } from "@/components";
 
-import { Layout, BuildingFilter, Input } from "@/components";
-
-import { HomeHeader } from "./HomeHeader";
 import { useState } from "react";
 import { HomeClasses } from "./HomeClasses";
 
@@ -13,21 +9,26 @@ export const Home = () => {
 
   return (
     <Layout>
-      <VStack flex={1} bg="gray.700" pb={16}>
-        {/* <HomeHeader /> */}
-
-        <VStack px={8}>
+      <VStack flex={1} backgroundColor="graySeven" paddingBottom={"m"}>
+        <VStack paddingHorizontal="l">
           <Input
-            mt={10}
+            marginTop={"l"}
             variation="secondary"
             placeholder="Procure por suas aulas"
             onChangeText={(text) => setNameFilter(text)}
           />
           <BuildingFilter
             activeBuilding={selectedBuilding}
-            selectBuilding={(b: string) => selectedBuilding === b ? setSelectedBuilding('') : setSelectedBuilding(b)}
+            selectBuilding={(b: string) =>
+              selectedBuilding === b
+                ? setSelectedBuilding("")
+                : setSelectedBuilding(b)
+            }
           />
-          <HomeClasses buildingFilter={selectedBuilding} nameFilter={nameFilter} />
+          <HomeClasses
+            buildingFilter={selectedBuilding}
+            nameFilter={nameFilter}
+          />
         </VStack>
       </VStack>
     </Layout>
