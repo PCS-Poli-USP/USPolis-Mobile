@@ -12,11 +12,16 @@
       "backgroundColor": "#29292E"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/b5f5a633-6123-4808-8db2-64f784c0380d"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "2",
+      "bundleIdentifier": "Lunadros.Uspolis"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,8 +36,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "4d7cbbbb-e19c-4e1e-8545-29fa9ad992d6"
+        "projectId": "b5f5a633-6123-4808-8db2-64f784c0380d"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
-  }
+  },
+  "owner": "jorgehabib"
 }
