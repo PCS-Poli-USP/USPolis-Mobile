@@ -1,4 +1,5 @@
 import { Layout, BuildingFilter, Input, VStack } from "@/components";
+import { logger } from "@/services/logger";
 
 import { useState } from "react";
 import { HomeClasses } from "./HomeClasses";
@@ -6,6 +7,15 @@ import { HomeClasses } from "./HomeClasses";
 export const Home = () => {
   const [selectedBuilding, setSelectedBuilding] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+
+  const selectBuilding = (b: string) => {
+    if (selectedBuilding === b) {
+      setSelectedBuilding("")
+    } else {
+      logger.logEvent('Edifício Selecionado', { building: b, screen: 'Home' })
+      setSelectedBuilding(b)
+    }
+  }
 
   return (
     <Layout>
@@ -16,14 +26,11 @@ export const Home = () => {
             variation="secondary"
             placeholder="Procure por suas aulas"
             onChangeText={(text) => setNameFilter(text)}
+            onBlur={() => logger.logEvent('Busca Realizada', { search: nameFilter, screen: 'Home' })}
           />
           <BuildingFilter
             activeBuilding={selectedBuilding}
-            selectBuilding={(b: string) =>
-              selectedBuilding === b
-                ? setSelectedBuilding("")
-                : setSelectedBuilding(b)
-            }
+            selectBuilding={selectBuilding}
           />
           <HomeClasses
             buildingFilter={selectedBuilding}

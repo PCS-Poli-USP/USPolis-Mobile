@@ -11,6 +11,7 @@ import { Theme } from "@/theme/theme";
 import { useTheme } from "@shopify/restyle";
 import Modal from 'react-native-modal';
 import { Box, HStack, Typography, VStack } from "../ui";
+import { logger } from "@/services/logger";
 
 interface ClassModalDetailsProps {
   sclass?: IClass | null;
@@ -26,6 +27,17 @@ export const ClassModalDetails = ({
   const navigation = useNavigation<NavigationProp<AppRoutesType>>();
   const { colors } = useTheme<Theme>();
   const { schedule, toggleClassOnSchedule } = useSchedule();
+
+  const handleToggleClassOnSchedule = (classId: string, className: string) => {
+    if (schedule.includes(classId)) {
+      logger.logEvent('Aula Removida no Cronograma', { class: className })
+    } else {
+      logger.logEvent('Aula Adicionada do Cronograma', { class: className })
+    }
+
+    toggleClassOnSchedule(classId)
+    logger.setUserProperty('classes_on_schedule', schedule.length.toString())
+  }
 
   if (!sclass) return <></>;
 
@@ -148,7 +160,7 @@ export const ClassModalDetails = ({
                     ? "Remover de minhas disciplinas"
                     : "Adicionar em minhas disciplinas"
                 }
-                onPress={() => toggleClassOnSchedule(sclass.id)}
+                onPress={() => handleToggleClassOnSchedule(sclass.id, sclass.subject_name)}
               />
             </VStack>
           </Box>

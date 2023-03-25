@@ -8,6 +8,8 @@ import Toast, { InfoToast, BaseToastProps } from 'react-native-toast-message';
 import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle'
 
 import RestyleTheme from '@/theme/theme'
+import { useEffect } from 'react';
+import { logger } from '@/services/logger';
 
 if (__DEV__) {
   /**
@@ -47,6 +49,10 @@ const toastConfig = {
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
+
+  useEffect(() => {
+    logger.logEvent('App inicializado')
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>

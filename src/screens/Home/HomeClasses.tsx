@@ -8,6 +8,7 @@ import { getUniqueValues } from "@/utils/array";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
 import { getFilteredClasses } from "./utils";
+import { logger } from "@/services/logger";
 
 interface HomeClassesProps {
   buildingFilter: string;
@@ -89,9 +90,14 @@ export const HomeClassCard = ({
     return classrooms.join(", ");
   }, [sclass]);
 
+  const selectClass = () => {
+    setIsClassModalOpen(true)
+    logger.logEvent('Aula Visualizada', { class: sclass.subject_name, screen: 'Home' })
+  }
+
   return (
     <>
-      <Pressable onPress={() => setIsClassModalOpen(true)}>
+      <Pressable onPress={selectClass}>
         <HStack
           alignItems="center"
           backgroundColor={"grayFive"}

@@ -1,6 +1,7 @@
-import { Box, BuildingFilter, IconButton, VStack } from "@/components";
+import { Box, BuildingFilter, IconButton, Typography, VStack } from "@/components";
 import { Building } from "@/dtos/classes";
 import { AppRoutesType } from "@/routes/app.routes";
+import { logger } from "@/services/logger";
 import { Theme } from "@/theme/theme";
 import FeatherIcons from "@expo/vector-icons/Feather";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
@@ -45,13 +46,32 @@ export const Maps = () => {
     setFloor(0);
   }, [activeBuilding]);
 
+  const currentFloor = useMemo(() => {
+    if (activeFloor === 0) {
+      return 'Térreo'
+    } else {
+      return `${activeFloor}.º andar`
+    }
+  }, [activeFloor])
+
+  const selectBuilding = (b: Building) => {
+    if (activeBuilding !== b) {
+      logger.logEvent('Edifício Selecionado', { building: b, screen: 'Mapas' })
+      setBuilding(b)
+    }
+  }
+
   return (
     <VStack bg="graySeven" paddingBottom="l" height="100%">
-      <Box>
+      <Box px={'m'}>
         <BuildingFilter
           activeBuilding={activeBuilding}
-          selectBuilding={setBuilding}
+          selectBuilding={selectBuilding}
         />
+      </Box>
+
+      <Box alignItems="center" justifyContent="center" bg={'grayFive'} p={'s'}>
+        <Typography color='grayOne' fontSize={22}>{currentFloor}</Typography>
       </Box>
 
       <ReactNativeZoomableView

@@ -10,6 +10,7 @@ import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
 import { IClass } from "@/dtos";
 import { ClassesGroupedByWeekday } from "@/dtos/classes";
+import { logger } from "@/services/logger";
 
 export const MyClasses = () => {
   const [selectedClass, setSelectedClass] = useState<IClass | undefined>();
@@ -22,8 +23,11 @@ export const MyClasses = () => {
 
   const classesGroupedByWeekday = scheduleFactory(schedule, classes);
 
-  const onOpenModal = (classId: string) => {
+  const onOpenModal = (classId: string, className: string) => {
     const sclass = classes?.find((c) => c.id === classId)
+
+    logger.logEvent('Aula Visualizada', { class: className, screen: 'Minhas Aulas' })
+
     setSelectedClass(sclass);
     setIsClassModalOpen(true);
   };
@@ -51,21 +55,6 @@ export const MyClasses = () => {
           </Typography>
         )}
       </Layout>
-      <Pressable
-        position="absolute"
-        bottom={10}
-        right={6}
-        padding={'m'}
-        borderWidth={1}
-        backgroundColor="graySeven"
-        alignItems="center"
-        justifyContent="center"
-        borderColor="grayThree"
-        borderRadius={9999}
-        onPress={() => navigation.navigate("Home" as never)}
-      >
-        <FeatherIcons name="plus" color={colors.grayThree} size={25} />
-      </Pressable>
     </Box>
   );
 };
