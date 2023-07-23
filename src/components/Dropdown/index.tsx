@@ -33,10 +33,10 @@ export const Dropdown = ({ disabled, label, data, onSelect, selected }: Dropdown
             backgroundColor: theme.colors.grayFive,
             borderRadius: 8,
             height: 100,
-           }}
-           itemStyle={{
-            height: 100,
-           }}
+          }}
+          itemStyle={{
+          height: 100,
+          }}
           enabled={!disabled}
           selectedValue={selected}
           onValueChange={(itemValue) => {
@@ -52,16 +52,25 @@ export const Dropdown = ({ disabled, label, data, onSelect, selected }: Dropdown
   }
 
   return (
-    <Box bg="white" padding={'m'} width={'100%'}>
+    <Box bg="grayFive" width={'100%'} borderRadius={8}>
       <Picker
-        style={{ backgroundColor: 'white' }}
+        mode='dropdown'
+        dropdownIconColor={theme.colors.primary}
+        style={{ 
+          borderRadius: 8,
+          height: 70,
+          color: theme.colors.grayTwo,
+        }}
+        prompt={label}
+        enabled={!disabled}
         selectedValue={selected}
-        onValueChange={(itemValue, itemIndex) =>
+        onValueChange={(itemValue) => {
           onItemPress(itemValue)
-        }>
-          {data.map((item, index) => (
-            <Picker.Item key={item.value} label={item.label} value={item.value} />
-          ))}
+        }}
+      >
+        {data.map((item, index) => (
+          <Picker.Item key={item.value} label={item.label} value={item.value} color={theme.colors.grayFive} />
+        ))}
       </Picker>
     </Box>
   );
