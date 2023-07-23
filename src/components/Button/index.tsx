@@ -4,7 +4,7 @@ import { PressableProps, Pressable as NativePressable } from "react-native";
 import { Typography } from "../ui";
 import { Loading } from "../Loading/index";
 
-type ButtonVariantType = "outlined" | "solid";
+type ButtonVariantType = "outlined" | "solid" | "primary" | "raw";
 
 type ButtonProps = PressableProps & {
   title: string;
@@ -20,17 +20,47 @@ export const Button = ({
   isLoading = false,
   ...rest
 }: ButtonProps) => {
-  const isOutlined = variant === "outlined";
+  const backgroundColorsByType: Record<string, any> = {
+    outlined: "grayFive",
+    solid: "secondary",
+    primary: "secondary",
+    raw: "transparent"
+  }
+
+  const textColorByType: Record<string, any> = {
+    outlined: "primary",
+    solid: "white",
+    primary: "white",
+    raw: "primary",
+  }
+
+  const borderColorByType: Record<string, any> = {
+    outlined: "primary",
+    solid: "transparent",
+    primary: "transparent",
+    raw: "transparent"
+  }
+
+  const borderWithByType: Record<string, any> = {
+    outlined: 1,
+    solid: 0,
+    primary: 0,
+    raw: 0,
+  }
 
   return (
     <Pressable
       width="100%"
       height={50}
       backgroundColor={
-        !rest.disabled ? "grayFive" : isOutlined ? "transparent" : "secondary"
+        !rest.disabled ? backgroundColorsByType[variant] : "grayFive"
       }
-      borderColor="primary"
-      borderWidth={isOutlined ? 1 : 0}
+      borderColor={
+        !rest.disabled ? borderColorByType[variant] : "grayThree"
+      }
+      borderWidth={
+        !rest.disabled ? borderWithByType[variant] : borderWithByType["outlined"]
+      }
       borderRadius={8}
       alignItems="center"
       justifyContent="center"
@@ -40,7 +70,9 @@ export const Button = ({
         <Loading />
       ) : (
         <Typography
-          color={isOutlined ? "primary" : "white"}
+          color={
+            !rest.disabled ? textColorByType[variant] : "grayThree"
+          }
           variant="heading"
           fontSize={16}
         >
