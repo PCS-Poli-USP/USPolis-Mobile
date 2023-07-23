@@ -42,7 +42,7 @@ const palette = {
 const theme = createTheme({
   colors: {
     primary: palette.colors.green[500],
-    secondary: palette.colors.gray[600],
+    secondary: palette.colors.green[700],
     grayOne: palette.colors.gray[100],
     grayTwo: palette.colors.gray[200],
     grayThree: palette.colors.gray[300],
