@@ -11,6 +11,9 @@ import { Theme } from "@/theme/theme";
 import { IClass } from "@/dtos";
 import { ClassesGroupedByWeekday } from "@/dtos/classes";
 import { logger } from "@/services/logger";
+import React from "react";
+
+const MemoDayClasses = React.memo(DayClasses);
 
 export const MyClasses = () => {
   const [selectedClass, setSelectedClass] = useState<IClass | undefined>();
@@ -42,7 +45,7 @@ export const MyClasses = () => {
         />
         <VStack height={"100%"}>
           {classesGroupedByWeekday.map((group: ClassesGroupedByWeekday) => (
-            <DayClasses
+            <MemoDayClasses
               onOpenModal={onOpenModal}
               key={group.week_day}
               classesGroup={group}

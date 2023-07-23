@@ -9,6 +9,7 @@ import { useTheme } from "@shopify/restyle";
 import { Theme } from "@/theme/theme";
 import { getFilteredClasses } from "./utils";
 import { logger } from "@/services/logger";
+import React from "react";
 
 interface HomeClassesProps {
   buildingFilter: string;
@@ -27,7 +28,7 @@ export const HomeClasses = ({
   useEffect(() => {
     setIsLoading(true)
 
-    setTimeout(() => {
+    const cancelTimeout = setTimeout(() => {
       const filteredClasses = getFilteredClasses({
         classes: classes || [],
         buildingFilter,
@@ -37,6 +38,10 @@ export const HomeClasses = ({
       setFilteredClasses(filteredClasses)
       setIsLoading(false)
     }, 2)
+
+    return () => {
+      clearTimeout(cancelTimeout)
+    }
   }, [classes, nameFilter, buildingFilter])
 
   return (
@@ -57,7 +62,7 @@ export const HomeClasses = ({
 
       {!isLoadingClasses && !isLoading && 
         filteredClasses.map((item, index) => (
-          <HomeClassCard
+          <MemoHomeClassCard
             sclass={item}
             key={`${item.id}-${index}`}
           />
@@ -135,3 +140,5 @@ export const HomeClassCard = ({
     </>
   );
 };
+
+const MemoHomeClassCard = React.memo(HomeClassCard);
