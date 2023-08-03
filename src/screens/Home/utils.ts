@@ -1,11 +1,16 @@
 import { IClass } from "@/dtos";
+import { ICourse } from "@/dtos/courses";
 import { replaceSpecialCharacters } from "@/utils/string";
 
 interface GetFilteredClassesProps {
   classes: IClass[]
   nameFilter: string
   buildingFilter: string
-
+}
+interface GetFilteredCoursesProps {
+  courses: ICourse[]
+  nameFilter: string
+  buildingFilter: string
 }
 
 export const getFilteredClasses = ({ classes, nameFilter, buildingFilter }: GetFilteredClassesProps) => {
@@ -42,4 +47,28 @@ export const getFilteredClasses = ({ classes, nameFilter, buildingFilter }: GetF
 
       return aDate.getTime() - bDate.getTime();
     });
+}
+
+export const getFilteredCourses = ({ courses, nameFilter, buildingFilter }: GetFilteredCoursesProps) => {
+  if (!courses) return [];
+
+    let coursesFiltered = [...courses];
+
+    if (nameFilter || buildingFilter) {
+      let correctBuilding = buildingFilter === 'Biênio' ? 'Ciclo Básico' : buildingFilter
+      coursesFiltered = coursesFiltered?.filter(
+        (c) => {
+          return (
+            nameFilter && 
+              replaceSpecialCharacters(c.program.toLowerCase()).includes(
+                replaceSpecialCharacters(nameFilter.toLowerCase())
+              )
+            ) || replaceSpecialCharacters(c.program.toLowerCase()).includes(
+            replaceSpecialCharacters(correctBuilding.toLowerCase())
+          )
+        }
+      );
+    }
+    console.log('coursesFiltered', coursesFiltered.length)
+    return coursesFiltered
 }

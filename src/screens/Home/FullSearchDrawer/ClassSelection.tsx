@@ -93,18 +93,34 @@ export const ClassSelection = ({ onClose }: { onClose: () => void }) => {
     <>
       <Box backgroundColor="graySeven" borderBottomColor="transparent">
         <VStack alignItems="center" marginBottom={'l'}>
-          <Typography variant={"heading"} color="white" fontSize={20} marginBottom={'s'} textAlign="center">
-            Encontramos as disciplinas a seguir
-          </Typography>
-          <Typography textAlign="center" color="grayTwo" fontSize={14} marginBottom={'s'} paddingHorizontal="m">
-            Você pode optar por adicioná-las ou não às suas disciplinas
-          </Typography>
+          {!availableDisciplines.length && !isLoadingCourses && (
+            <>
+            <Typography variant={"heading"} color="white" fontSize={20} marginBottom={'s'} textAlign="center">
+              Não encontramos disciplinas
+            </Typography>
+            <Typography textAlign="center" color="grayTwo" fontSize={14} marginBottom={'s'} paddingHorizontal="m">
+              Não encontramos disciplinas para o curso e período selecionados
+            </Typography>
+          </>
+          )}
+
+          {availableDisciplines.length > 0 && (
+            <>
+              <Typography variant={"heading"} color="white" fontSize={20} marginBottom={'s'} textAlign="center">
+                Encontramos as disciplinas a seguir
+              </Typography>
+              <Typography textAlign="center" color="grayTwo" fontSize={14} marginBottom={'s'} paddingHorizontal="m">
+                Você pode optar por adicioná-las ou não às suas disciplinas
+              </Typography>
+            </>
+          )}
           <Box mb={'l'} />
 
           <Box paddingHorizontal="m" maxHeight={(3 * Dimensions.get('window').height) / 7}>
-            {isLoadingCourses ? (
+            {isLoadingCourses && (
               <ActivityIndicator />
-            ) : (
+            )}
+            {!isLoadingCourses && !!availableDisciplines.length && (
               <FlatList 
                 data={availableDisciplines}
                 nestedScrollEnabled
@@ -126,11 +142,14 @@ export const ClassSelection = ({ onClose }: { onClose: () => void }) => {
       </Box>
       <Box backgroundColor="graySeven" paddingHorizontal={'m'} paddingBottom={'s'}>
         <VStack backgroundColor="graySeven" marginBottom="m">
+        {!isLoadingCourses && !!availableDisciplines.length && (
           <Button
             variant={"outlined"}
             title={"Adicionar em minhas disciplinas"}
             onPress={handleToggleClassOnSchedule}
+            disabled={!availableDisciplines.some(discipline => discipline.selected)}
           />
+          )}
           <Box mb="s" />
           <Button
             variant={"raw"}

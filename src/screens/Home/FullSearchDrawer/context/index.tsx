@@ -10,6 +10,7 @@ export type FullSearchContextDataProps = {
   semester: string
   handleUpdateInfos: (data: Partial<FullSearchContextDataProps>) => void
   index: number
+  isDrawerOpen: boolean
 }
 
 type FullSearchContextProviderProps = {
@@ -34,6 +35,7 @@ export const FullSearchContextProvider = ({ children }: FullSearchContextProvide
   const [course, setCourse] = React.useState(rawCourses?.[0]?.id || "");
   const [semester, setSemester] = React.useState(String(rawCourses?.[0]?.periods?.[0] || ""));
   const [index, setIndex] = React.useState(0);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
     if (rawCourses?.[0]) {
@@ -61,6 +63,10 @@ export const FullSearchContextProvider = ({ children }: FullSearchContextProvide
       setSemester(data.semester)
     }
 
+    if (data.isDrawerOpen !== undefined) {
+      setIsDrawerOpen(data.isDrawerOpen)
+    }
+
     if (data.index !== undefined) {
       setIndex(data.index)
     }
@@ -71,7 +77,8 @@ export const FullSearchContextProvider = ({ children }: FullSearchContextProvide
       course, 
       semester, 
       handleUpdateInfos, 
-      index 
+      index,
+      isDrawerOpen,
     }}>
       {children}
     </FullSearchContext.Provider>

@@ -6,13 +6,16 @@ import { HomeClasses } from "./HomeClasses";
 import { useDebounce } from "@/hooks";
 import React from "react";
 import { ClassFullSearchDrawer } from "./FullSearchDrawer";
+import { useAnalytics } from "@/contexts/AnalyticsContext";
+import { FullSearchContextProvider, useFullSearch } from "./FullSearchDrawer/context";
 
 const HomeClassesMemo = React.memo(HomeClasses)
 
-export const Home = () => {
+export const HomeContent = () => {
   const [selectedBuilding, setSelectedBuilding] = useState("");
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [nameFilter, setNameFilter] = useState("");
+  const { tests } = useAnalytics()
+  const { isDrawerOpen, handleUpdateInfos } = useFullSearch()
 
   const debouncedBuilding = useDebounce(selectedBuilding, 500)
 
@@ -26,7 +29,9 @@ export const Home = () => {
   }
 
   const handleSmartSearch = () => {
-    setIsDrawerOpen(!isDrawerOpen)
+    handleUpdateInfos({
+      isDrawerOpen: !isDrawerOpen
+    })
   }
 
   return (
@@ -34,15 +39,19 @@ export const Home = () => {
       <VStack flex={1} backgroundColor="graySeven" paddingBottom={"m"}>
         <VStack paddingHorizontal="l">
           <VStack marginTop={"l"} width={'100%'}>
-            <Button
-              variant={"primary"}
-              title="Buscar disciplinas por curso e período"
-              onPress={handleSmartSearch}
-            />
-            <Typography color="white" textAlign="center" my="m">ou</Typography>
+            {tests.FULL_SEARCH && (
+              <>
+                <Button
+                  variant={"primary"}
+                  title="Buscar disciplinas por curso e período"
+                  onPress={handleSmartSearch}
+                />
+                <Typography color="white" textAlign="center" my="m">ou</Typography>
+              </>
+            )}
             <Input
               variation="secondary"
-              placeholder="Procure por suas aulas"
+              placeholder={tests.FULL_SEARCH ? "Procure por suas aulas" : "Procure por seu curso ou aulas"}
               onChangeText={(text) => setNameFilter(text)}
               onBlur={() => logger.logEvent('Busca Realizada', { search: nameFilter, screen: 'Home' })}
             />
@@ -58,7 +67,15 @@ export const Home = () => {
         </VStack>
       </VStack>
 
-      <ClassFullSearchDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+      <ClassFullSearchDrawer isOpen={isDrawerOpen} onClose={() => handleUpdateInfos({ isDrawerOpen: false })} />
     </Layout>
   );
 };
+
+export const Home = () => {
+  return (
+    <FullSearchContextProvider>
+      <HomeContent />
+    </FullSearchContextProvider>
+  )
+}

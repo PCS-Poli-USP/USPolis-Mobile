@@ -17,21 +17,6 @@ export const ClassFullSearchDrawer = ({
   isOpen,
   onClose,
 }: IFullSearchDrawerProps) => {
-
-  return (
-    <FullSearchContextProvider>
-      <ClassFullSearchContent 
-        isOpen={isOpen}
-        onClose={onClose}
-      />
-    </FullSearchContextProvider>
-  );
-};
-
-const ClassFullSearchContent = ({
-  isOpen,
-  onClose,
-}: IFullSearchDrawerProps) => {
   const { colors } = useTheme<Theme>();
   const { index } = useFullSearch()
 
