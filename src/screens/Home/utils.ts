@@ -69,6 +69,6 @@ export const getFilteredCourses = ({ courses, nameFilter, buildingFilter }: GetF
         }
       );
     }
-    console.log('coursesFiltered', coursesFiltered.length)
+
     return coursesFiltered
 }
