@@ -60,7 +60,7 @@ const ClassFullSearchContent = ({
           )}
 
           {index === 1 && (
-            <ClassSelection />
+            <ClassSelection onClose={onClose} />
           )}
         </Box>
       </Modal>

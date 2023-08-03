@@ -1,121 +1,53 @@
 import { Box, Button, Checkbox, Dropdown, Typography, VStack } from "@/components"
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFullSearch } from "./context";
 import { IPickerOption } from "@/components/Dropdown";
-import { Dimensions, FlatList, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, TouchableOpacity } from "react-native";
+import { useCourseProgram } from "@/hooks/react-query/useCourseProgram";
+import { logger } from "@/services/logger";
+import { useSchedule } from "@/hooks/useSchedule";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AppRoutesType } from "@/routes/app.routes";
 
-export const ClassSelection = () => {
+export const ClassSelection = ({ onClose }: { onClose: () => void }) => {
   const { handleUpdateInfos, course, semester } = useFullSearch()
+  const { toggleClassOnSchedule } = useSchedule();
+  const navigation = useNavigation<NavigationProp<AppRoutesType>>();
 
-  const [availableDisciplines, setAvailableDisciplines] = useState<ISelectableDiscipline[]>([
-    {
-      id: '1',
-      name: 'PRO3373 - Introdução à Economia',
-      selected: false,
-      classes: [
-        {
-          label: 'Turma 1 - Segunda 17:30',
-          value: 'Turma 1 - Segunda 17:30'
-        },
-        {
-          label: 'Turma 2 - Sexta 12:30',
-          value: 'Turma 2 - Sexta 12:30'
-        },
-        {
-          label: 'Turma 3 - Quarta 15:30',
-          value: 'Turma 3 - Quarta 15:30'
-        },
-      ],
-      selectedClass: ''
-    },
-    {
-      id: '2',
-      name: 'MAP3121 - Métodos Numéricos e Aplicações',
-      selected: false,
-      classes: [
-        {
-          label: 'Turma 1 - Segunda 17:30',
-          value: 'Turma 1 - Segunda 17:30'
-        },
-        {
-          label: 'Turma 2 - Sexta 12:30',
-          value: 'Turma 2 - Sexta 12:30'
-        },
-        {
-          label: 'Turma 3 - Quarta 15:30',
-          value: 'Turma 3 - Quarta 15:30'
-        },
-      ],
-      selectedClass: ''
-    },
-    {
-      id: '3',
-      name: 'MAT2453 - Cálculo Diferencial e Integral III',
-      selected: false,
-      classes: [
-        {
-          label: 'Turma 1 - Segunda 17:30',
-          value: 'Turma 1 - Segunda 17:30'
-        },
-        {
-          label: 'Turma 2 - Sexta 12:30',
-          value: 'Turma 2 - Sexta 12:30'
-        },
-        {
-          label: 'Turma 3 - Quarta 15:30',
-          value: 'Turma 3 - Quarta 15:30'
-        },
-      ],
-      selectedClass: ''
-    },
-    {
-      id: '4',
-      name: 'PEA3100 - Introdução à Engenharia de Produção',
-      selected: false,
-      classes: [
-        {
-          label: 'Turma 1 - Segunda 17:30',
-          value: 'Turma 1 - Segunda 17:30'
-        },
-        {
-          label: 'Turma 2 - Sexta 12:30',
-          value: 'Turma 2 - Sexta 12:30'
-        },
-        {
-          label: 'Turma 3 - Quarta 15:30',
-          value: 'Turma 3 - Quarta 15:30'
-        },
-      ],
-      selectedClass: ''
-    },
-    {
-      id: '5',
-      name: 'FEP0111 - Física Aplicada à Engenharia I',
-      selected: false,
-      classes: [
-        {
-          label: 'Turma 1 - Segunda 17:30',
-          value: 'Turma 1 - Segunda 17:30'
-        },
-        {
-          label: 'Turma 2 - Sexta 12:30',
-          value: 'Turma 2 - Sexta 12:30'
-        },
-        {
-          label: 'Turma 3 - Quarta 15:30',
-          value: 'Turma 3 - Quarta 15:30'
-        },
-      ],
-      selectedClass: ''
+  const { data: courseProgram, isLoading: isLoadingCourses } = useCourseProgram({
+    program: course,
+    period: semester
+  })
+
+  const [availableDisciplines, setAvailableDisciplines] = useState<ISelectableDiscipline[]>([])
+  
+  useEffect(() => {
+    if (courseProgram) {
+      const newAvailableDisciplines = courseProgram.map((course) => ({
+        id: course.code,
+        name: `${course.code} - ${course.name}`,
+        selected: false,
+        classes: course.classes.map(iclass => ({
+          label: `Turma ${iclass.class_code}`,
+          value: iclass.id
+        })),
+        selectedClass: ''
+      }))
+
+      const availableDisciplinesWithClasses = newAvailableDisciplines.filter(c => c.classes.length)
+
+      setAvailableDisciplines(availableDisciplinesWithClasses)
     }
-  ] )
+  }, [courseProgram])
+
 
   const handleSelectDiscipline = (id: string) => {
     const newDisciplines = availableDisciplines.map((discipline) => {
       if (discipline.id === id) {
         return {
           ...discipline,
-          selected: !discipline.selected
+          selected: !discipline.selected,
+          selectedClass: discipline.classes?.[0]?.value || ""
         }
       }
 
@@ -140,6 +72,23 @@ export const ClassSelection = () => {
     setAvailableDisciplines(newDisciplines)
   }
 
+  const handleToggleClassOnSchedule = () => {
+    const selectedDisciplines = availableDisciplines.filter(discipline => discipline.selected)
+    const selectedClasses = selectedDisciplines.map(discipline => discipline.selectedClass)
+
+    logger.logEvent('Aulas adicionadas automaticamente', { classes: selectedClasses.join(',') })
+
+    selectedClasses.forEach((classId) => {
+      toggleClassOnSchedule(classId)
+    })
+
+    navigation.navigate('MyClasses')
+    handleUpdateInfos({
+      index: 0,
+    })
+    onClose()
+  }
+
   return (
     <>
       <Box backgroundColor="graySeven" borderBottomColor="transparent">
@@ -152,22 +101,26 @@ export const ClassSelection = () => {
           </Typography>
           <Box mb={'l'} />
 
-          <Box paddingHorizontal="m">
-            <FlatList 
-              data={availableDisciplines}
-              nestedScrollEnabled
-              keyExtractor={(item) => item.id}
-              style={{
-                maxHeight: (3 * Dimensions.get('window').height) / 7
-              }}
-              renderItem={({ item }) => (
-                <MaybeTouchableSelectableDiscipline
-                  {...item}
-                  handleSelect={() => handleSelectDiscipline(item.id)}
-                  handleSelectClass={(classId) => handleSelectClass(item.id, classId)}
-                />
+          <Box paddingHorizontal="m" maxHeight={(3 * Dimensions.get('window').height) / 7}>
+            {isLoadingCourses ? (
+              <ActivityIndicator />
+            ) : (
+              <FlatList 
+                data={availableDisciplines}
+                nestedScrollEnabled
+                keyExtractor={(item) => item.id}
+                style={{
+                  maxHeight: (3 * Dimensions.get('window').height) / 7
+                }}
+                renderItem={({ item }) => (
+                  <MaybeTouchableSelectableDiscipline
+                    {...item}
+                    handleSelect={() => handleSelectDiscipline(item.id)}
+                    handleSelectClass={(classId) => handleSelectClass(item.id, classId)}
+                  />
+                )}
+              />
               )}
-            />
           </Box>
         </VStack>
       </Box>
@@ -176,7 +129,7 @@ export const ClassSelection = () => {
           <Button
             variant={"outlined"}
             title={"Adicionar em minhas disciplinas"}
-            onPress={() => null}
+            onPress={handleToggleClassOnSchedule}
           />
           <Box mb="s" />
           <Button

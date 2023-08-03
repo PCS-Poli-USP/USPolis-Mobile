@@ -1,71 +1,34 @@
 import { Box, Button, Dropdown, Typography, VStack } from "@/components"
 import { useMemo } from "react";
 import { useFullSearch } from "./context";
+import { useCourses } from "@/hooks/react-query/useCourses";
 
 export const CourseSearch = () => {
   const { handleUpdateInfos, course, semester } = useFullSearch()
 
+  const { data: rawCourses } = useCourses() 
+
   const courses = useMemo(() => {
-    return [
-      {
-        label: "Curso 1",
-        value: "1",
-      },
-      {
-        label: "Curso 2",
-        value: "2",
-      },
-      {
-        label: "Curso 3",
-        value: "3",
-      },
-    ];
-  }, [])
+    return rawCourses?.map((course) => ({
+      label: course.program,
+      value: course.id,
+    })) || []
+  }, [rawCourses])
 
   const semesters = useMemo(() => {
-    return [
-      {
-        label: "1º Semestre",
-        value: "1",
-      },
-      {
-        label: "2º Semestre",
-        value: "2",
-      },
-      {
-        label: "3º Semestre",
-        value: "3",
-      },
-      {
-        label: "4º Semestre",
-        value: "4",
-      },
-      {
-        label: "5º Semestre",
-        value: "5",
-      },
-      {
-        label: "6º Semestre",
-        value: "6",
-      },
-      {
-        label: "7º Semestre",
-        value: "7",
-      },
-      {
-        label: "8º Semestre",
-        value: "8",
-      },
-      {
-        label: "9º Semestre",
-        value: "9",
-      },
-      {
-        label: "10º Semestre",
-        value: "10",
-      },
-    ];
-  }, [])
+    const selectedCourse = rawCourses?.find((rawCourse) => rawCourse.id === course)
+
+    if (!selectedCourse) {
+      return []
+    }
+
+    const { periods } = selectedCourse
+
+    return periods.map((semester) => ({
+      label: `${semester}º período`,
+      value: String(semester),
+    }))
+  }, [rawCourses, course])
 
   const handleSearch = () => {
     handleUpdateInfos({
@@ -91,7 +54,7 @@ export const CourseSearch = () => {
           />
           <Box mb={'m'} />
           <Dropdown 
-            label={"Selecione seu semestre ideal"}
+            label={"Selecione seu período ideal"}
             data={semesters}
             onSelect={(v) => handleUpdateInfos({
               semester: v

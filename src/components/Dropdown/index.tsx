@@ -35,7 +35,8 @@ export const Dropdown = ({ disabled, label, data, onSelect, selected }: Dropdown
             height: 100,
           }}
           itemStyle={{
-          height: 100,
+            height: 100,
+            fontSize: 10,
           }}
           enabled={!disabled}
           selectedValue={selected}

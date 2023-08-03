@@ -1,4 +1,5 @@
 import { User } from '@/dtos'
+import { useCourses } from '@/hooks/react-query/useCourses'
 import { userStorage } from '@/storage/user'
 import React, { useCallback, useMemo } from 'react'
 import { useEffect } from 'react'
@@ -28,9 +29,28 @@ export const useFullSearch = () => {
 }
 
 export const FullSearchContextProvider = ({ children }: FullSearchContextProviderProps) => {
-  const [course, setCourse] = React.useState("1");
-  const [semester, setSemester] = React.useState("1");
+  const { data: rawCourses } = useCourses() 
+  
+  const [course, setCourse] = React.useState(rawCourses?.[0]?.id || "");
+  const [semester, setSemester] = React.useState(String(rawCourses?.[0]?.periods?.[0] || ""));
   const [index, setIndex] = React.useState(0);
+
+  useEffect(() => {
+    if (rawCourses?.[0]) {
+      setCourse(rawCourses?.[0]?.id || "")
+      setSemester(String(rawCourses?.[0]?.periods?.[0] || ""))
+    }
+  }, [rawCourses])
+
+  useEffect(() => {
+    if (rawCourses) {
+      const selectedCourse = rawCourses?.find((rawCourse) => rawCourse.id === course)
+
+      if (selectedCourse) {
+        setSemester(String(selectedCourse?.periods?.[0] || ""))
+      }
+    }
+  }, [course])
 
   const handleUpdateInfos = useCallback((data: Partial<FullSearchContextDataProps>) => {
     if (data.course) {
