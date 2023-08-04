@@ -1,3 +1,4 @@
+import { AnalyticsContextProvider } from "./AnalyticsContext";
 import { AuthContextProvider } from "./AuthContext";
 import { ScheduleContextProvider } from "./ScheduleContext";
 
@@ -8,7 +9,9 @@ type ContextsProps = {
 export const Contexts = ({ children }: ContextsProps) => {
   return (
     <AuthContextProvider>
-      <ScheduleContextProvider>{children}</ScheduleContextProvider>
+      <AnalyticsContextProvider>
+        <ScheduleContextProvider>{children}</ScheduleContextProvider>
+      </AnalyticsContextProvider>
     </AuthContextProvider>
   );
 };
