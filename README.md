@@ -62,6 +62,33 @@ src/
 
 > ⚠️ Nota: Estamos transitando de `native-base` para `@shopify/restyle` para estilização. Por favor, evite usar `native-base` em novos desenvolvimentos.
 
+## Deploy para as Lojas
+
+### Android
+
+A fim de realizar o deploy para a loja do android, os seguintes passos devem ser seguidos:
+1. Criar uma conta em http://expo.dev
+2. Configurar as credenciais de android para tal conta: 
+    2.1 Conseguir Alias
+    2.2 Conseguir Senha
+3. Logar na sua conta expo em seu terminar ``npx expo login -h``
+3. Rodar ```npx eas build --profile preview --platform android``` e seguir as instruções
+
+### iOS
+
+A fim de realizar o deploy para a loja do iOS, os seguintes passos devem ser seguidos:
+1. Criar uma conta em http://expo.dev
+2. Configurar as credenciais de iOS para tal conta: 
+    2.1 Conseguir Apple ID
+    2.2 Conseguir Apple Team ID
+    2.3 Conseguir Apple Provisioning Profile
+    2.4 Conseguir Apple Push Notifications Key
+    2.5 Conseguir Apple Push Notifications Certificate
+
+3. Logar na sua conta expo em seu terminar ``npx expo login -h``
+3. Rodar ```npx eas build --profile preview --platform ios``` e seguir as instruções. Para isso você precisará de uma conta na apple connect que tenha permissões para realizar o build de aplicativos.
+4. Após o build ser realizado, rodar o comando ```npx eas submit --platform ios``` e seguir as instruções. Dessa forma o build irá automaticamente para a Apple como um build válido.
+
 ## Contribuição
 
 Sinta-se à vontade para contribuir e melhorar ainda mais nosso aplicativo. Se encontrar problemas ou tiver sugestões, abra uma Issue ou envie um Pull Request.
