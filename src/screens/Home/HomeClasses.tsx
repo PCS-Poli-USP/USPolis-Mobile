@@ -63,6 +63,10 @@ export const HomeClasses = ({
           buildingFilter,
           nameFilter: nameFilter || '',
         })
+
+        console.log(nameFilter, filteredCourses.length)
+        console.log(JSON.stringify(filteredCourses.map((item) => item.program), null, 2))
+
         setFilteredCourses(filteredCourses || [])
         setIsLoading(false)
       } else {
@@ -221,7 +225,7 @@ export const HomeCourseCard = ({
           <VStack flex={1} marginRight={'xs'}>
             <Typography
               marginBottom={'xxs'}
-              fontSize={18}
+              fontSize={12}
               color="white"
               variant={"heading"}
               fontWeight="bold"

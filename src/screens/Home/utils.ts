@@ -56,6 +56,7 @@ export const getFilteredCourses = ({ courses, nameFilter, buildingFilter }: GetF
 
     if (nameFilter || buildingFilter) {
       let correctBuilding = buildingFilter === 'Biênio' ? 'Ciclo Básico' : buildingFilter
+      
       coursesFiltered = coursesFiltered?.filter(
         (c) => {
           return (
@@ -63,8 +64,9 @@ export const getFilteredCourses = ({ courses, nameFilter, buildingFilter }: GetF
               replaceSpecialCharacters(c.program.toLowerCase()).includes(
                 replaceSpecialCharacters(nameFilter.toLowerCase())
               )
-            ) || replaceSpecialCharacters(c.program.toLowerCase()).includes(
-            replaceSpecialCharacters(correctBuilding.toLowerCase())
+            ) || (
+              correctBuilding && replaceSpecialCharacters(c.program.toLowerCase()).includes(
+            replaceSpecialCharacters(correctBuilding.toLowerCase()))
           )
         }
       );
