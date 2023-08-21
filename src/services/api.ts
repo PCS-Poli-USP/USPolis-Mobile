@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios'
 
-const BASE_URL = "https://uspolis.com.br/api/mobile/"
+const BASE_URL = 'https://uspolis.com.br/api/mobile/'
 
 const api = axios.create({
   baseURL: BASE_URL,
-});
+})
 
-export default api;
+export default api

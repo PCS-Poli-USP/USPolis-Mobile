@@ -3,8 +3,7 @@ import { DEFAULT_AB_TESTING, generateAbTesting } from '@/dtos/ab-testing'
 import { logger } from '@/services/logger'
 import { abTestingStorage } from '@/storage/ab-testing'
 import { userStorage } from '@/storage/user'
-import { useContext, useEffect } from 'react'
-import { createContext, useState } from 'react'
+import { useContext, useEffect, createContext, useState } from 'react'
 
 export type AnalyticsContextDataProps = {
   tests: AbTesting
@@ -17,14 +16,16 @@ type AnalyticsContextProviderProps = {
 
 export const AnalyticsContext = createContext({} as AnalyticsContextDataProps)
 
-export const AnalyticsContextProvider = ({ children }: AnalyticsContextProviderProps) => {
+export const AnalyticsContextProvider = ({
+  children,
+}: AnalyticsContextProviderProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const [tests, setTests] = useState<AbTesting>({} as AbTesting)
-  
+
   useEffect(() => {
     const getAbTestings = async () => {
       const tests = await abTestingStorage.get()
-      
+
       let finalNewTests = tests
 
       if (!tests) {
@@ -32,17 +33,20 @@ export const AnalyticsContextProvider = ({ children }: AnalyticsContextProviderP
         await abTestingStorage.save(newTests)
         finalNewTests = newTests
       } else {
-        const testHasMissing = Object.keys(DEFAULT_AB_TESTING).some(key => tests?.[key] === undefined)
+        const testHasMissing = Object.keys(DEFAULT_AB_TESTING).some(
+          (key) => tests?.[key] === undefined,
+        )
 
         if (testHasMissing) {
           const fullNewTests = generateAbTesting()
-  
-          Object.keys(tests).forEach(key => {
+
+          Object.keys(tests).forEach((key) => {
             if (tests[key]) {
-              fullNewTests[key as unknown as keyof AbTesting] = tests?.[key as unknown as keyof AbTesting]
+              fullNewTests[key as unknown as keyof AbTesting] =
+                tests?.[key as unknown as keyof AbTesting]
             }
           })
-  
+
           await abTestingStorage.save(fullNewTests)
           finalNewTests = fullNewTests
         }
@@ -50,9 +54,12 @@ export const AnalyticsContextProvider = ({ children }: AnalyticsContextProviderP
 
       setTests(finalNewTests)
 
-      Object.keys(finalNewTests).forEach(key => {
+      Object.keys(finalNewTests).forEach((key) => {
         if (finalNewTests[key as unknown as keyof AbTesting]) {
-          logger.setUserProperty(key, finalNewTests[key as unknown as keyof AbTesting])
+          logger.setUserProperty(
+            key,
+            finalNewTests[key as unknown as keyof AbTesting],
+          )
         }
       })
 

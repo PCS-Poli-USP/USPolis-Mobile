@@ -1,6 +1,6 @@
-import { IClass } from "@/dtos";
-import { apiMockAdapter } from "./api.mock";
-import { setupUseQueryFactory, stubCaseGenerator } from "./factory";
+import { IClass } from '@/dtos'
+import { apiMockAdapter } from './api.mock'
+import { setupUseQueryFactory, stubCaseGenerator } from './factory'
 
 const classesStub: IClass[] = [
   {
@@ -17,7 +17,7 @@ const classesStub: IClass[] = [
         start_time: '09:20',
         end_time: '11:00',
         building: 'Biênio',
-        classroom: 'C1-04'
+        classroom: 'C1-04',
       },
       {
         id: 'asdfjasldjfkl1j1333',
@@ -25,9 +25,9 @@ const classesStub: IClass[] = [
         start_time: '09:20',
         end_time: '11:00',
         building: 'Biênio',
-        classroom: 'C2-02'
-      }
-    ]
+        classroom: 'C2-02',
+      },
+    ],
   },
   {
     id: '2',
@@ -43,7 +43,7 @@ const classesStub: IClass[] = [
         start_time: '09:20',
         end_time: '11:00',
         building: 'Biênio',
-        classroom: 'C1-04'
+        classroom: 'C1-04',
       },
       {
         id: '12312431fdsfsdfsdf',
@@ -51,9 +51,9 @@ const classesStub: IClass[] = [
         start_time: '09:20',
         end_time: '11:00',
         building: 'Biênio',
-        classroom: 'C2-02'
-      }
-    ]
+        classroom: 'C2-02',
+      },
+    ],
   },
   {
     id: '3',
@@ -69,7 +69,7 @@ const classesStub: IClass[] = [
         start_time: '09:20',
         end_time: '11:00',
         building: 'Biênio',
-        classroom: 'C1-04'
+        classroom: 'C1-04',
       },
       {
         id: 'dddjasdlfjaskj1kl3j1klj',
@@ -77,9 +77,9 @@ const classesStub: IClass[] = [
         start_time: '14:20',
         end_time: '17:20',
         building: 'Biênio',
-        classroom: 'C2-02'
-      }
-    ]
+        classroom: 'C2-02',
+      },
+    ],
   },
 ]
 
@@ -96,5 +96,5 @@ export const setupUseClasses = setupUseQueryFactory(
       status: 500,
       error: 'Something went wrong',
     },
-  })
+  }),
 )

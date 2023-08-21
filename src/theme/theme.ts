@@ -1,28 +1,28 @@
-import { createTheme } from "@shopify/restyle";
+import { createTheme } from '@shopify/restyle'
 
 const palette = {
   colors: {
     green: {
-      700: "#408180",
-      500: "#18DAD7",
+      700: '#408180',
+      500: '#18DAD7',
     },
     gray: {
-      700: "#121214",
-      600: "#202024",
-      500: "#29292E",
-      400: "#323238",
-      300: "#7C7C8A",
-      200: "#C4C4CC",
-      100: "#E1E1E6",
+      700: '#121214',
+      600: '#202024',
+      500: '#29292E',
+      400: '#323238',
+      300: '#7C7C8A',
+      200: '#C4C4CC',
+      100: '#E1E1E6',
     },
-    white: "#FFFFFF",
+    white: '#FFFFFF',
     red: {
-      500: "#F75A68",
+      500: '#F75A68',
     },
   },
   fonts: {
-    heading: "Roboto_700Bold",
-    body: "Roboto_400Regular",
+    heading: 'Roboto_700Bold',
+    body: 'Roboto_400Regular',
   },
   fontSizes: {
     xs: 12,
@@ -37,7 +37,7 @@ const palette = {
     14: 56,
     33: 148,
   },
-};
+}
 
 const theme = createTheme({
   colors: {
@@ -52,14 +52,14 @@ const theme = createTheme({
     graySeven: palette.colors.gray[700],
     white: palette.colors.white,
     red: palette.colors.red[500],
-    transparent: "transparent",
+    transparent: 'transparent',
   },
   textVariants: {
     heading: {
-      fontFamily: "Roboto_700Bold",
+      fontFamily: 'Roboto_700Bold',
     },
     defaults: {
-      fontFamily: "Roboto_400Regular",
+      fontFamily: 'Roboto_400Regular',
     },
   },
   fontSizes: {
@@ -78,9 +78,9 @@ const theme = createTheme({
     m: 16,
     l: 24,
     xl: 40,
-    auto: "auto",
+    auto: 'auto',
   },
-});
+})
 
-export type Theme = typeof theme;
-export default theme;
+export type Theme = typeof theme
+export default theme

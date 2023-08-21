@@ -1,46 +1,46 @@
+export type Building =
+  | 'Biênio'
+  | 'Mecânica'
+  | 'Produção'
+  | 'Administração'
+  | 'Elétrica'
+  | 'Metalúrgica'
+  | 'Civil'
+
 export type Schedule = {
-  id: string;
-  week_day: string;
-  start_time: string;
-  end_time: string;
-  building: Building;
-  classroom: string;
-  floor: number;
-};
+  id: string
+  week_day: string
+  start_time: string
+  end_time: string
+  building: Building
+  classroom: string
+  floor: number
+}
 
 export type IClass = {
-  id: string;
-  class_code: string;
-  professor: string;
-  subject_code: string;
-  subject_name: string;
-  start_period: string;
-  end_period: string;
-  schedule: Array<Schedule>;
-};
-
-export type ClassesGroupedByWeekday = {
-  week_day: string;
-  classes: ScheduledClasses[];
-};
+  id: string
+  class_code: string
+  professor: string
+  subject_code: string
+  subject_name: string
+  start_period: string
+  end_period: string
+  schedule: Array<Schedule>
+}
 
 export type ScheduledClasses = {
-  class_subject_name: string;
-  class_subject_code: string;
-  class_id: string;
-  class_code: string;
-  week_day: string;
-  start_time: string;
-  end_time: string;
-  building: Building;
-  classroom: string;
-};
+  class_subject_name: string
+  class_subject_code: string
+  class_id: string
+  class_code: string
+  week_day: string
+  start_time: string
+  end_time: string
+  building: Building
+  classroom: string
+}
 
-export type Building =
-  | "Biênio"
-  | "Mecânica"
-  | "Produção"
-  | "Administração"
-  | "Elétrica"
-  | "Metalúrgica"
-  | "Civil";
+export type ClassesGroupedByWeekday = {
+  week_day: string
+  classes: ScheduledClasses[]
+}

@@ -1,28 +1,28 @@
-import AdmFirstFloor from "@/assets/maps/projeto_detalhado_administracao_1andar.jpg";
-import AdmGround from "@/assets/maps/projeto_detalhado_administracao_terreo.jpg";
-import BienioFirstFloor from "@/assets/maps/projeto_detalhado_bienio_1andar.jpg";
-import BienioSecondFloor from "@/assets/maps/projeto_detalhado_bienio_2andar.jpg";
-import BienioGround from "@/assets/maps/projeto_detalhado_bienio_terreo.jpg";
-import CivilFirstFloor from "@/assets/maps/projeto_detalhado_civil_1andar.jpg";
-import CivilGround from "@/assets/maps/projeto_detalhado_civil_terreo.jpg";
-import EletricaFirstFloor from "@/assets/maps/projeto_detalhado_eletrica_1andar.jpg";
-import EletricaSecondFloor from "@/assets/maps/projeto_detalhado_eletrica_2andar.jpg";
-import EletricaThirdFloor from "@/assets/maps/projeto_detalhado_eletrica_3andar.jpg";
-import EletricaGround from "@/assets/maps/projeto_detalhado_eletrica_terreo.jpg";
-import MecanicaFirstFloor from "@/assets/maps/projeto_detalhado_mecanica_1andar.jpg";
-import MecanicaGround from "@/assets/maps/projeto_detalhado_mecanica_terreo.jpg";
-import MetalurgicaFirstFloor from "@/assets/maps/projeto_detalhado_metalurgica_1andar.jpg";
-import MetalurgicaGround from "@/assets/maps/projeto_detalhado_metalurgica_terreo.jpg";
-import ProducaoFirstFloor from "@/assets/maps/projeto_detalhado_producao_1andar.jpg";
-import ProducaoGround from "@/assets/maps/projeto_detalhado_producao_terreo.jpg";
+import AdmFirstFloor from '@/assets/maps/projeto_detalhado_administracao_1andar.jpg'
+import AdmGround from '@/assets/maps/projeto_detalhado_administracao_terreo.jpg'
+import BienioFirstFloor from '@/assets/maps/projeto_detalhado_bienio_1andar.jpg'
+import BienioSecondFloor from '@/assets/maps/projeto_detalhado_bienio_2andar.jpg'
+import BienioGround from '@/assets/maps/projeto_detalhado_bienio_terreo.jpg'
+import CivilFirstFloor from '@/assets/maps/projeto_detalhado_civil_1andar.jpg'
+import CivilGround from '@/assets/maps/projeto_detalhado_civil_terreo.jpg'
+import EletricaFirstFloor from '@/assets/maps/projeto_detalhado_eletrica_1andar.jpg'
+import EletricaSecondFloor from '@/assets/maps/projeto_detalhado_eletrica_2andar.jpg'
+import EletricaThirdFloor from '@/assets/maps/projeto_detalhado_eletrica_3andar.jpg'
+import EletricaGround from '@/assets/maps/projeto_detalhado_eletrica_terreo.jpg'
+import MecanicaFirstFloor from '@/assets/maps/projeto_detalhado_mecanica_1andar.jpg'
+import MecanicaGround from '@/assets/maps/projeto_detalhado_mecanica_terreo.jpg'
+import MetalurgicaFirstFloor from '@/assets/maps/projeto_detalhado_metalurgica_1andar.jpg'
+import MetalurgicaGround from '@/assets/maps/projeto_detalhado_metalurgica_terreo.jpg'
+import ProducaoFirstFloor from '@/assets/maps/projeto_detalhado_producao_1andar.jpg'
+import ProducaoGround from '@/assets/maps/projeto_detalhado_producao_terreo.jpg'
 
-import { Building } from "@/dtos/classes";
-import { ImageSourcePropType } from "react-native";
+import { Building } from '@/dtos/classes'
+import { ImageSourcePropType } from 'react-native'
 
 type BuildingMaps = {
-  height: number;
-  images: Record<string, ImageSourcePropType>;
-};
+  height: number
+  images: Record<string, ImageSourcePropType>
+}
 
 export const mapsImagePathTable: Record<Building, BuildingMaps> = {
   Administração: {
@@ -77,4 +77,4 @@ export const mapsImagePathTable: Record<Building, BuildingMaps> = {
       1: ProducaoFirstFloor,
     },
   },
-};
+}

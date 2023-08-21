@@ -14,12 +14,19 @@ export const stubCasePattern = {
   default: successCasePattern,
   error: errorCasePattern,
 }
-export type allMockAdapterHandlers = TypeUtilGetAllValuesThatStartsWithOn<MockAdapter>
 
+export type TypeUtilGetAllValuesThatStartsWithOn<T> = {
+  [K in keyof T]: K extends `on${string}` ? K : never
+}[keyof T]
+
+export type allMockAdapterHandlers =
+  TypeUtilGetAllValuesThatStartsWithOn<MockAdapter>
+
+export type StubCasePattern = P.infer<typeof stubCasePattern>
 export type fnIdentityPattern = (e: StubCasePattern) => ValueOf<StubCasePattern>
 export type ReturnTypeSetupUseQuery<
   TGetStubCaseFn = unknown,
-  CTStubs extends StubCasePattern = StubCasePattern
+  CTStubs extends StubCasePattern = StubCasePattern,
 > = TGetStubCaseFn extends undefined
   ? CTStubs['default']
   : TGetStubCaseFn extends (...args: any) => infer R
@@ -27,14 +34,14 @@ export type ReturnTypeSetupUseQuery<
   : TGetStubCaseFn extends Record<any, any>
   ? TGetStubCaseFn
   : CTStubs['default']
-export type StubCasePattern = P.infer<typeof stubCasePattern>
 
-export type StubCasePatternGeneric<TData, TError> = P.infer<typeof stubCasePattern> &
-  Record<string, { status: number; data: TData } | { status: number; error: TError }>
+export type StubCasePatternGeneric<TData, TError> = P.infer<
+  typeof stubCasePattern
+> &
+  Record<
+    string,
+    { status: number; data: TData } | { status: number; error: TError }
+  >
 
-export type IErrorCasePattern = P.infer<typeof stubCasePattern['error']>
-export type ISuccessStubCase = P.infer<typeof stubCasePattern['default']>
-
-export type TypeUtilGetAllValuesThatStartsWithOn<T> = {
-  [K in keyof T]: K extends `on${string}` ? K : never
-}[keyof T]
+export type IErrorCasePattern = P.infer<(typeof stubCasePattern)['error']>
+export type ISuccessStubCase = P.infer<(typeof stubCasePattern)['default']>

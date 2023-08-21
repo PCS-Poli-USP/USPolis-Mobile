@@ -5,11 +5,11 @@ export type AbTesting = {
 }
 
 export const DEFAULT_AB_TESTING: AbTesting = {
-  FULL_SEARCH: false
+  FULL_SEARCH: false,
 }
 
 export const generateAbTesting = (): AbTesting => {
   return {
-    FULL_SEARCH: Math.random() > 0.5 ? true : false
+    FULL_SEARCH: Math.random() > 0.5,
   }
 }

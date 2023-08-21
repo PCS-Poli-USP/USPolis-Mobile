@@ -1,7 +1,6 @@
 import { User } from '@/dtos'
 import { userStorage } from '@/storage/user'
-import { useEffect } from 'react'
-import { createContext, useState } from 'react'
+import { useEffect, createContext, useState } from 'react'
 
 type SignInData = {
   name: string
@@ -23,7 +22,7 @@ export const AuthContext = createContext({} as AuthContextDataProps)
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [user, setUser] = useState<User | null>({
     id: '1',
-    name: ''
+    name: '',
   })
   const [isLoadingStorageUser, setIsLoadingStorageUser] = useState(true)
 
@@ -31,11 +30,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     if (data.name) {
       setUser({
         id: '1',
-        name: data.name
+        name: data.name,
       })
       userStorage.save({
         id: '1',
-        name: data.name
+        name: data.name,
       })
     }
   }
@@ -50,9 +49,10 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       // const user = await userStorage.get()
       // To remove user login page
       const tempDefaultUser = { id: '1', name: '' }
-  
+
       setUser(tempDefaultUser)
     } catch (err) {
+      console.log('err', err)
       throw err
     } finally {
       setIsLoadingStorageUser(false)
@@ -64,7 +64,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isLoadingStorageUser, user, handleSignIn, handleLogout }}>
+    <AuthContext.Provider
+      value={{ isLoadingStorageUser, user, handleSignIn, handleLogout }}
+    >
       {children}
     </AuthContext.Provider>
   )

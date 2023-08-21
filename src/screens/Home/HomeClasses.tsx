@@ -1,31 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
-import { ClassModalDetails, HStack, Typography, VStack } from "@/components";
-import FeatherIcons from "@expo/vector-icons/Feather";
-import { useClasses } from "@/hooks/react-query/useClasses";
-import { IClass } from "@/dtos";
-import { ActivityIndicator, Pressable } from "react-native";
-import { getUniqueValues } from "@/utils/array";
-import { useTheme } from "@shopify/restyle";
-import { Theme } from "@/theme/theme";
-import { getFilteredClasses, getFilteredCourses } from "./utils";
-import { logger } from "@/services/logger";
-import React from "react";
-import { useCourses } from "@/hooks/react-query/useCourses";
-import { ICourse } from "@/dtos/courses";
-import { useFullSearch } from "./FullSearchDrawer/context";
-import { useAnalytics } from "@/contexts/AnalyticsContext";
+import React, { useEffect, useMemo, useState } from 'react'
+import { ClassModalDetails, HStack, Typography, VStack } from '@/components'
+import FeatherIcons from '@expo/vector-icons/Feather'
+import { useClasses } from '@/hooks/react-query/useClasses'
+import { IClass } from '@/dtos'
+import { ActivityIndicator, Pressable } from 'react-native'
+import { getUniqueValues } from '@/utils/array'
+import { useTheme } from '@shopify/restyle'
+import { Theme } from '@/theme/theme'
+import { getFilteredClasses, getFilteredCourses } from './utils'
+import { logger } from '@/services/logger'
+import { useCourses } from '@/hooks/react-query/useCourses'
+import { ICourse } from '@/dtos/courses'
+import { useFullSearch } from './FullSearchDrawer/context'
+import { useAnalytics } from '@/contexts/AnalyticsContext'
 
 interface HomeClassesProps {
-  buildingFilter: string;
-  nameFilter?: string;
+  buildingFilter: string
+  nameFilter?: string
 }
 
 export const HomeClasses = ({
   buildingFilter,
   nameFilter,
 }: HomeClassesProps) => {
-  const { data: classes, isLoading: isLoadingClasses } = useClasses();
-  const { data: courses, isLoading: isLoadingCourses } = useCourses();
+  const { data: classes, isLoading: isLoadingClasses } = useClasses()
+  const { data: courses, isLoading: isLoadingCourses } = useCourses()
 
   const { tests } = useAnalytics()
 
@@ -43,7 +42,7 @@ export const HomeClasses = ({
         buildingFilter,
         nameFilter: nameFilter || '',
       })
-  
+
       setFilteredClasses(filteredClasses)
       setIsLoading(false)
     }, 2)
@@ -65,7 +64,13 @@ export const HomeClasses = ({
         })
 
         console.log(nameFilter, filteredCourses.length)
-        console.log(JSON.stringify(filteredCourses.map((item) => item.program), null, 2))
+        console.log(
+          JSON.stringify(
+            filteredCourses.map((item) => item.program),
+            null,
+            2,
+          ),
+        )
 
         setFilteredCourses(filteredCourses || [])
         setIsLoading(false)
@@ -87,14 +92,18 @@ export const HomeClasses = ({
 
   return (
     <VStack>
-      <HStack flex={1} justifyContent={"space-between"} marginBottom={'xs'}>
-        <Typography color="grayTwo" fontWeight={"bold"}>
+      <HStack flex={1} justifyContent={'space-between'} marginBottom={'xs'}>
+        <Typography color="grayTwo" fontWeight={'bold'}>
           Aulas
         </Typography>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <Typography color="grayTwo">{!tests.FULL_SEARCH ? filteredClasses?.length + filteredCourses?.length : filteredClasses?.length}</Typography>
+          <Typography color="grayTwo">
+            {!tests.FULL_SEARCH
+              ? filteredClasses?.length + filteredCourses?.length
+              : filteredClasses?.length}
+          </Typography>
         )}
       </HStack>
 
@@ -102,53 +111,50 @@ export const HomeClasses = ({
       {(isLoading || isLoadingClasses) && <ActivityIndicator />}
       {!tests.FULL_SEARCH && (
         <>
-          {!isLoadingCourses && !isLoading && 
+          {!isLoadingCourses &&
+            !isLoading &&
             filteredCourses?.map((item, index) => (
-              <HomeCourseCard
-                course={item}
-                key={`${item.id}-${index}`}
-              />
-          ))}
+              <HomeCourseCard course={item} key={`${item.id}-${index}`} />
+            ))}
         </>
       )}
-      {!isLoadingClasses && !isLoading && 
+      {!isLoadingClasses &&
+        !isLoading &&
         filteredClasses.map((item, index) => (
-          <MemoHomeClassCard
-            sclass={item}
-            key={`${item.id}-${index}`}
-          />
-      ))}
+          <MemoHomeClassCard sclass={item} key={`${item.id}-${index}`} />
+        ))}
     </VStack>
-  );
-};
-
-interface HomeClassCardProps {
-  sclass: IClass;
+  )
 }
 
-export const HomeClassCard = ({
-  sclass,
-}: HomeClassCardProps) => {
-  const [isClassModalOpen, setIsClassModalOpen] = useState(false);
-  const { colors } = useTheme<Theme>();
+interface HomeClassCardProps {
+  sclass: IClass
+}
+
+export const HomeClassCard = ({ sclass }: HomeClassCardProps) => {
+  const [isClassModalOpen, setIsClassModalOpen] = useState(false)
+  const { colors } = useTheme<Theme>()
 
   const classRooms = useMemo(() => {
-    const classes = sclass.schedule.map((s) => s.classroom);
-    const classrooms = getUniqueValues(classes);
+    const classes = sclass.schedule.map((s) => s.classroom)
+    const classrooms = getUniqueValues(classes)
 
-    return classrooms.join(" | ");
-  }, [sclass]);
+    return classrooms.join(' | ')
+  }, [sclass])
 
   const buildings = useMemo(() => {
-    const classes = sclass.schedule.map((s) => s.building);
-    const classrooms = getUniqueValues(classes);
+    const classes = sclass.schedule.map((s) => s.building)
+    const classrooms = getUniqueValues(classes)
 
-    return classrooms.join(", ");
-  }, [sclass]);
+    return classrooms.join(', ')
+  }, [sclass])
 
   const selectClass = () => {
     setIsClassModalOpen(true)
-    logger.logEvent('Aula Visualizada', { class: sclass.subject_name, screen: 'Home' })
+    logger.logEvent('Aula Visualizada', {
+      class: sclass.subject_name,
+      screen: 'Home',
+    })
   }
 
   return (
@@ -156,7 +162,7 @@ export const HomeClassCard = ({
       <Pressable onPress={selectClass}>
         <HStack
           alignItems="center"
-          backgroundColor={"grayFive"}
+          backgroundColor={'grayFive'}
           borderRadius={8}
           padding="m"
           marginBottom="s"
@@ -166,7 +172,7 @@ export const HomeClassCard = ({
               marginBottom={'xxs'}
               fontSize={18}
               color="white"
-              variant={"heading"}
+              variant={'heading'}
               fontWeight="bold"
               numberOfLines={1}
             >
@@ -180,7 +186,11 @@ export const HomeClassCard = ({
               {classRooms}
             </Typography>
           </VStack>
-          <FeatherIcons name="chevron-right" color={colors.grayThree} size={24} />
+          <FeatherIcons
+            name="chevron-right"
+            color={colors.grayThree}
+            size={24}
+          />
         </HStack>
       </Pressable>
       <ClassModalDetails
@@ -189,17 +199,15 @@ export const HomeClassCard = ({
         onClose={() => setIsClassModalOpen(false)}
       />
     </>
-  );
-};
+  )
+}
 
 interface HomeCourseCardProps {
   course: ICourse
 }
 
-export const HomeCourseCard = ({
-  course,
-}: HomeCourseCardProps) => {
-  const { colors } = useTheme<Theme>();
+export const HomeCourseCard = ({ course }: HomeCourseCardProps) => {
+  const { colors } = useTheme<Theme>()
   const { handleUpdateInfos } = useFullSearch()
 
   const selectCourse = () => {
@@ -207,7 +215,10 @@ export const HomeCourseCard = ({
       isDrawerOpen: true,
       course: course.id,
     })
-    logger.logEvent('Curso selecionado', { course: course.program, screen: 'Home' })
+    logger.logEvent('Curso selecionado', {
+      course: course.program,
+      screen: 'Home',
+    })
   }
 
   return (
@@ -217,7 +228,7 @@ export const HomeCourseCard = ({
           borderWidth={2}
           borderColor="secondary"
           alignItems="center"
-          backgroundColor={"grayFive"}
+          backgroundColor={'grayFive'}
           borderRadius={8}
           padding="m"
           marginBottom="s"
@@ -227,7 +238,7 @@ export const HomeCourseCard = ({
               marginBottom={'xxs'}
               fontSize={12}
               color="white"
-              variant={"heading"}
+              variant={'heading'}
               fontWeight="bold"
               numberOfLines={1}
             >
@@ -241,11 +252,15 @@ export const HomeCourseCard = ({
               CURSO
             </Typography>
           </VStack>
-          <FeatherIcons name="chevron-right" color={colors.secondary} size={24} />
+          <FeatherIcons
+            name="chevron-right"
+            color={colors.secondary}
+            size={24}
+          />
         </HStack>
       </Pressable>
     </>
-  );
-};
+  )
+}
 
-const MemoHomeClassCard = React.memo(HomeClassCard);
+const MemoHomeClassCard = React.memo(HomeClassCard)

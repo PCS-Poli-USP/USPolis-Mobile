@@ -23,7 +23,9 @@ export const isStubCase = isMatching(stubCasePattern)
 const _isErrorStubCase = isMatching(errorCasePattern)
 const _isSuccessStubCase = isMatching(successCasePattern)
 
-const assertsFunctionSetupUseQuery = <T, R>(v: any): v is Function.Function<[T], R> => {
+const assertsFunctionSetupUseQuery = <T, R>(
+  v: any,
+): v is Function.Function<[T], R> => {
   const isUndefined = v === undefined
   const isFunction = typeof v === 'function'
   return isUndefined || isFunction
@@ -37,19 +39,30 @@ export const setupUseQueryFactory = <CTStubs extends StubCasePattern>(
   axiosInstance: MockAdapter,
   urlRegex: RegExp | string,
   handler: allMockAdapterHandlers,
-  stubCases: CTStubs
+  stubCases: CTStubs,
 ) => {
   if (!isStubCase(stubCases)) {
     throw new Error('stubCases must have at least one default and one error')
   }
   function setupUseQuery<
-    Fn extends Record<any, any> | any[] | Function.Function<[CTStubs], ReturnTypeSetupUseQuery<Fn>> = Function.Function<
+    Fn extends
+      | Record<any, any>
+      | any[]
+      | Function.Function<
+          [CTStubs],
+          ReturnTypeSetupUseQuery<Fn>
+        > = Function.Function<
       [CTStubs],
       ReturnTypeSetupUseQuery<Function.Function<[], CTStubs>>
-    >
+    >,
   >(getStub?: Fn): ReturnTypeSetupUseQuery<Fn> {
-    if (assertsFunctionSetupUseQuery<CTStubs, ReturnTypeSetupUseQuery<Fn>>(getStub)) {
-      const safeGetStub = getStub ?? ((e) => e.default as ReturnTypeSetupUseQuery<Fn>)
+    if (
+      assertsFunctionSetupUseQuery<CTStubs, ReturnTypeSetupUseQuery<Fn>>(
+        getStub,
+      )
+    ) {
+      const safeGetStub =
+        getStub ?? ((e) => e.default as ReturnTypeSetupUseQuery<Fn>)
       const stubCase = safeGetStub(stubCases)
 
       if (isSuccessStubCase(stubCase)) {

@@ -1,4 +1,4 @@
-import { IClass } from "./classes"
+import { IClass } from './classes'
 
 export interface ICourse {
   id: string

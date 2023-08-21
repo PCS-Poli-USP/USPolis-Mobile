@@ -1,7 +1,7 @@
-import { User } from "@/dtos";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { User } from '@/dtos'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { USER_STORAGE } from "./config";
+import { USER_STORAGE } from './config'
 
 export const userStorage = {
   save: async (user: User) => {
@@ -13,5 +13,5 @@ export const userStorage = {
   },
   delete: async () => {
     await AsyncStorage.removeItem(USER_STORAGE)
-  }
+  },
 }
