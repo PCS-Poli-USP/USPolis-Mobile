@@ -1,8 +1,7 @@
-import { AbTesting, User } from '@/dtos'
+import { AbTesting } from '@/dtos'
 import { DEFAULT_AB_TESTING, generateAbTesting } from '@/dtos/ab-testing'
 import { logger } from '@/services/logger'
 import { abTestingStorage } from '@/storage/ab-testing'
-import { userStorage } from '@/storage/user'
 import { useContext, useEffect, createContext, useState } from 'react'
 
 export type AnalyticsContextDataProps = {

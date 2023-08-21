@@ -1,15 +1,15 @@
 type TestType = boolean
 
 export type AbTesting = {
-  FULL_SEARCH: TestType
+  EXAMPLE_TEST: TestType
 }
 
 export const DEFAULT_AB_TESTING: AbTesting = {
-  FULL_SEARCH: false,
+  EXAMPLE_TEST: false,
 }
 
 export const generateAbTesting = (): AbTesting => {
   return {
-    FULL_SEARCH: Math.random() > 0.5,
+    EXAMPLE_TEST: Math.random() > 0.5,
   }
 }

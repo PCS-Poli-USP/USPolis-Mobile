@@ -12,7 +12,6 @@ import { logger } from '@/services/logger'
 import { useCourses } from '@/hooks/react-query/useCourses'
 import { ICourse } from '@/dtos/courses'
 import { useFullSearch } from './FullSearchDrawer/context'
-import { useAnalytics } from '@/contexts/AnalyticsContext'
 
 interface HomeClassesProps {
   buildingFilter: string
@@ -25,8 +24,6 @@ export const HomeClasses = ({
 }: HomeClassesProps) => {
   const { data: classes, isLoading: isLoadingClasses } = useClasses()
   const { data: courses, isLoading: isLoadingCourses } = useCourses()
-
-  const { tests } = useAnalytics()
 
   const [filteredClasses, setFilteredClasses] = useState<IClass[]>([])
   const [filteredCourses, setFilteredCourses] = useState<ICourse[]>([])
@@ -100,24 +97,20 @@ export const HomeClasses = ({
           <ActivityIndicator />
         ) : (
           <Typography color="grayTwo">
-            {!tests.FULL_SEARCH
-              ? filteredClasses?.length + filteredCourses?.length
-              : filteredClasses?.length}
+            {filteredClasses?.length + filteredCourses?.length}
           </Typography>
         )}
       </HStack>
 
       {/* Todo: return skeleton loading */}
       {(isLoading || isLoadingClasses) && <ActivityIndicator />}
-      {!tests.FULL_SEARCH && (
-        <>
-          {!isLoadingCourses &&
-            !isLoading &&
-            filteredCourses?.map((item, index) => (
-              <HomeCourseCard course={item} key={`${item.id}-${index}`} />
-            ))}
-        </>
-      )}
+      <>
+        {!isLoadingCourses &&
+          !isLoading &&
+          filteredCourses?.map((item, index) => (
+            <HomeCourseCard course={item} key={`${item.id}-${index}`} />
+          ))}
+      </>
       {!isLoadingClasses &&
         !isLoading &&
         filteredClasses.map((item, index) => (
