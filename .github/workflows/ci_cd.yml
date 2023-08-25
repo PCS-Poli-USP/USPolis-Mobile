@@ -45,6 +45,17 @@ jobs:
         with:
           node-version: 18.x
 
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn # Cache para Yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Instalar dependências com Yarn
+        run: yarn install --frozen-lockfile
+
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
         with:
