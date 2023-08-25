@@ -1,0 +1,49 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  CI:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies
+        run: npm install
+    
+  CD:
+    name: Continuous Delivery
+    runs-on: ubuntu-latest
+
+    needs: CI
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+      uses: actions/setup-node@v3
+
+      - name: Setup EAS
+      uses: expo/expo-github-action@v8
+      with:
+        eas-version: latest
+        packager: npm
+        token: ${{ secrets.EAS_EXPO_TOKEN }}
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: eas build --platform all --profile preview --non-interactive --auto-submit-with-profile=preview --no-wait

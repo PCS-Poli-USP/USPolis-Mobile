@@ -9,8 +9,10 @@
       "channel": "development"
     },
     "preview": {
+      "autoIncrement": true,
       "distribution": "internal",
       "android": {
+        "autoIncrement": "versionCode",
         "buildType": "apk"
       },
       "channel": "preview"
@@ -26,11 +28,23 @@
       "channel": "preview3"
     },
     "production": {
-      "channel": "production"
+      "channel": "production",
+      "autoIncrement": true,
+      "android": {
+        "autoIncrement": "versionCode"
+      },
+      "ios": {
+        "image": "latest",
+        "autoIncrement": "buildNumber"
+      }
     }
   },
   "submit": {
-    "production": {
+    "preview": {
+      "android": {
+        "track": "internal",
+        "releaseStatus": "draft"
+      },
       "ios": {
         "appleId": "renandeluca01@gmail.com",
         "ascAppId": "1451455075",

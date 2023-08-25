@@ -2,7 +2,7 @@
   "expo": {
     "name": "uspolis",
     "slug": "uspolis",
-    "version": "6.1.0",
+    "version": "7.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -36,7 +36,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "b5f5a633-6123-4808-8db2-64f784c0380d"
+        "projectId": "e8ff3ab1-1c5e-4c53-b7c8-9dab42186dc3"
       }
     },
     "runtimeVersion": {
