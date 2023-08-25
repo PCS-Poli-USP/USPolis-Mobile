@@ -19,18 +19,17 @@ jobs:
         with:
           node-version: 18.x
 
- - name: Cache node modules
-      uses: actions/cache@v2
-      with:
-        path: ~/.cache/yarn  # Cache para Yarn
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn # Cache para Yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-    - name: Instalar dependências com Yarn
-      run: yarn install --frozen-lockfile
+      - name: Instalar dependências com Yarn
+        run: yarn install --frozen-lockfile
 
-    
   cd:
     name: Continuous Delivery
     runs-on: ubuntu-latest
@@ -41,17 +40,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
 
       - name: Setup Expo and EAS
-      uses: expo/expo-github-action@v8
-      with:
-        eas-version: latest
-        packager: yarn
-        token: ${{ secrets.EAS_EXPO_TOKEN }}
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          packager: yarn
+          token: ${{ secrets.EAS_EXPO_TOKEN }}
 
       - name: Build
         run: eas build --platform all --profile preview --non-interactive --auto-submit-with-profile=preview --no-wait
