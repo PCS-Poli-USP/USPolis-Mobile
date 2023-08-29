@@ -64,4 +64,4 @@ jobs:
           token: ${{ secrets.EAS_EXPO_TOKEN }}
 
       - name: Build
-        run: eas build --platform all --profile preview --non-interactive --auto-submit-with-profile=preview --no-wait
+        run: EXPO_APPLE_APP_SPECIFIC_PASSWORD=${{ secrets.EAS_APPLE_APP_SPECIFIC_PASSWORD }} eas build --platform all --profile preview --non-interactive --auto-submit-with-profile=preview --no-wait
