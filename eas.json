@@ -15,7 +15,11 @@
         "autoIncrement": "versionCode",
         "buildType": "apk"
       },
-      "channel": "preview"
+      "channel": "preview",
+      "ios": {
+        "image": "latest",
+        "autoIncrement": "buildNumber"
+      }
     },
     "preview2": {
       "android": {
