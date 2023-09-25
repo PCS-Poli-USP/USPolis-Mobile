@@ -60,15 +60,6 @@ export const HomeClasses = ({
           nameFilter: nameFilter || '',
         })
 
-        console.log(nameFilter, filteredCourses.length)
-        console.log(
-          JSON.stringify(
-            filteredCourses.map((item) => item.program),
-            null,
-            2,
-          ),
-        )
-
         setFilteredCourses(filteredCourses || [])
         setIsLoading(false)
       } else {

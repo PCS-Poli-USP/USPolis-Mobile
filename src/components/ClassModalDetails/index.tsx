@@ -1,22 +1,22 @@
-import { useSchedule } from "@/hooks/useSchedule";
-import { AppRoutesType } from "@/routes/app.routes";
-import FeatherIcons from "@expo/vector-icons/Feather";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { differenceInDays, format, parseISO } from "date-fns";
-import { Pressable } from "react-native";
-import { Button } from "../Button";
-import { sortEventsByScheduleTime } from "./utils";
-import { Building, IClass } from "../../dtos/classes";
-import { Theme } from "@/theme/theme";
-import { useTheme } from "@shopify/restyle";
-import Modal from 'react-native-modal';
-import { Box, HStack, Typography, VStack } from "../ui";
-import { logger } from "@/services/logger";
+import { useSchedule } from '@/hooks/useSchedule'
+import { AppRoutesType } from '@/routes/app.routes'
+import FeatherIcons from '@expo/vector-icons/Feather'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { differenceInDays, format, parseISO } from 'date-fns'
+import { Pressable } from 'react-native'
+import { Button } from '../Button'
+import { sortEventsByScheduleTime } from './utils'
+import { Building, IClass } from '../../dtos/classes'
+import { Theme } from '@/theme/theme'
+import { useTheme } from '@shopify/restyle'
+import Modal from 'react-native-modal'
+import { Box, HStack, Typography, VStack } from '../ui'
+import { logger } from '@/services/logger'
 
 interface ClassModalDetailsProps {
-  sclass?: IClass | null;
-  isOpen: boolean;
-  onClose: () => void;
+  sclass?: IClass | null
+  isOpen: boolean
+  onClose: () => void
 }
 
 export const ClassModalDetails = ({
@@ -24,9 +24,9 @@ export const ClassModalDetails = ({
   isOpen,
   onClose,
 }: ClassModalDetailsProps) => {
-  const navigation = useNavigation<NavigationProp<AppRoutesType>>();
-  const { colors } = useTheme<Theme>();
-  const { schedule, toggleClassOnSchedule } = useSchedule();
+  const navigation = useNavigation<NavigationProp<AppRoutesType>>()
+  const { colors } = useTheme<Theme>()
+  const { schedule, toggleClassOnSchedule } = useSchedule()
 
   const handleToggleClassOnSchedule = (classId: string, className: string) => {
     if (schedule.includes(classId)) {
@@ -39,25 +39,25 @@ export const ClassModalDetails = ({
     logger.setUserProperty('classes_on_schedule', schedule.length.toString())
   }
 
-  if (!sclass) return <></>;
+  if (!sclass) return <></>
 
   const progressValue =
     differenceInDays(new Date(), parseISO(sclass.end_period)) > 0
       ? (differenceInDays(new Date(), parseISO(sclass.end_period)) /
           differenceInDays(
             parseISO(sclass.start_period),
-            parseISO(sclass.end_period)
+            parseISO(sclass.end_period),
           )) *
         100
-      : 0;
+      : 0
 
   const navigateToMap = (building: Building, floor: number) => {
-    navigation.navigate("Maps", {
+    navigation.navigate('Maps', {
       building,
       floor,
-    });
-    onClose();
-  };
+    })
+    onClose()
+  }
 
   return (
     <Box flex={1}>
@@ -71,13 +71,32 @@ export const ClassModalDetails = ({
         coverScreen
         style={{ margin: 0 }}
       >
-        <Box width={'100%'} borderTopLeftRadius={8} borderTopRightRadius={8} backgroundColor="graySeven" position="absolute" bottom={0} paddingHorizontal={'s'} paddingVertical="l">
+        <Box
+          width={'100%'}
+          borderTopLeftRadius={8}
+          borderTopRightRadius={8}
+          backgroundColor="graySeven"
+          position="absolute"
+          bottom={0}
+          paddingHorizontal={'s'}
+          paddingVertical="l"
+        >
           <Box backgroundColor="graySeven" borderBottomColor="transparent">
             <VStack alignItems="center" marginBottom={'m'}>
-              <Typography variant={"heading"} color="white" fontSize={20} marginBottom={'s'}>
+              <Typography
+                variant={'heading'}
+                color="white"
+                fontSize={20}
+                marginBottom={'s'}
+              >
                 {sclass.subject_code}
               </Typography>
-              <Typography variant={"heading"} color="white" fontSize={18} marginBottom={'s'}>
+              <Typography
+                variant={'heading'}
+                color="white"
+                fontSize={18}
+                marginBottom={'s'}
+              >
                 {sclass.subject_name}
               </Typography>
               <Typography color="grayTwo" fontSize={14}>
@@ -85,14 +104,19 @@ export const ClassModalDetails = ({
               </Typography>
             </VStack>
           </Box>
-          <Box backgroundColor="graySeven" paddingHorizontal={'m'} paddingBottom={'s'}>
+          <Box
+            backgroundColor="graySeven"
+            paddingHorizontal={'m'}
+            paddingBottom={'s'}
+          >
             <VStack backgroundColor="graySeven" marginBottom="m">
               {sclass.schedule
                 .sort(sortEventsByScheduleTime)
                 .map((event, index) => (
                   <Box key={`${event.id}-${index}`} marginBottom={'s'}>
-                    <Typography variant={"heading"} color="white" mb={'xs'}>
-                      {event.week_day}, das {event.start_time} às {event.end_time}
+                    <Typography variant={'heading'} color="white" mb={'xs'}>
+                      {event.week_day}, das {event.start_time} às{' '}
+                      {event.end_time}
                     </Typography>
                     <Pressable
                       onPress={() => navigateToMap(event.building, event.floor)}
@@ -105,12 +129,16 @@ export const ClassModalDetails = ({
                         borderRadius={8}
                         padding={'s'}
                       >
-                        <VStack gap={"xs"}>
-                          <Typography color="white">Prédio: {event.building}</Typography>
-                          <Typography color="white">Sala: {event.classroom}</Typography>
+                        <VStack gap={'xs'}>
+                          <Typography color="white">
+                            Prédio: {event.building}
+                          </Typography>
+                          <Typography color="white">
+                            Sala: {event.classroom}
+                          </Typography>
                         </VStack>
-                        <HStack alignItems={"center"}>
-                          <Typography color={"primary"} marginRight='s'>
+                        <HStack alignItems={'center'}>
+                          <Typography color={'primary'} marginRight="s">
                             Ver no mapa
                           </Typography>
                           <FeatherIcons
@@ -134,13 +162,13 @@ export const ClassModalDetails = ({
                   <Box>
                     <Typography color="grayTwo">Início</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.start_period), "dd/MM/yyyy")}
+                      {format(parseISO(sclass.start_period), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                   <Box>
                     <Typography color="grayTwo">Fim</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.end_period), "dd/MM/yyyy")}
+                      {format(parseISO(sclass.end_period), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                 </Box>
@@ -154,18 +182,20 @@ export const ClassModalDetails = ({
                 /> */}
               </Box>
               <Button
-                variant={"outlined"}
+                variant={'outlined'}
                 title={
                   schedule.includes(sclass.id)
-                    ? "Remover de minhas disciplinas"
-                    : "Adicionar em minhas disciplinas"
+                    ? 'Remover de minhas disciplinas'
+                    : 'Adicionar em minhas disciplinas'
                 }
-                onPress={() => handleToggleClassOnSchedule(sclass.id, sclass.subject_name)}
+                onPress={() =>
+                  handleToggleClassOnSchedule(sclass.id, sclass.subject_name)
+                }
               />
             </VStack>
           </Box>
         </Box>
       </Modal>
     </Box>
-  );
-};
+  )
+}
