@@ -10,4 +10,5 @@ export interface IEvent {
   location: string
   start_timestamp: string
   title: string
+  likes: number
 }

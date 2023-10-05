@@ -29,7 +29,7 @@ export const Events = () => {
           <VStack marginTop={'l'} width={'100%'}>
             <Input
               variation="secondary"
-              placeholder={'Procure por seu curso ou aulas'}
+              placeholder={'Procure por eventos'}
               onChangeText={(text) => setNameFilter(text)}
               onBlur={() =>
                 logger.logEvent('Busca Realizada', {
