@@ -70,8 +70,6 @@ export const EventsList = ({ buildingFilter, nameFilter }: EventsListProps) => {
         filteredEvents.map((item, index) => (
           <MemoEventCard event={item} key={`${item._id}-${index}`} />
         ))}
-
-      <Typography textAlign="center">Deseja adicionar um evento?</Typography>
     </VStack>
   )
 }
