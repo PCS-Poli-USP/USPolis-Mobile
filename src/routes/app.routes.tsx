@@ -10,7 +10,7 @@ import { Home, Maps, About, MyClasses, Events } from '@/screens'
 import { Building } from '@/dtos/classes'
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
-import { Box } from '@/components'
+import { Box, Typography } from '@/components'
 import { logger } from '@/services/logger'
 
 export type AppRoutesType = {
@@ -46,7 +46,7 @@ export const AppRoutes = () => {
         tabBarStyle: {
           backgroundColor: colors.graySix,
           borderTopWidth: 0,
-          height: Platform.OS === 'ios' ? 96 : 88,
+          height: Platform.OS === 'ios' ? 110 : 102,
           paddingBottom: spacing.xl,
           paddingTop: spacing.l,
           paddingHorizontal: spacing.l,
@@ -71,6 +71,12 @@ export const AppRoutes = () => {
           tabPress: () => onTabPress(route.name),
         })}
         options={{
+          tabBarLabel: ({ color }) => (
+            <Typography fontSize={10} style={{ color }}>
+              Eventos
+            </Typography>
+          ),
+          tabBarShowLabel: true,
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="calendar" color={color} size={iconSize} />
           ),
@@ -89,8 +95,14 @@ export const AppRoutes = () => {
           tabPress: () => onTabPress(route.name),
         })}
         options={{
+          tabBarLabel: ({ color }) => (
+            <Typography fontSize={10} style={{ color }}>
+              Busca
+            </Typography>
+          ),
+          tabBarShowLabel: true,
           tabBarIcon: ({ color }) => (
-            <FeatherIcons name="home" color={color} size={iconSize} />
+            <FeatherIcons name="search" color={color} size={iconSize} />
           ),
           title: 'Início',
           headerLeft: () => (
@@ -107,8 +119,14 @@ export const AppRoutes = () => {
           tabPress: () => onTabPress(route.name),
         })}
         options={{
+          tabBarLabel: ({ color }) => (
+            <Typography fontSize={10} style={{ color }}>
+              Minhas Aulas
+            </Typography>
+          ),
+          tabBarShowLabel: true,
           tabBarIcon: ({ color }) => (
-            <FeatherIcons name="book-open" color={color} size={iconSize} />
+            <FeatherIcons name="home" color={color} size={iconSize} />
           ),
           title: 'Minhas Aulas',
         }}
@@ -120,6 +138,12 @@ export const AppRoutes = () => {
           tabPress: () => onTabPress(route.name),
         })}
         options={{
+          tabBarLabel: ({ color }) => (
+            <Typography fontSize={10} style={{ color }}>
+              Mapas
+            </Typography>
+          ),
+          tabBarShowLabel: true,
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
@@ -133,6 +157,12 @@ export const AppRoutes = () => {
           tabPress: () => onTabPress(route.name),
         })}
         options={{
+          tabBarLabel: ({ color }) => (
+            <Typography fontSize={10} style={{ color }}>
+              Informações
+            </Typography>
+          ),
+          tabBarShowLabel: true,
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="info" color={color} size={iconSize} />
           ),

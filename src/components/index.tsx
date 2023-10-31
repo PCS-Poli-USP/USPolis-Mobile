@@ -1,16 +1,18 @@
-import { Dropdown } from "./Dropdown";
-import { Checkbox } from "./Checkbox";
-import { Loading } from "./Loading";
-import { Input } from "./Input";
-import { TextArea } from "./TextArea";
-import { Button } from "./Button";
-import { IconButton } from "./IconButton";
-import { Layout } from "./Layout";
-import { BuildingFilter } from "./BuildingFilter";
-import { ClassModalDetails } from "./ClassModalDetails";
-import { Box, HStack, Typography, VStack, Pressable } from "./ui";
+import { Dropdown } from './Dropdown'
+import { Checkbox } from './Checkbox'
+import { Loading } from './Loading'
+import { Input } from './Input'
+import { TextArea } from './TextArea'
+import { Button } from './Button'
+import { IconButton } from './IconButton'
+import { Layout } from './Layout'
+import { BuildingFilter } from './BuildingFilter'
+import { ClassModalDetails } from './ClassModalDetails'
+import { Box, HStack, Typography, VStack, Pressable } from './ui'
+import { MailComposer } from './MailComposer'
 
 export {
+  MailComposer,
   Dropdown,
   BuildingFilter,
   Loading,
@@ -26,4 +28,4 @@ export {
   VStack,
   Pressable,
   Checkbox,
-};
+}

@@ -1,16 +1,20 @@
-import { StatusBar } from 'react-native';
-import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto'
-import { Box, Loading } from '@/components/index';
-import { Routes } from '@/routes';
-import { Contexts } from '@/contexts';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import Toast, { InfoToast, BaseToastProps } from 'react-native-toast-message';
+import { StatusBar } from 'react-native'
+import {
+  useFonts,
+  Roboto_400Regular as Roboto400Regular,
+  Roboto_700Bold as Roboto700Bold,
+} from '@expo-google-fonts/roboto'
+import { Box, Loading } from '@/components/index'
+import { Routes } from '@/routes'
+import { Contexts } from '@/contexts'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import Toast, { InfoToast, BaseToastProps } from 'react-native-toast-message'
 import { ThemeProvider as RestyleThemeProvider } from '@shopify/restyle'
 
 import RestyleTheme from '@/theme/theme'
-import { useEffect } from 'react';
-import { logger } from '@/services/logger';
-import { abTestingStorage } from '@/storage/ab-testing';
+import { useEffect } from 'react'
+import { useLikeStore } from '@/store/likes-store'
+import { queryClient } from '@/hooks/react-query/client'
 
 if (__DEV__) {
   /**
@@ -23,11 +27,8 @@ if (__DEV__) {
    * PS: é ideal que você remova esses mocks para mergear na branch principal, afinal você
    * não quer causar um comportamento inesperado no ambiente de desenvolvimento de ninguém
    */
-
   // setupUseClasses(e => e.default)
 }
-
-const queryClient = new QueryClient()
 
 const toastConfig = {
   info: (props: BaseToastProps) => (
@@ -36,28 +37,36 @@ const toastConfig = {
       style={{ borderLeftColor: '#408180' }}
       text1Style={{
         fontSize: 18,
-        fontWeight: "700",
-        fontFamily: 'Roboto'
+        fontWeight: '700',
+        fontFamily: 'Roboto',
       }}
       text2Style={{
         fontSize: 14,
         fontFamily: 'Roboto',
-        fontWeight: "400"
+        fontWeight: '400',
       }}
     />
   ),
-};
+}
 
 export default function App() {
-  const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
+  const [fontsLoaded] = useFonts({
+    Roboto_400Regular: Roboto400Regular,
+    Roboto_700Bold: Roboto700Bold,
+  })
+  const populateLikes = useLikeStore((state) => state.populateLikes)
+
+  useEffect(() => {
+    populateLikes()
+  }, [populateLikes])
 
   return (
     <QueryClientProvider client={queryClient}>
       <RestyleThemeProvider theme={RestyleTheme}>
         <Contexts>
-          <StatusBar 
+          <StatusBar
             barStyle="light-content"
-            backgroundColor='transparent'
+            backgroundColor="transparent"
             translucent
           />
           {fontsLoaded ? (
@@ -68,8 +77,8 @@ export default function App() {
             </Box>
           )}
         </Contexts>
-        <Toast config={toastConfig}/>
+        <Toast config={toastConfig} />
       </RestyleThemeProvider>
     </QueryClientProvider>
-  );
+  )
 }
