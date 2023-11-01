@@ -42,10 +42,5 @@ export const getFilteredEvents = ({
     })
   }
 
-  return eventsFiltered.sort((a, b) => {
-    const aDate = new Date(a.created_at)
-    const bDate = new Date(b.created_at)
-
-    return aDate.getTime() - bDate.getTime()
-  })
+  return eventsFiltered
 }
