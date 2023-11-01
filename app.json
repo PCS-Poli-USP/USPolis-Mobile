@@ -20,7 +20,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "10",
+      "buildNumber": "14",
       "bundleIdentifier": "Lunadros.Uspolis"
     },
     "android": {
@@ -29,13 +29,18 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "uspolis.lunadros",
-      "versionCode": 49
+      "versionCode": 57
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e8ff3ab1-1c5e-4c53-b7c8-9dab42186dc3"
+      }
     }
   }
 }

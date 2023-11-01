@@ -30,6 +30,8 @@ export const EventModal = ({ event, isOpen, onClose }: EventModalProps) => {
     }
     onClose()
   }
+  console.log(event)
+  console.log(dayjs(event.end_datetime).format('YYYY-MM-DD HH:mm'))
 
   return (
     <Box flex={1}>
@@ -129,18 +131,22 @@ export const EventModal = ({ event, isOpen, onClose }: EventModalProps) => {
               )}
               <Box marginBottom="m">
                 <Box flexDirection="row" justifyContent="space-between">
-                  <Box>
-                    <Typography color="grayTwo">Início</Typography>
-                    <Typography color="white">
-                      {dayjs(event.start_timestamp).format('DD/MM/YYYY')}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography color="grayTwo">Fim</Typography>
-                    <Typography color="white">
-                      {dayjs(event.end_timestamp).format('DD/MM/YYYY')}
-                    </Typography>
-                  </Box>
+                  {!!event.start_datetime && (
+                    <Box>
+                      <Typography color="grayTwo">Início</Typography>
+                      <Typography color="white">
+                        {dayjs(event.start_datetime).format('DD/MM/YYYY HH:mm')}
+                      </Typography>
+                    </Box>
+                  )}
+                  {!!event.end_datetime && (
+                    <Box>
+                      <Typography color="grayTwo">Fim</Typography>
+                      <Typography color="white">
+                        {dayjs(event.end_datetime).format('DD/MM/YYYY HH:mm')}
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </VStack>
