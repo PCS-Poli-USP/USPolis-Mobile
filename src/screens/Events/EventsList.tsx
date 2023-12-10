@@ -142,16 +142,12 @@ export const EventCard = ({ event }: EventCardProps) => {
                 color="white"
                 variant={'heading'}
                 fontWeight="bold"
-                numberOfLines={1}
+                // numberOfLines={1}
               >
                 {event.title}
               </Typography>
 
-              <Typography
-                color="grayTwo"
-                marginBottom={'xxs'}
-                numberOfLines={2}
-              >
+              <Typography color="grayTwo" marginBottom={'xs'} numberOfLines={2}>
                 {event.description}
               </Typography>
               <Typography color="grayOne" numberOfLines={2} variant="heading">

@@ -158,7 +158,7 @@ export const HomeClassCard = ({ sclass }: HomeClassCardProps) => {
               color="white"
               variant={'heading'}
               fontWeight="bold"
-              numberOfLines={1}
+              // numberOfLines={1}
             >
               {sclass.subject_code} - {sclass.subject_name}
             </Typography>
@@ -224,7 +224,7 @@ export const HomeCourseCard = ({ course }: HomeCourseCardProps) => {
               color="white"
               variant={'heading'}
               fontWeight="bold"
-              numberOfLines={1}
+              // numberOfLines={1}
             >
               {course.program}
             </Typography>

@@ -1,10 +1,10 @@
-import { Loading } from "@/components"
-import { useAuth } from "@/hooks"
-import { Theme } from "@/theme/theme"
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { useTheme } from "@shopify/restyle"
+import { Loading } from '@/components'
+import { useAuth } from '@/hooks'
+import { Theme } from '@/theme/theme'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
+import { useTheme } from '@shopify/restyle'
 
-import { AppRoutes } from "./app.routes"
+import { AppRoutes } from './app.routes'
 // import { AuthRoutes } from "./auth.routes"
 
 export const Routes = () => {

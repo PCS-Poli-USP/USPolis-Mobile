@@ -47,7 +47,7 @@ export const AppRoutes = () => {
           backgroundColor: colors.graySix,
           borderTopWidth: 0,
           height: Platform.OS === 'ios' ? 110 : 102,
-          paddingBottom: spacing.xl,
+          paddingBottom: Platform.OS === 'ios' ? spacing.xl : spacing.m,
           paddingTop: spacing.l,
           paddingHorizontal: spacing.l,
         },
