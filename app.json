@@ -29,7 +29,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "uspolis.lunadros",
-      "versionCode": 57
+      "versionCode": 60
     },
     "web": {
       "favicon": "./assets/favicon.png"
