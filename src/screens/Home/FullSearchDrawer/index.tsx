@@ -1,52 +1,40 @@
-import { Theme } from "@/theme/theme";
-import { useTheme } from "@shopify/restyle";
-import Modal from 'react-native-modal';
-import { logger } from "@/services/logger";
-import { Box, Button, Dropdown, Typography, VStack } from "@/components";
-import React, { useMemo } from "react";
-import { CourseSearch } from "./CourseSearch";
-import { FullSearchContextProvider, useFullSearch } from "./context";
-import { ClassSelection } from "./ClassSelection";
+import { Theme } from '@/theme/theme'
+import { useTheme } from '@shopify/restyle'
+import { Box } from '@/components'
+import React from 'react'
+import { CourseSearch } from './CourseSearch'
+import { useFullSearch } from './context'
+import { ClassSelection } from './ClassSelection'
+import { Modal } from '@/components/Modal'
 
 interface IFullSearchDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean
+  onClose: () => void
 }
 
 export const ClassFullSearchDrawer = ({
   isOpen,
   onClose,
 }: IFullSearchDrawerProps) => {
-  const { colors } = useTheme<Theme>();
+  const { colors } = useTheme<Theme>()
   const { index } = useFullSearch()
 
   return (
     <Box flex={1}>
-      <Modal
-        isVisible={isOpen}
-        backdropColor={colors.grayOne}
-        backdropOpacity={0.2}
-        onBackdropPress={onClose}
-        coverScreen
-        style={{ margin: 0 }}
-      >
-        <Box 
-          width={'100%'} 
-          borderTopLeftRadius={8} 
-          borderTopRightRadius={8} 
-          backgroundColor="graySeven" 
-          position="absolute" 
-          bottom={0} 
-          paddingHorizontal={'s'} 
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <Box
+          width={'100%'}
+          borderTopLeftRadius={8}
+          borderTopRightRadius={8}
+          backgroundColor="graySeven"
+          position="absolute"
+          bottom={0}
+          paddingHorizontal={'s'}
           paddingVertical="l"
         >
-          {index === 0 && (
-            <CourseSearch />
-          )}
+          {index === 0 && <CourseSearch />}
 
-          {index === 1 && (
-            <ClassSelection onClose={onClose} />
-          )}
+          {index === 1 && <ClassSelection onClose={onClose} />}
         </Box>
       </Modal>
     </Box>

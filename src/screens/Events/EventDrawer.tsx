@@ -1,12 +1,18 @@
 import FeatherIcons from '@expo/vector-icons/Feather'
-import { format, parseISO } from 'date-fns'
-import { Alert, Linking, Pressable } from 'react-native'
+import {
+  Alert,
+  Dimensions,
+  Linking,
+  Pressable,
+  ScrollView,
+  View,
+} from 'react-native'
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
-import Modal from 'react-native-modal'
 import { Box, HStack, Typography, VStack } from '@/components'
 import { IEvent } from '@/dtos/events'
 import dayjs from 'dayjs'
+import { Modal } from '@/components/Modal'
 
 interface EventModalProps {
   event?: IEvent | null
@@ -36,14 +42,16 @@ export const EventModal = ({ event, isOpen, onClose }: EventModalProps) => {
   return (
     <Box flex={1}>
       <Modal
-        isVisible={isOpen}
-        backdropColor={colors.grayOne}
-        backdropOpacity={0.2}
-        swipeDirection={'down'}
-        onBackdropPress={onClose}
-        onSwipeComplete={onClose}
-        coverScreen
-        style={{ margin: 0 }}
+        isOpen={isOpen}
+        onClose={onClose}
+        // isVisible={isOpen}
+        // backdropColor={colors.grayOne}
+        // backdropOpacity={0.2}
+        // swipeDirection={'down'}
+        // onBackdropPress={onClose}
+        // onSwipeComplete={onClose}
+        // coverScreen
+        // style={{ margin: 0 }}
       >
         <Box
           width={'100%'}
@@ -54,6 +62,7 @@ export const EventModal = ({ event, isOpen, onClose }: EventModalProps) => {
           bottom={0}
           paddingHorizontal={'s'}
           paddingVertical="l"
+          maxHeight={Dimensions.get('window').height * 0.9}
         >
           <Box backgroundColor="graySeven" borderBottomColor="transparent">
             <VStack alignItems="center" marginBottom={'m'}>
@@ -106,13 +115,18 @@ export const EventModal = ({ event, isOpen, onClose }: EventModalProps) => {
                   </Pressable>
                 </Box>
               )}
-              {!!event.description && (
-                <Box marginBottom="m" marginTop="m">
-                  <Typography color="white" fontSize={16}>
-                    {event.description}
-                  </Typography>
-                </Box>
-              )}
+              <Box maxHeight={(3 * Dimensions.get('window').height) / 7}>
+                <ScrollView>
+                  <View
+                    style={{ flex: 1 }}
+                    onStartShouldSetResponder={() => true}
+                  >
+                    <Typography color="white" fontSize={16}>
+                      {event.description}
+                    </Typography>
+                  </View>
+                </ScrollView>
+              </Box>
               {!!event.category && (
                 <Box marginBottom="m">
                   <Typography color="grayTwo">Categoria</Typography>

@@ -2,11 +2,11 @@ import { TouchableOpacity } from 'react-native'
 import { Box, Typography } from '../ui'
 import * as Mail from 'expo-mail-composer'
 import { useRef, useState } from 'react'
-import Modal from 'react-native-modal'
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
 import { Button } from '../Button'
 import * as Clipboard from 'expo-clipboard'
+import { Modal } from '../Modal'
 
 export const MailComposer = () => {
   const { colors } = useTheme<Theme>()
@@ -42,14 +42,16 @@ export const MailComposer = () => {
         </Typography>
       </TouchableOpacity>
       <Modal
-        isVisible={isDrawerOpen}
-        backdropColor={colors.grayOne}
-        backdropOpacity={0.2}
-        swipeDirection={'down'}
-        onBackdropPress={() => setIsDrawerOpen(false)}
-        onSwipeComplete={() => setIsDrawerOpen(false)}
-        coverScreen
-        style={{ margin: 0 }}
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        // isVisible={isDrawerOpen}
+        // backdropColor={colors.grayOne}
+        // backdropOpacity={0.2}
+        // swipeDirection={'down'}
+        // onBackdropPress={() => setIsDrawerOpen(false)}
+        // onSwipeComplete={() => setIsDrawerOpen(false)}
+        // coverScreen
+        // style={{ margin: 0 }}
       >
         <Box
           width={'100%'}
