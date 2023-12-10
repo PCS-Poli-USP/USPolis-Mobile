@@ -9,9 +9,9 @@ import { sortEventsByScheduleTime } from './utils'
 import { Building, IClass } from '../../dtos/classes'
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
-import Modal from 'react-native-modal'
 import { Box, HStack, Typography, VStack } from '../ui'
 import { logger } from '@/services/logger'
+import { Modal } from '../Modal'
 
 interface ClassModalDetailsProps {
   sclass?: IClass | null
@@ -62,14 +62,16 @@ export const ClassModalDetails = ({
   return (
     <Box flex={1}>
       <Modal
-        isVisible={isOpen}
-        backdropColor={colors.grayOne}
-        backdropOpacity={0.2}
-        swipeDirection={'down'}
-        onBackdropPress={onClose}
-        onSwipeComplete={onClose}
-        coverScreen
-        style={{ margin: 0 }}
+        isOpen={isOpen}
+        onClose={onClose}
+        // isVisible={isOpen}
+        // backdropColor={colors.grayOne}
+        // backdropOpacity={0.2}
+        // swipeDirection={'down'}
+        // onBackdropPress={onClose}
+        // onSwipeComplete={onClose}
+        // coverScreen
+        // style={{ margin: 0 }}
       >
         <Box
           width={'100%'}
