@@ -46,6 +46,7 @@ export const Dropdown = ({
           }}
           enabled={!disabled}
           selectedValue={selected}
+          numberOfLines={2}
           onValueChange={(itemValue) => {
             onItemPress(itemValue)
           }}
