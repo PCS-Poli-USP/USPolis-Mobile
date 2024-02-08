@@ -12,21 +12,27 @@ O aplicativo oficial da faculdade para consulta de salas de aula, matérias e ma
 
 ## Como Rodar o Projeto
 
-1. Certifique-se de ter o [Expo CLI](https://expo.dev/tools/cli) instalado.
-2. Clone o repositório:
+1. Certifique-se de ter uma conta na [Expo](https://expo.dev)
+2. Crie um projeto na aba "Projects" vinculado ao seu perfil
+3. Baixe o aplicativo [Expo Go](https://expo.dev/client) em seu celular
+4. Clone o repositório:
     ```bash
     git clone [https://github.com/seu-repositorio/uspolis.git](https://github.com/PCS-Poli-USP/USPolis-Mobile)
     cd uspolis
     ```
-3. Instale as dependências:
+5. No diretório do projeto, em app.json na linha 42 mude o projectID para o ID do projeto que você criou
+6. Instale as dependências:
     ```bash
     npm install
     ```
-4. Inicie o projeto:
+7. Inicie o projeto:
     ```bash
     npm start
     ```
+8. Leia o QR Code que irá aparecer usando o aplicativo Expo Go ou insira manualmente a url
 
+> [!TIP]
+> Caso queira usar sua própria API, na pasta "src" vá para a pasta "services" e modifique a constante  ```URL_BASE ``` no arquivo api.ts
 ## Estrutura do Projeto
 
 ```plaintext
@@ -67,27 +73,27 @@ src/
 ### Android
 
 A fim de realizar o deploy para a loja do android, os seguintes passos devem ser seguidos:
-1. Criar uma conta em http://expo.dev
+1. Certifique-se de usar sua conta da [Expo](https://expo.dev)
 2. Configurar as credenciais de android para tal conta: 
-    2.1 Conseguir Alias
-    2.2 Conseguir Senha
-3. Logar na sua conta expo em seu terminar ``npx expo login -h``
-3. Rodar ```npx eas build --profile preview --platform android``` e seguir as instruções
+   * Conseguir Alias
+   * Conseguir Senha
+3. Logar na sua conta expo em seu terminal ``npx expo login -h``
+4. Rodar ```npx eas build --profile preview --platform android``` e seguir as instruções
 
 ### iOS
 
 A fim de realizar o deploy para a loja do iOS, os seguintes passos devem ser seguidos:
-1. Criar uma conta em http://expo.dev
+1. Certifique-se de usar sua conta da [Expo](https://expo.dev)
 2. Configurar as credenciais de iOS para tal conta: 
-    2.1 Conseguir Apple ID
-    2.2 Conseguir Apple Team ID
-    2.3 Conseguir Apple Provisioning Profile
-    2.4 Conseguir Apple Push Notifications Key
-    2.5 Conseguir Apple Push Notifications Certificate
+    * Conseguir Apple ID
+    * Conseguir Apple Team ID
+    * Conseguir Apple Provisioning Profile
+    * Conseguir Apple Push Notifications Key
+    * Conseguir Apple Push Notifications Certificate
 
-3. Logar na sua conta expo em seu terminar ``npx expo login -h``
-3. Rodar ```npx eas build --profile preview --platform ios``` e seguir as instruções. Para isso você precisará de uma conta na apple connect que tenha permissões para realizar o build de aplicativos.
-4. Após o build ser realizado, rodar o comando ```npx eas submit --platform ios``` e seguir as instruções. Dessa forma o build irá automaticamente para a Apple como um build válido.
+3. Logar na sua conta expo em seu terminal ``npx expo login -h``
+4. Rodar ```npx eas build --profile preview --platform ios``` e seguir as instruções. Para isso você precisará de uma conta na apple connect que tenha permissões para realizar o build de aplicativos.
+5. Após o build ser realizado, rodar o comando ```npx eas submit --platform ios``` e seguir as instruções. Dessa forma o build irá automaticamente para a Apple como um build válido.
 
 ## Contribuição
 
