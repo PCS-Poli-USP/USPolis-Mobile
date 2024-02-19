@@ -88,6 +88,7 @@ export const ClassModalDetails = ({
               <Typography
                 variant={"heading"}
                 color="white"
+                
                 fontSize={20}
                 marginBottom={"s"}
               >
