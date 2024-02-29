@@ -6,15 +6,12 @@ export const useEvents = () => {
   const query = useQuery(
     ["events"],
     async () => {
-      const response = await api
-        .get<IEvent[]>("/institutional-events")
-        .then((response) => {
-          return response.data;
-        })
-        .catch((error) => {
-          console.log("Erro: ", error);
-          return [];
-        });
+      try {
+        const response = await api.get<IEvent[]>("/institutional-events");
+        return response.data;
+      } catch {
+        return [];
+      }
     },
     {
       keepPreviousData: true,
