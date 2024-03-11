@@ -56,6 +56,8 @@ export const About = () => {
           aplicativo para sua visualização pelos alunos da faculdade.{"\n"}
           {"\n"}
           <Bold>Desenvolvedores:</Bold>{"\n"}
+            {`\u2022`} Gabriel Di Vanna Camargo{"\n"}
+            {`\u2022`} Henrique Fuga Duran{"\n"}
             {`\u2022`} Jorge Habib El Khouri{"\n"}
             {`\u2022`} Luiz Roberto Akio Higuti{"\n"}
             {`\u2022`} Marcel Makoto Kondo{"\n"}
