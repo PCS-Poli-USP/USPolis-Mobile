@@ -1,3 +1,4 @@
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSchedule } from '@/hooks/useSchedule'
 import { AppRoutesType } from '@/routes/app.routes'
 import FeatherIcons from '@expo/vector-icons/Feather'
@@ -13,6 +14,8 @@ import { Box, HStack, Typography, VStack } from '../ui'
 import { logger } from '@/services/logger'
 import { Modal } from '../Modal'
 
+import { ForumModal } from '../ForumModal'
+
 interface ClassModalDetailsProps {
   sclass?: IClass | null
   isOpen: boolean
@@ -27,6 +30,7 @@ export const ClassModalDetails = ({
   const navigation = useNavigation<NavigationProp<AppRoutesType>>()
   const { colors } = useTheme<Theme>()
   const { schedule, toggleClassOnSchedule } = useSchedule()
+  const [ isForumModalOpen, setIsForumModalOpen] = useState(false)
 
   const handleToggleClassOnSchedule = (classId: string, className: string) => {
     if (schedule.includes(classId)) {
@@ -59,8 +63,18 @@ export const ClassModalDetails = ({
     onClose()
   }
 
+  const openForumModal = () => {
+    setIsForumModalOpen(true)
+  }
+
+
   return (
     <Box flex={1}>
+      <ForumModal
+        sclass={sclass}
+        isOpen={isForumModalOpen}
+        onClose={() => setIsForumModalOpen(false)}       
+      />
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -183,6 +197,15 @@ export const ClassModalDetails = ({
                   }}
                 /> */}
               </Box>
+              <Button marginBottom="s"
+                variant={'outlined'}
+                title={
+                  'Abrir Fórum da Disciplina'
+                }
+                onPress={() =>
+                  openForumModal()
+                }
+              />
               <Button
                 variant={'outlined'}
                 title={
