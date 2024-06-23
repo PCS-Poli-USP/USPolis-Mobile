@@ -16,3 +16,7 @@ web-build/
 # android
 *.aab
 *.apk
+
+# build ios
+#Build
+ios/

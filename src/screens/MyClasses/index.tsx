@@ -43,6 +43,7 @@ export const MyClasses = () => {
 
     setSelectedClass(sclass)
     setIsClassModalOpen(true)
+    console.log("[MyClasses] tentou abrir modal modalOpen=", isClassModalOpen);
   }
 
   return (

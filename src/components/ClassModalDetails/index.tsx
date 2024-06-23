@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useSchedule } from '@/hooks/useSchedule'
 import { AppRoutesType } from '@/routes/app.routes'
 import FeatherIcons from '@expo/vector-icons/Feather'
@@ -14,7 +14,7 @@ import { Box, HStack, Typography, VStack } from '../ui'
 import { logger } from '@/services/logger'
 import { Modal } from '../Modal'
 
-import { ForumModal } from '../ForumModal'
+import { type StackRoutesType } from '@/routes'
 
 interface ClassModalDetailsProps {
   sclass?: IClass | null
@@ -28,6 +28,7 @@ export const ClassModalDetails = ({
   onClose,
 }: ClassModalDetailsProps) => {
   const navigation = useNavigation<NavigationProp<AppRoutesType>>()
+  const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
   const { colors } = useTheme<Theme>()
   const { schedule, toggleClassOnSchedule } = useSchedule()
   const [ isForumModalOpen, setIsForumModalOpen] = useState(false)
@@ -63,18 +64,21 @@ export const ClassModalDetails = ({
     onClose()
   }
 
+  const navigateToForum = (sclass: IClass) => {
+    navigationStack.navigate('Forum', 
+      {sclass}
+    )
+    onClose();
+  }
   const openForumModal = () => {
-    setIsForumModalOpen(true)
+    logger.logEvent("Clicou p abrir forum");
+    navigateToForum(sclass);
+    //setIsForumModalOpen(true);
   }
 
 
   return (
     <Box flex={1}>
-      <ForumModal
-        sclass={sclass}
-        isOpen={isForumModalOpen}
-        onClose={() => setIsForumModalOpen(false)}       
-      />
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -203,7 +207,8 @@ export const ClassModalDetails = ({
                   'Abrir Fórum da Disciplina'
                 }
                 onPress={() =>
-                  openForumModal()
+                  {onClose();
+                  openForumModal();}
                 }
               />
               <Button

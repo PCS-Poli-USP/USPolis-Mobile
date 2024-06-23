@@ -7,11 +7,12 @@ import { Image, Platform } from 'react-native'
 import Logo from '@/assets/logo.png'
 
 import { Home, Maps, About, MyClasses, Events } from '@/screens'
-import { Building } from '@/dtos/classes'
+import { Building, IClass } from '@/dtos/classes'
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
 import { Box, Typography } from '@/components'
 import { logger } from '@/services/logger'
+import { Forum } from '@/screens/Forum/Forum'
 
 export type AppRoutesType = {
   Home: undefined
