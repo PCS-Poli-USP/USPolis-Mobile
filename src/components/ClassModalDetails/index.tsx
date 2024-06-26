@@ -201,7 +201,7 @@ export const ClassModalDetails = ({
                   }}
                 /> */}
               </Box>
-              <Button marginBottom="s"
+              <Button 
                 variant={'outlined'}
                 title={
                   'Abrir Fórum da Disciplina'

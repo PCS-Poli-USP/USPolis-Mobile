@@ -1,9 +1,11 @@
-import { Box, Button, Pressable, Typography, VStack, HStack} from "@/components";
+import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
 import { ForumModal } from "@/components/ForumModal";
+import { usePosts } from "@/hooks/react-query/usePosts";
 import { StackRoutesType } from "@/routes";
+import api from "@/services/api";
 import { logger } from "@/services/logger";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Post = {
     author: string;
@@ -26,8 +28,21 @@ const dict: Post[] = [
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
+    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);
     const [posts, setPosts] = useState<Post[]>(dict);
 
+    useEffect(() => {
+        if (fetchedPosts) {
+            console.log("atualizou posts", fetchedPosts);
+            setPosts(fetchedPosts.map((post) => {
+                return {
+                    author: post.author,
+                    body: post.content,
+                    date: post.created_at
+                };
+            }));
+        }
+    }, [fetchedPosts]);
 
     function handleAddNewPost(body: string) {
         const newPost: Post = {
@@ -40,6 +55,15 @@ export function Forum() {
             newPost
         ]
         setPosts(newPosts);
+        (async () => {
+            const response = await api.post('forum/posts', {
+                author: newPost.author,
+                content: newPost.body,
+                event_id: params.sclass?.schedule[0].id.$oid
+            })
+            console.log("post response=", response.status);
+            console.log("post response=", response.data);
+        })();
         logger.setUserProperty("Posts: ", posts.toString());
     }
 
@@ -53,13 +77,13 @@ export function Forum() {
             <Box flex={1}>
                 <Typography color='grayOne' fontSize={22}>Teste</Typography>
             </Box>
-            {posts.map( (post) => {
-                return <MemoPost post={post}/>
+            {posts.map((post) => {
+                return <MemoPost post={post} />
             }
             )}
             <Button
                 variant='outlined'
-                title={'Postar no forum de '+params.sclass?.subject_code}
+                title={'Postar no forum de ' + params.sclass?.subject_code}
                 onPress={() => { openForumModal(); }}
             />
             <Box flex={1}>
@@ -75,9 +99,9 @@ export function Forum() {
 }
 
 type PostCardProps = {
-    post: Post;    
+    post: Post;
 }
-function PostCard({post}: PostCardProps) {
+function PostCard({ post }: PostCardProps) {
     return (
         <Pressable /*onPress={selectClass}*/>
             <HStack

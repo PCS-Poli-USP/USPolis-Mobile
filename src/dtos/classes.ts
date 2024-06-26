@@ -8,7 +8,7 @@ export type Building =
   | 'Civil'
 
 export type Schedule = {
-  id: string
+  id: {$oid: string}
   week_day: string
   start_time: string
   end_time: string
