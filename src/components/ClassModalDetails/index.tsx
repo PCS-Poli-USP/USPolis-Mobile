@@ -33,7 +33,7 @@ export const ClassModalDetails = ({
   const { schedule, toggleClassOnSchedule } = useSchedule()
   const [ isForumModalOpen, setIsForumModalOpen] = useState(false)
 
-  const handleToggleClassOnSchedule = (classId: string, className: string) => {
+  const handleToggleClassOnSchedule = (classId: number, className: string) => {
     if (schedule.includes(classId)) {
       logger.logEvent('Aula Removida no Cronograma', { class: className })
     } else {
@@ -47,11 +47,11 @@ export const ClassModalDetails = ({
   if (!sclass) return <></>
 
   const progressValue =
-    differenceInDays(new Date(), parseISO(sclass.end_period)) > 0
-      ? (differenceInDays(new Date(), parseISO(sclass.end_period)) /
+    differenceInDays(new Date(), parseISO(sclass.end_date)) > 0
+      ? (differenceInDays(new Date(), parseISO(sclass.end_date)) /
           differenceInDays(
-            parseISO(sclass.start_period),
-            parseISO(sclass.end_period),
+            parseISO(sclass.start_date),
+            parseISO(sclass.end_date),
           )) *
         100
       : 0
@@ -120,7 +120,7 @@ export const ClassModalDetails = ({
                 {sclass.subject_name}
               </Typography>
               <Typography color="grayTwo" fontSize={14}>
-                Turma {sclass.class_code.slice(-2)}
+                Turma {sclass.code}
               </Typography>
             </VStack>
           </Box>
@@ -130,7 +130,7 @@ export const ClassModalDetails = ({
             paddingBottom={'s'}
           >
             <VStack backgroundColor="graySeven" marginBottom="m">
-              {sclass.schedule
+              {sclass.schedules
                 .sort(sortEventsByScheduleTime)
                 .map((event, index) => (
                   <Box key={`${event.id}-${index}`} marginBottom={'s'}>
@@ -182,13 +182,13 @@ export const ClassModalDetails = ({
                   <Box>
                     <Typography color="grayTwo">Início</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.start_period), 'dd/MM/yyyy')}
+                      {format(parseISO(sclass.start_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                   <Box>
                     <Typography color="grayTwo">Fim</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.end_period), 'dd/MM/yyyy')}
+                      {format(parseISO(sclass.end_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                 </Box>

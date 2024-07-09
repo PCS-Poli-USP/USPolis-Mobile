@@ -18,14 +18,14 @@ export type Schedule = {
 }
 
 export type IClass = {
-  id: string
-  class_code: string
-  professor: string
+  id: number
+  code: string
+  professor: Array<string>
   subject_code: string
   subject_name: string
-  start_period: string
-  end_period: string
-  schedule: Array<Schedule>
+  start_date: string
+  end_date: string
+  schedules: Array<Schedule>
 }
 
 export type ScheduledClasses = {

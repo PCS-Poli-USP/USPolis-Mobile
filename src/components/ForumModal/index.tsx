@@ -55,7 +55,7 @@ export const ForumModal = ({
 								{sclass!.subject_name}
 							</Typography>
 							<Typography color="grayTwo" fontSize={14}>
-								Turma {sclass!.class_code.slice(-2)}
+								Turma {sclass!.code}
 							</Typography>
 						</VStack>
 					</Box>

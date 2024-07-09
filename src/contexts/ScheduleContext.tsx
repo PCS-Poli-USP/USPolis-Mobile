@@ -4,9 +4,9 @@ import { createContext, useState } from "react";
 import { scheduleStorage } from "@/storage/schedule";
 
 export type ScheduleContextDataProps = {
-  schedule: string[];
+  schedule: number[];
   isLoadingStorageSchedule: boolean;
-  toggleClassOnSchedule: (classId: string) => void;
+  toggleClassOnSchedule: (classId: number) => void;
 };
 
 type ScheduleContextProviderProps = {
@@ -18,7 +18,7 @@ export const ScheduleContext = createContext({} as ScheduleContextDataProps);
 export const ScheduleContextProvider = ({
   children,
 }: ScheduleContextProviderProps) => {
-  const [schedule, setSchedule] = useState<string[]>([]);
+  const [schedule, setSchedule] = useState<number[]>([]);
   const [isLoadingStorageSchedule, setIsLoadingStorageSchedule] =
     useState(true);
 
@@ -35,7 +35,7 @@ export const ScheduleContextProvider = ({
   }, []);
 
   const toggleClassOnSchedule = useCallback(
-    (classId: string) => {
+    (classId: number) => {
       if (schedule.includes(classId)) {
         Toast.show({
           type: 'info',
