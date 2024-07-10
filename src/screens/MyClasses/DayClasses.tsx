@@ -3,15 +3,17 @@ import { ClassesGroupedByWeekday } from "@/dtos/classes";
 import { parse, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 interface DayClassesProps {
-  onOpenModal: (classId: string, name: string) => void;
+  onOpenModal: (classId: number, name: string) => void;
   classesGroup: ClassesGroupedByWeekday;
 }
 
 export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
-  const parsedWeekDay = parse(classesGroup.week_day, "EEEE", new Date(), {
+  var dayOfWeek = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"]
+  var weekDay = dayOfWeek[+classesGroup.week_day]
+  const parsedWeekDay = parse(weekDay, "EEEE", new Date(), {
     locale: ptBR,
   });
-
+  console.log("Debugging: ",parsedWeekDay, classesGroup.week_day, weekDay)
   const weekdayAbbreviated = format(parsedWeekDay, "EEEEEE", { locale: ptBR });
   
   const orderedClasses = classesGroup.classes.sort((a, b) => {

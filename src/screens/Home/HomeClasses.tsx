@@ -164,7 +164,7 @@ export const HomeClassCard = ({ sclass }: HomeClassCardProps) => {
             </Typography>
 
             <Typography color="grayTwo" marginBottom={'xxs'} numberOfLines={2}>
-              Turma {sclass.code} - {buildings}
+              Turma {sclass.code.slice(-2)} - {buildings}
             </Typography>
             <Typography color="grayOne" numberOfLines={2} variant="heading">
               {classRooms}

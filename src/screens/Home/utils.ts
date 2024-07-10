@@ -27,7 +27,7 @@ export const getFilteredClasses = ({
         replaceSpecialCharacters(c.subject_name.toLowerCase()).includes(
           replaceSpecialCharacters(nameFilter.toLowerCase()),
         ) ||
-        replaceSpecialCharacters((c.professor || '').toLowerCase()).includes(
+        replaceSpecialCharacters((c.professor[0] || '').toLowerCase()).includes(
           replaceSpecialCharacters(nameFilter.toLowerCase()),
         ) ||
         replaceSpecialCharacters(c.subject_code.toLowerCase()).includes(
@@ -38,7 +38,7 @@ export const getFilteredClasses = ({
 
   if (buildingFilter) {
     classesFiltered = classesFiltered?.filter((c) => {
-      const classesInBuilding = c.schedule.filter(
+      const classesInBuilding = c.schedules.filter(
         (s) => s.building === buildingFilter,
       )
       return !!classesInBuilding.length
@@ -46,8 +46,8 @@ export const getFilteredClasses = ({
   }
 
   return classesFiltered.sort((a, b) => {
-    const aDate = new Date(a.start_period)
-    const bDate = new Date(b.start_period)
+    const aDate = new Date(a.start_date)
+    const bDate = new Date(b.end_date)
 
     return aDate.getTime() - bDate.getTime()
   })

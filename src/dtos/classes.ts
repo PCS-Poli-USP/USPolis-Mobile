@@ -31,7 +31,7 @@ export type IClass = {
 export type ScheduledClasses = {
   class_subject_name: string
   class_subject_code: string
-  class_id: string
+  class_id: number
   class_code: string
   week_day: string
   start_time: string
