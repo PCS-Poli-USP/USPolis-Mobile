@@ -15,14 +15,14 @@ type Post = {
 
 const dict: Post[] = [
     {
-        author: 'Autor1',
-        body: 'aashdfuiashbfipuahsiufhusahfouhasoui',
-        date: 'ontem'
+        author: "Autor1",
+        body: "aashdfuiashbfipuahsiufhusahfouhasoui",
+        date: "ontem"
     },
     {
-        author: 'Autor2',
-        body: 'aashdfuiashbfipuahsiufhusahfouhasouifibdsnaons',
-        date: '19/02/2023'
+        author: "Autor2",
+        body: "aashdfuiashbfipuahsiufhusahfouhasouifibdsnaons",
+        date: "19/02/2023"
     }
 ]
 export function Forum() {
@@ -46,7 +46,7 @@ export function Forum() {
 
     function handleAddNewPost(body: string) {
         const newPost: Post = {
-            author: 'MyUser',
+            author: "MyUser",
             body: body,
             date: new Date().toString()
         };
@@ -56,7 +56,7 @@ export function Forum() {
         ]
         setPosts(newPosts);
         (async () => {
-            const response = await api.post('forum/posts', {
+            const response = await api.post("forum/posts", {
                 author: newPost.author,
                 content: newPost.body,
                 event_id: params.sclass?.schedules[0].id
@@ -75,15 +75,15 @@ export function Forum() {
     return (
         <VStack>
             <Box flex={1}>
-                <Typography color='grayOne' fontSize={22}>Teste</Typography>
+                <Typography color="grayOne" fontSize={22}>Teste</Typography>
             </Box>
             {posts.map((post) => {
                 return <MemoPost post={post} />
             }
             )}
             <Button
-                variant='outlined'
-                title={'Postar no forum de ' + params.sclass?.subject_code}
+                variant="outlined"
+                title={"Postar no forum de " + params.sclass?.subject_code}
                 onPress={() => { openForumModal(); }}
             />
             <Box flex={1}>
@@ -106,21 +106,21 @@ function PostCard({ post }: PostCardProps) {
         <Pressable /*onPress={selectClass}*/>
             <HStack
                 alignItems="center"
-                backgroundColor={'grayFive'}
+                backgroundColor={"grayFive"}
                 borderRadius={8}
                 padding="m"
                 marginBottom="s"
             >
-                <VStack flex={1} marginRight={'xs'}>
+                <VStack flex={1} marginRight={"xs"}>
                     <Typography
-                        marginBottom={'xxs'}
+                        marginBottom={"xxs"}
                         fontSize={16}
                         color="white"
-                        variant={'heading'} >{post.body}</Typography>
+                        variant={"heading"} >{post.body}</Typography>
                     <HStack>
                         <Typography
                             color="grayOne"
-                            paddingRight={'xxs'}
+                            paddingRight={"xxs"}
                             numberOfLines={2}>
                             {post.author} </Typography>
                         <Typography

@@ -1,14 +1,14 @@
 export interface IEvent {
-  _id: string
-  building: string | null
+  id: number
+  title: string
+  description: string
   category: string
+  end_datetime: string
+  start_datetime: string
+  location: string
+  building: string | null
   classroom: string | null
   created_at: string
-  description: string
-  end_datetime: string
   external_link: string
-  location: string
-  start_datetime: string
-  title: string
   likes: number
 }
