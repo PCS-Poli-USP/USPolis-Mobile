@@ -12,23 +12,9 @@ import { useTheme } from "@shopify/restyle";
 import { Box, HStack, Typography, VStack } from "../ui";
 import { logger } from "@/services/logger";
 import { Modal } from "../Modal";
-import React, { useState } from 'react'
-import { useSchedule } from '@/hooks/useSchedule'
-import { AppRoutesType } from '@/routes/app.routes'
-import FeatherIcons from '@expo/vector-icons/Feather'
-import { NavigationProp, useNavigation } from '@react-navigation/native'
-import { differenceInDays, format, parseISO } from 'date-fns'
-import { Pressable } from 'react-native'
-import { Button } from '../Button'
-import { sortEventsByScheduleTime } from './utils'
-import { Building, IClass } from '../../dtos/classes'
-import { Theme } from '@/theme/theme'
-import { useTheme } from '@shopify/restyle'
-import { Box, HStack, Typography, VStack } from '../ui'
-import { logger } from '@/services/logger'
-import { Modal } from '../Modal'
-
-import { type StackRoutesType } from '@/routes'
+import { type StackRoutesType } from "@/routes"
+import { useState } from "react";
+import React from "react";
 
 interface ClassModalDetailsProps {
   sclass?: IClass | null;
@@ -135,9 +121,7 @@ export const ClassModalDetails = ({
                 {sclass.subject_name}
               </Typography>
               <Typography color="grayTwo" fontSize={14} marginBottom={"s"}>
-                Turma {sclass.class_code.slice(-2)}
-              <Typography color="grayTwo" fontSize={14}>
-                Turma {sclass.code}
+                Turma {sclass.code.slice(-2)}
               </Typography>
               <Typography color="grayTwo" fontSize={14}>
                 {sclass.professors.join(", ")}
@@ -202,14 +186,12 @@ export const ClassModalDetails = ({
                   <Box>
                     <Typography color="grayTwo">Início</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.start_period), "dd/MM/yyyy")}
                       {format(parseISO(sclass.start_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                   <Box>
                     <Typography color="grayTwo">Fim</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.end_period), "dd/MM/yyyy")}
                       {format(parseISO(sclass.end_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
