@@ -59,7 +59,7 @@ export function Forum() {
             const response = await api.post('forum/posts', {
                 author: newPost.author,
                 content: newPost.body,
-                event_id: params.sclass?.schedule[0].id.$oid
+                event_id: params.sclass?.schedules[0].id
             })
             console.log("post response=", response.status);
             console.log("post response=", response.data);

@@ -8,12 +8,10 @@ interface DayClassesProps {
 }
 
 export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
-  var dayOfWeek = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"]
-  var weekDay = dayOfWeek[+classesGroup.week_day]
-  const parsedWeekDay = parse(weekDay, "EEEE", new Date(), {
+  const parsedWeekDay = parse(classesGroup.week_day, "EEEE", new Date(), {
     locale: ptBR,
   });
-  console.log("Debugging: ",parsedWeekDay, classesGroup.week_day, weekDay)
+  console.log("Debugging: ", classesGroup.week_day, classesGroup.week_day)
   const weekdayAbbreviated = format(parsedWeekDay, "EEEEEE", { locale: ptBR });
   
   const orderedClasses = classesGroup.classes.sort((a, b) => {

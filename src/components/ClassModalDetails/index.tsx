@@ -171,10 +171,10 @@ export const ClassModalDetails = ({
                     </Pressable>
                   </Box>
                 ))}
-              {!!sclass.professor && (
+              {!!sclass.professors && (
                 <Box marginBottom="m">
                   <Typography color="grayTwo">Docente:</Typography>
-                  <Typography color="white">{sclass.professor}</Typography>
+                  <Typography color="white">{sclass.professors}</Typography>
                 </Box>
               )}
               <Box marginBottom="m">

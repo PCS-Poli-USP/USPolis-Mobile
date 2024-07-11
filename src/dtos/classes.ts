@@ -8,7 +8,7 @@ export type Building =
   | 'Civil'
 
 export type Schedule = {
-  id: {$oid: string}
+  id: number
   week_day: string
   start_time: string
   end_time: string
@@ -20,7 +20,7 @@ export type Schedule = {
 export type IClass = {
   id: number
   code: string
-  professor: Array<string>
+  professors: Array<string>
   subject_code: string
   subject_name: string
   start_date: string
