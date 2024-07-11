@@ -40,6 +40,7 @@ export const AppRoutes = () => {
 
   return (
     <Navigator
+      initialRouteName={'Home'}
       screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primary,

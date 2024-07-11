@@ -18,7 +18,8 @@ web-build/
 *.aab
 *.apk
 
-# build ios
 #Build
 ios/
 android/
+
+.pre-commit-config.yaml

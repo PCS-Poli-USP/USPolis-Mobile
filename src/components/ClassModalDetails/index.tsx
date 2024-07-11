@@ -1,3 +1,17 @@
+import { useSchedule } from "@/hooks/useSchedule";
+import { AppRoutesType } from "@/routes/app.routes";
+import FeatherIcons from "@expo/vector-icons/Feather";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { differenceInDays, format, parseISO } from "date-fns";
+import { Pressable } from "react-native";
+import { Button } from "../Button";
+import { sortEventsByScheduleTime } from "./utils";
+import { Building, IClass } from "../../dtos/classes";
+import { Theme } from "@/theme/theme";
+import { useTheme } from "@shopify/restyle";
+import { Box, HStack, Typography, VStack } from "../ui";
+import { logger } from "@/services/logger";
+import { Modal } from "../Modal";
 import React, { useState } from 'react'
 import { useSchedule } from '@/hooks/useSchedule'
 import { AppRoutesType } from '@/routes/app.routes'
@@ -17,9 +31,9 @@ import { Modal } from '../Modal'
 import { type StackRoutesType } from '@/routes'
 
 interface ClassModalDetailsProps {
-  sclass?: IClass | null
-  isOpen: boolean
-  onClose: () => void
+  sclass?: IClass | null;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export const ClassModalDetails = ({
@@ -35,34 +49,34 @@ export const ClassModalDetails = ({
 
   const handleToggleClassOnSchedule = (classId: number, className: string) => {
     if (schedule.includes(classId)) {
-      logger.logEvent('Aula Removida no Cronograma', { class: className })
+      logger.logEvent("Aula Removida no Cronograma", { class: className });
     } else {
-      logger.logEvent('Aula Adicionada do Cronograma', { class: className })
+      logger.logEvent("Aula Adicionada do Cronograma", { class: className });
     }
 
-    toggleClassOnSchedule(classId)
-    logger.setUserProperty('classes_on_schedule', schedule.length.toString())
-  }
+    toggleClassOnSchedule(classId);
+    logger.setUserProperty("classes_on_schedule", schedule.length.toString());
+  };
 
-  if (!sclass) return <></>
+  if (!sclass) return <></>;
 
   const progressValue =
     differenceInDays(new Date(), parseISO(sclass.end_date)) > 0
       ? (differenceInDays(new Date(), parseISO(sclass.end_date)) /
           differenceInDays(
             parseISO(sclass.start_date),
-            parseISO(sclass.end_date),
+            parseISO(sclass.end_date)
           )) *
         100
-      : 0
+      : 0;
 
   const navigateToMap = (building: Building, floor: number) => {
-    navigation.navigate('Maps', {
+    navigation.navigate("Maps", {
       building,
       floor,
-    })
-    onClose()
-  }
+    });
+    onClose();
+  };
 
   const navigateToForum = (sclass: IClass) => {
     navigationStack.navigate('Forum', 
@@ -92,50 +106,56 @@ export const ClassModalDetails = ({
         // style={{ margin: 0 }}
       >
         <Box
-          width={'100%'}
+          width={"100%"}
           borderTopLeftRadius={8}
           borderTopRightRadius={8}
           backgroundColor="graySeven"
           position="absolute"
           bottom={0}
-          paddingHorizontal={'s'}
+          paddingHorizontal={"s"}
           paddingVertical="l"
         >
           <Box backgroundColor="graySeven" borderBottomColor="transparent">
-            <VStack alignItems="center" marginBottom={'m'}>
+            <VStack alignItems="center" marginBottom={"m"}>
               <Typography
-                variant={'heading'}
+                variant={"heading"}
                 color="white"
+                
                 fontSize={20}
-                marginBottom={'s'}
+                marginBottom={"s"}
               >
                 {sclass.subject_code}
               </Typography>
               <Typography
-                variant={'heading'}
+                variant={"heading"}
                 color="white"
                 fontSize={18}
-                marginBottom={'s'}
+                marginBottom={"s"}
               >
                 {sclass.subject_name}
               </Typography>
+              <Typography color="grayTwo" fontSize={14} marginBottom={"s"}>
+                Turma {sclass.class_code.slice(-2)}
               <Typography color="grayTwo" fontSize={14}>
                 Turma {sclass.code}
+              </Typography>
+              <Typography color="grayTwo" fontSize={14}>
+                {sclass.professors.join(", ")}
               </Typography>
             </VStack>
           </Box>
           <Box
             backgroundColor="graySeven"
-            paddingHorizontal={'m'}
-            paddingBottom={'s'}
+            paddingHorizontal={"m"}
+            paddingBottom={"s"}
           >
             <VStack backgroundColor="graySeven" marginBottom="m">
               {sclass.schedules
                 .sort(sortEventsByScheduleTime)
                 .map((event, index) => (
-                  <Box key={`${event.id}-${index}`} marginBottom={'s'}>
-                    <Typography variant={'heading'} color="white" mb={'xs'}>
-                      {event.week_day}, das {event.start_time} às{' '}
+                  <Box key={`${event.id}-${index}`} marginBottom={"s"}>
+                    <Typography variant={"heading"} color="white" mb={"xs"}>
+                      {event.week_day}, das {event.start_time} às{" "}
                       {event.end_time}
                     </Typography>
                     <Pressable
@@ -147,9 +167,9 @@ export const ClassModalDetails = ({
                         alignItems="center"
                         backgroundColor="grayFive"
                         borderRadius={8}
-                        padding={'s'}
+                        padding={"s"}
                       >
-                        <VStack gap={'xs'}>
+                        <VStack gap={"xs"}>
                           <Typography color="white">
                             Prédio: {event.building}
                           </Typography>
@@ -157,8 +177,8 @@ export const ClassModalDetails = ({
                             Sala: {event.classroom}
                           </Typography>
                         </VStack>
-                        <HStack alignItems={'center'}>
-                          <Typography color={'primary'} marginRight="s">
+                        <HStack alignItems={"center"}>
+                          <Typography color={"primary"} marginRight="s">
                             Ver no mapa
                           </Typography>
                           <FeatherIcons
@@ -182,29 +202,31 @@ export const ClassModalDetails = ({
                   <Box>
                     <Typography color="grayTwo">Início</Typography>
                     <Typography color="white">
+                      {format(parseISO(sclass.start_period), "dd/MM/yyyy")}
                       {format(parseISO(sclass.start_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                   <Box>
                     <Typography color="grayTwo">Fim</Typography>
                     <Typography color="white">
+                      {format(parseISO(sclass.end_period), "dd/MM/yyyy")}
                       {format(parseISO(sclass.end_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                 </Box>
                 {/* <Progress
                   value={progressValue}
-                  size="md"
+                  size='md'
                   mt={1}
                   _filledTrack={{
-                    bg: "green.700",
+                    bg: 'green.700',
                   }}
                 /> */}
               </Box>
               <Button 
-                variant={'outlined'}
+                variant={"outlined"}
                 title={
-                  'Abrir Fórum da Disciplina'
+                  "Abrir Fórum da Disciplina"
                 }
                 onPress={() =>
                   {onClose();
@@ -212,11 +234,11 @@ export const ClassModalDetails = ({
                 }
               />
               <Button
-                variant={'outlined'}
+                variant={"outlined"}
                 title={
                   schedule.includes(sclass.id)
-                    ? 'Remover de minhas disciplinas'
-                    : 'Adicionar em minhas disciplinas'
+                    ? "Remover de minhas disciplinas"
+                    : "Adicionar em minhas disciplinas"
                 }
                 onPress={() =>
                   handleToggleClassOnSchedule(sclass.id, sclass.subject_name)
@@ -227,5 +249,5 @@ export const ClassModalDetails = ({
         </Box>
       </Modal>
     </Box>
-  )
-}
+  );
+};
