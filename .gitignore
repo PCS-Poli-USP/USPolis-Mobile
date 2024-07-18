@@ -17,9 +17,11 @@ web-build/
 # android
 *.aab
 *.apk
+gradle.properties
 
 #Build
 ios/
 android/
 
-.pre-commit-config.yaml
+# Environment
+.env

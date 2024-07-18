@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@/routes/auth.routes';
 import { useAuth } from '@/hooks';
 import { Controller, useForm } from 'react-hook-form';
+import React from 'react';
 
 type SignInFormProps = {
   name: string

@@ -11,8 +11,8 @@ export const scheduleFactory = (
 ): ClassesGroupedByWeekday[] => {
   const classesOnSchedule =
     classes?.filter((c) => schedule.includes(c.id)) ?? []
-    console.log("classes:", classes![0].schedules)
 console.log("classesonschedule:", classesOnSchedule)
+console.log("allClasses:", classesOnSchedule)
   const allClasses: ScheduledClasses[] = classesOnSchedule
     .map((c) =>
       c.schedules.map((s) => ({
@@ -24,7 +24,7 @@ console.log("classesonschedule:", classesOnSchedule)
       })),
     )
     .flat(1)
-    console.log("allClasses:", allClasses)
+    
   const weekDaysWithClasses: string[] = getUniqueValues(
     allClasses.map((c) => c.week_day),
   ).sort(

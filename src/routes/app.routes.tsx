@@ -6,13 +6,14 @@ import FeatherIcons from '@expo/vector-icons/Feather'
 import { Image, Platform } from 'react-native'
 import Logo from '@/assets/logo.png'
 
-import { Home, Maps, About, MyClasses, Events } from '@/screens'
+import { Home, Maps, About, MyClasses, Events, SignIn, SignUp, Profile } from '@/screens'
 import { Building, IClass } from '@/dtos/classes'
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
 import { Box, Typography } from '@/components'
 import { logger } from '@/services/logger'
 import { Forum } from '@/screens/Forum/Forum'
+import React from 'react'
 
 export type AppRoutesType = {
   Home: undefined
@@ -23,6 +24,7 @@ export type AppRoutesType = {
   MyClasses: undefined
   About: undefined
   Events: undefined
+  Profile: undefined
 }
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutesType>
@@ -150,6 +152,25 @@ export const AppRoutes = () => {
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
           title: 'Mapa dos Prédios da POLI',
+        }}
+      />
+      <Screen
+        name="Profile"
+        component={Profile}
+        listeners={({ route }) => ({
+          tabPress: () => onTabPress(route.name),
+        })}
+        options={{
+          tabBarLabel: ({ color }) => (
+            <Typography fontSize={10} style={{ color }}>
+              Perfil
+            </Typography>
+          ),
+          tabBarShowLabel: true,
+          tabBarIcon: ({ color }) => (
+            <FeatherIcons name="user" color={color} size={iconSize} />
+          ),
+          title: 'Perfil',
         }}
       />
       <Screen

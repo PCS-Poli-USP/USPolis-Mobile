@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "uspolis",
+    "name": "Uspolis",
     "slug": "uspolis",
     "version": "7.2.3",
     "orientation": "portrait",
@@ -18,6 +18,15 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.370044874397-rbq7vv4d9sgorj4boso4i5nohn5u3mc1"
+        }
+      ],
+      "expo-font"
+    ],
     "ios": {
       "supportsTablet": true,
       "buildNumber": "22",
@@ -29,7 +38,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "uspolis.lunadros",
-      "versionCode": 71
+      "versionCode": 72
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,7 +48,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "e8ff3ab1-1c5e-4c53-b7c8-9dab42186dc3"
+        "projectId": "7897098c-0fa4-4492-ae0f-6359bd5a063d"
       }
     }
   }
