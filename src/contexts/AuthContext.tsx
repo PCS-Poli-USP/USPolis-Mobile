@@ -1,73 +1,100 @@
-import { User } from '@/dtos'
-import { userStorage } from '@/storage/user'
-import { useEffect, createContext, useState } from 'react'
+import { AuthUser } from '@/dtos/auth';
+import React from 'react'
+import { createContext, useReducer } from 'react'
 
-type SignInData = {
-  name: string
+type GAuthState = {
+  isLoggedIn: boolean;
+  isRegisteredUser: boolean;
+  authUser: AuthUser | null;
+};
+
+// type that has the GAuthState and the functions that manage them
+export type GAuthContextValue = GAuthState & {
+  updateLoggedIn: (isLoggedIn: boolean) => void;
+  updateRegisteredUser: (isRegistered: boolean) => void;
+  updateUser: (user: AuthUser | null) => void;
+};
+
+type GAuthContextProviderProps = {
+  children: React.ReactNode;
+};
+
+// Initial value of createContext is null because we'll manage it elsewhere
+export const GAuthContext = createContext<GAuthContextValue | null>(null);
+
+const initialState: GAuthState = {
+  isLoggedIn: false,
+  isRegisteredUser: true,
+  authUser: null
 }
 
-export type AuthContextDataProps = {
-  user: User | null
-  handleSignIn: (signInData: SignInData) => void
-  handleLogout: () => void
-  isLoadingStorageUser: boolean
-}
-
-type AuthContextProviderProps = {
-  children: React.ReactNode
-}
-
-export const AuthContext = createContext({} as AuthContextDataProps)
-
-export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [user, setUser] = useState<User | null>({
-    id: '1',
-    name: '',
-  })
-  const [isLoadingStorageUser, setIsLoadingStorageUser] = useState(true)
-
-  const handleSignIn = (data: SignInData) => {
-    if (data.name) {
-      setUser({
-        id: '1',
-        name: data.name,
-      })
-      userStorage.save({
-        id: '1',
-        name: data.name,
-      })
-    }
+type IsLoggedInAction = { 
+  type: "UPDATE_LOGGED_IN";
+  isLoggedIn: boolean;
   }
-
-  const handleLogout = () => {
-    setUser(null)
-    userStorage.delete()
+type IsResgisterUserAction = {
+  type: "UPDATE_REGISTERED_USER";
+  isRegisteredUser: boolean;
+};
+type UserAction = {
+  type: "UPDATE_USER"
+  user: AuthUser | null;
+};
+type Action = IsLoggedInAction | IsResgisterUserAction | UserAction;
+function gAuthReducer(state: GAuthState, action: Action): GAuthState {
+  if (action.type === "UPDATE_LOGGED_IN") {
+    const newState: GAuthState = {
+      ...state, // get current state's values
+      isLoggedIn: action.isLoggedIn,
+    };
+    console.debug("CTX Updated isLoggedIn: ", newState);
+    return newState;
+  } else if (action.type === "UPDATE_REGISTERED_USER") {
+    const newState: GAuthState = {
+      ...state, // get current state's values
+      isRegisteredUser: action.isRegisteredUser,
+    };
+    console.debug("CTX Updated isRegistered: ", newState);
+    return newState;
+  } else if (action.type === "UPDATE_USER") {
+    const newState: GAuthState = {
+      ...state, // get current state's values
+      authUser: action.user,
+    };
+    console.debug("CTX Updated user: ", newState);
+    return newState;
   }
+  return state
+};
 
-  const loadUserData = async () => {
-    try {
-      // const user = await userStorage.get()
-      // To remove user login page
-      const tempDefaultUser = { id: '1', name: '' }
+export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) => {
+  /* we could use the usual useState(), but the useReducer() is more suitable for
+    complex states, that may be triggered from multiple places.
+    It receives a reducer function and an initialState.
+    The reducer function is a function that is automatically executed  by React when 
+    an action is dispatched (using the 'dispatch' return) to the Reducer, triggering 
+    a change of state    */
+    const [gAuthState, dispatch] = useReducer(gAuthReducer, initialState);
 
-      setUser(tempDefaultUser)
-    } catch (err) {
-      console.log('err', err)
-      throw err
-    } finally {
-      setIsLoadingStorageUser(false)
-    }
-  }
-
-  useEffect(() => {
-    loadUserData()
-  }, [])
+  const ctx: GAuthContextValue = {
+    isLoggedIn: gAuthState.isLoggedIn,
+    isRegisteredUser: gAuthState.isRegisteredUser,
+    authUser: gAuthState.authUser,
+    updateLoggedIn(isLoggedIn) {
+      dispatch({type: "UPDATE_LOGGED_IN", isLoggedIn: isLoggedIn})
+    },
+    updateRegisteredUser(isRegistered) {
+      dispatch({type: "UPDATE_REGISTERED_USER", isRegisteredUser: isRegistered})
+    },
+    updateUser(user) {
+      dispatch({type: "UPDATE_USER", user: user})
+    },
+  };
 
   return (
-    <AuthContext.Provider
-      value={{ isLoadingStorageUser, user, handleSignIn, handleLogout }}
-    >
+    <GAuthContext.Provider
+      value={ctx}>
       {children}
-    </AuthContext.Provider>
+    </GAuthContext.Provider>
   )
-}
+};

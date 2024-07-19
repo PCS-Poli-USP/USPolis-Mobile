@@ -1,11 +1,13 @@
 import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
 import { ForumModal } from "@/components/ForumModal";
 import { usePosts } from "@/hooks/react-query/usePosts";
+import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import api from "@/services/api";
 import { logger } from "@/services/logger";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
 
 type Post = {
     author: string;
@@ -30,6 +32,7 @@ export function Forum() {
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
     const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);
     const [posts, setPosts] = useState<Post[]>(dict);
+    const { authUser } = useGoogleAuthContext()
 
     useEffect(() => {
         if (fetchedPosts) {
@@ -45,26 +48,34 @@ export function Forum() {
     }, [fetchedPosts]);
 
     function handleAddNewPost(body: string) {
-        const newPost: Post = {
-            author: "MyUser",
-            body: body,
-            date: new Date().toString()
-        };
-        const newPosts: Post[] = [
-            ...posts,
-            newPost
-        ]
-        setPosts(newPosts);
-        (async () => {
-            const response = await api.post("forum/posts", {
-                author: newPost.author,
-                content: newPost.body,
-                event_id: params.sclass?.schedules[0].id
-            })
-            console.log("post response=", response.status);
-            console.log("post response=", response.data);
-        })();
-        logger.setUserProperty("Posts: ", posts.toString());
+        if (authUser) {
+            const newPost: Post = {
+                author: authUser.given_name,
+                body: body,
+                date: new Date().toString()
+            };
+            const newPosts: Post[] = [
+                ...posts,
+                newPost
+            ]
+            setPosts(newPosts);
+            (async () => {
+                const response = await api.post("forum/posts", {
+                    author: newPost.author,
+                    content: newPost.body,
+                    event_id: params.sclass?.schedules[0].id
+                })
+                console.log("post response=", response.status);
+                console.log("post response=", response.data);
+            })();
+            logger.setUserProperty("Posts: ", posts.toString());
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Ops!',
+                text2: 'É preciso logar para postar!'
+              });
+        }
     }
 
     const openForumModal = () => {

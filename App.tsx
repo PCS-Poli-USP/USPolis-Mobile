@@ -15,6 +15,7 @@ import RestyleTheme from '@/theme/theme'
 import { useEffect } from 'react'
 import { useLikeStore } from '@/store/likes-store'
 import { queryClient } from '@/hooks/react-query/client'
+import React from 'react'
 
 if (__DEV__) {
   /**

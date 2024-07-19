@@ -21,16 +21,11 @@ export type StackRoutesType = {
 
 export const Routes = () => {
   const { colors } = useTheme<Theme>()
-  const { user, isLoadingStorageUser } = useAuth()
 
   const { Navigator, Screen } = createNativeStackNavigator<StackRoutesType>();
 
   const theme = DefaultTheme
   theme.colors.background = colors.graySeven
-
-  if (isLoadingStorageUser) {
-    return <Loading />
-  }
 
   return (
     <NavigationContainer theme={theme} >
