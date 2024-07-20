@@ -18,14 +18,8 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    //This is set inside app.config.ts for a safe use of credentials
     "plugins": [
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.370044874397-rbq7vv4d9sgorj4boso4i5nohn5u3mc1"
-        }
-      ],
-      "expo-font"
     ],
     "ios": {
       "supportsTablet": true,

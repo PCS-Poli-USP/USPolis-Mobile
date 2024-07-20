@@ -12,3 +12,9 @@ export interface IEvent {
   external_link: string
   likes: number
 }
+
+export type EventLikeDTO = {
+  event_id: number
+  user_id: number
+  like: boolean
+}

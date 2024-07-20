@@ -1,4 +1,7 @@
-import { AuthUser } from '@/dtos/auth';
+import { type AuthResponse, type AuthUser } from '@/dtos/auth';
+import api from '@/services/api';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { type AxiosResponse } from 'axios';
 import React from 'react'
 import { createContext, useReducer } from 'react'
 
@@ -13,6 +16,7 @@ export type GAuthContextValue = GAuthState & {
   updateLoggedIn: (isLoggedIn: boolean) => void;
   updateRegisteredUser: (isRegistered: boolean) => void;
   updateUser: (user: AuthUser | null) => void;
+  silentlyLogin: () => void;
 };
 
 type GAuthContextProviderProps = {
@@ -26,12 +30,12 @@ const initialState: GAuthState = {
   isLoggedIn: false,
   isRegisteredUser: true,
   authUser: null
-}
+};
 
-type IsLoggedInAction = { 
+type IsLoggedInAction = {
   type: "UPDATE_LOGGED_IN";
   isLoggedIn: boolean;
-  }
+}
 type IsResgisterUserAction = {
   type: "UPDATE_REGISTERED_USER";
   isRegisteredUser: boolean;
@@ -64,7 +68,7 @@ function gAuthReducer(state: GAuthState, action: Action): GAuthState {
     console.debug("CTX Updated user: ", newState);
     return newState;
   }
-  return state
+  return state;
 };
 
 export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) => {
@@ -74,27 +78,70 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
     The reducer function is a function that is automatically executed  by React when 
     an action is dispatched (using the 'dispatch' return) to the Reducer, triggering 
     a change of state    */
-    const [gAuthState, dispatch] = useReducer(gAuthReducer, initialState);
+  const [gAuthState, dispatch] = useReducer(gAuthReducer, initialState);
 
   const ctx: GAuthContextValue = {
     isLoggedIn: gAuthState.isLoggedIn,
     isRegisteredUser: gAuthState.isRegisteredUser,
     authUser: gAuthState.authUser,
     updateLoggedIn(isLoggedIn) {
-      dispatch({type: "UPDATE_LOGGED_IN", isLoggedIn: isLoggedIn})
+      dispatch({ type: "UPDATE_LOGGED_IN", isLoggedIn: isLoggedIn });
     },
     updateRegisteredUser(isRegistered) {
-      dispatch({type: "UPDATE_REGISTERED_USER", isRegisteredUser: isRegistered})
+      dispatch({ type: "UPDATE_REGISTERED_USER", isRegisteredUser: isRegistered });
     },
     updateUser(user) {
-      dispatch({type: "UPDATE_USER", user: user})
+      dispatch({ type: "UPDATE_USER", user: user });
     },
+    silentlyLogin() {
+      if (!this.isLoggedIn) {
+        const silentlySignIn = async () => {
+          try {
+            const { idToken } = await GoogleSignin.signInSilently();
+            const response = await authenticateInBackend(idToken!);
+            if (response.status == 200) {
+              //console.log(response);
+              dispatch({ type: "UPDATE_LOGGED_IN", isLoggedIn: true });
+              dispatch({ type: "UPDATE_REGISTERED_USER", isRegisteredUser: true });
+              dispatch({ type: "UPDATE_USER", user: response.data.user });
+            }
+          } catch (err: any) {
+            // -4 is user never logged in before or signed out
+            if (err.code != -4) {
+              console.error("Silent Signin err: ", err);
+            }
+            dispatch({ type: "UPDATE_REGISTERED_USER", isRegisteredUser: false });
+            dispatch({ type: "UPDATE_USER", user: null });
+          }
+        };
+        silentlySignIn()
+      }
+    }
   };
+
+  async function authenticateInBackend(idToken: string): Promise<AxiosResponse<AuthResponse>> {
+    try {
+      let config = {
+        headers: {
+          "idToken": idToken,
+        },
+        validateStatus: function (status: number) {
+          return status <= 500; // Resolve only if the status code is less than 500
+        }
+      };
+
+      const response = await api.post('/authentication', null, config);
+
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
 
   return (
     <GAuthContext.Provider
       value={ctx}>
       {children}
     </GAuthContext.Provider>
-  )
+  );
 };
