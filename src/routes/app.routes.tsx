@@ -5,6 +5,7 @@ import {
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { Image, Platform } from 'react-native'
 import Logo from '@/assets/logo.png'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 
 import { Home, Maps, About, MyClasses, Events, SignIn, SignUp, Profile } from '@/screens'
 import { Building, IClass } from '@/dtos/classes'
@@ -14,6 +15,7 @@ import { Box, Typography } from '@/components'
 import { logger } from '@/services/logger'
 import { Forum } from '@/screens/Forum/Forum'
 import React from 'react'
+import { type StackRoutesType } from '@/routes'
 
 export type AppRoutesType = {
   Home: undefined
@@ -38,6 +40,11 @@ export const AppRoutes = () => {
 
   const onTabPress = (routeName: string) => {
     logger.logEvent(`Clicou na tab ${routeName}`)
+  }
+  const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
+
+  const openUserPage = () => {
+    navigationStack.navigate('User')
   }
 
   return (
@@ -90,6 +97,11 @@ export const AppRoutes = () => {
               <Image source={Logo} />
             </Box>
           ),
+          headerRight: () => (
+            <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
+              <FeatherIcons name="user" color="white" size={iconSize} />
+            </Box>
+          ),
         }}
       />
       <Screen
@@ -114,6 +126,12 @@ export const AppRoutes = () => {
               <Image source={Logo} />
             </Box>
           ),
+          headerRight: () => (
+            <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
+              <FeatherIcons name="user" color="white" size={iconSize} />
+            </Box>
+          ),
+
         }}
       />
       <Screen
@@ -133,6 +151,12 @@ export const AppRoutes = () => {
             <FeatherIcons name="home" color={color} size={iconSize} />
           ),
           title: 'Minhas Aulas',
+          headerRight: () => (
+            <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
+              <FeatherIcons name="user" color="white" size={iconSize} />
+            </Box>
+          ),
+
         }}
       />
       <Screen
@@ -152,9 +176,15 @@ export const AppRoutes = () => {
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
           title: 'Mapa dos Prédios da POLI',
+          headerRight: () => (
+            <Box ml={'m'}>
+              <FeatherIcons name="user" color="white" size={iconSize} />
+            </Box>
+          ),
+
         }}
       />
-      <Screen
+      {/* <Screen
         name="Profile"
         component={Profile}
         listeners={({ route }) => ({
@@ -172,7 +202,7 @@ export const AppRoutes = () => {
           ),
           title: 'Perfil',
         }}
-      />
+      /> */} 
       <Screen
         name="About"
         component={About}
@@ -189,6 +219,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="info" color={color} size={iconSize} />
           ),
+
           title: 'Sobre o USPolis',
         }}
       />

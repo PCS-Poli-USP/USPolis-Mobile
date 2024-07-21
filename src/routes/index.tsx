@@ -10,6 +10,7 @@ import { Forum } from '@/screens/Forum/Forum'
 import { type IClass } from '@/dtos'
 import { Platform } from 'react-native'
 import { Header } from 'react-native/Libraries/NewAppScreen'
+import { Profile } from '@/screens'
 // import { AuthRoutes } from "./auth.routes"
 
 export type StackRoutesType = {
@@ -17,6 +18,7 @@ export type StackRoutesType = {
   Forum: {
     sclass?: IClass
   }
+  User: undefined
 };
 
 export const Routes = () => {
@@ -51,6 +53,13 @@ export const Routes = () => {
         })}
           name="Forum"
           component={Forum}
+        />
+        <Screen options={({route}) => ({
+          headerShown: true,
+          headerTitle: "User"
+        })}
+          name="User"
+          component={Profile}
         />
       </Navigator>
     </NavigationContainer>
