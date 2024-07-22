@@ -1,30 +1,27 @@
 import { IClass } from "@/dtos";
-import { PostDTO } from "@/dtos/forum";
+import { type PostRequest, type PostResponse } from "@/dtos/forum";
 import api from "@/services/api";
-import axios from "axios";
 import { useQuery } from "react-query";
 
 export function usePosts(sclass: IClass) {
     const query = useQuery(['posts'], async () => {
-        const response = await api.get<PostDTO[]>('forum/posts', {
+        const response = await api.get<PostResponse[]>('forum/posts', {
             params: {
-                event_id: sclass.schedule[0].id.$oid
+                class_id: sclass.id
             }
         });
-        console.log("Response=",response.data);
+        //console.log("ForumGetResponse=",response.data);
         return response.data;
     });
     return query;
 }
 
-export function useCreatePost(postDTO: PostDTO) {
-    const query = useQuery(['posts'], async () => {
-        const response = await api.post('forum/posts', {
-            author: postDTO.author,
-            content: postDTO.content,
-            event_id: postDTO.event_id
-        });
+export function useCreatePost() {
+    const handlePost = async (postDTO: PostRequest) => {
+        console.log("entrou aqui")
+        
+        const response = await api.post<PostResponse>('forum/posts', postDTO);
         return response.data;
-    })
-    return query;
+    };
+    return handlePost;
 }

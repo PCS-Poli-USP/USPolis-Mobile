@@ -1,6 +1,7 @@
 import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
 import { ForumModal } from "@/components/ForumModal";
-import { usePosts } from "@/hooks/react-query/usePosts";
+import { PostRequest, PostResponse } from "@/dtos/forum";
+import { useCreatePost, usePosts } from "@/hooks/react-query/usePosts";
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import api from "@/services/api";
@@ -12,74 +13,58 @@ import Toast from "react-native-toast-message";
 type Post = {
     author: string;
     body: string;
-    date: string;
+    createdAt: string;
 };
 
-const dict: Post[] = [
-    {
-        author: "Autor1",
-        body: "aashdfuiashbfipuahsiufhusahfouhasoui",
-        date: "ontem"
-    },
-    {
-        author: "Autor2",
-        body: "aashdfuiashbfipuahsiufhusahfouhasouifibdsnaons",
-        date: "19/02/2023"
-    }
-]
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
-    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);
-    const [posts, setPosts] = useState<Post[]>(dict);
+    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);;
+    const handlePost = useCreatePost();
+    const [posts, setPosts] = useState<Post[]>([]);
     const { authUser } = useGoogleAuthContext()
 
     useEffect(() => {
         if (fetchedPosts) {
-            console.log("atualizou posts", fetchedPosts);
+            console.log("Atualizou os posts, total:", fetchedPosts.length);
             setPosts(fetchedPosts.map((post) => {
                 return {
-                    author: post.author,
+                    author: post.user_name,
                     body: post.content,
-                    date: post.created_at
+                    createdAt: post.created_at
                 };
             }));
         }
     }, [fetchedPosts]);
 
-    function handleAddNewPost(body: string) {
+    async function handleAddNewPost(body: string) {
         if (authUser) {
-            const newPost: Post = {
-                author: authUser.given_name,
-                body: body,
-                date: new Date().toString()
+            const newPostDTO: PostRequest = {
+                user_id: authUser.id,
+                content: body,
+                class_id: params.sclass!.id,
             };
-            const newPosts: Post[] = [
+            const newPost = await handlePost(newPostDTO);
+            setPosts([
                 ...posts,
-                newPost
-            ]
-            setPosts(newPosts);
-            (async () => {
-                const response = await api.post("forum/posts", {
-                    author: newPost.author,
-                    content: newPost.body,
-                    event_id: params.sclass?.schedules[0].id
-                })
-                console.log("post response=", response.status);
-                console.log("post response=", response.data);
-            })();
+                {
+                    author: newPost.user_name,
+                    body: newPost.content,
+                    createdAt: newPost.created_at,
+                }
+            ]);
             logger.setUserProperty("Posts: ", posts.toString());
         } else {
             Toast.show({
                 type: 'error',
                 text1: 'Ops!',
                 text2: 'É preciso logar para postar!'
-              });
+            });
         }
     }
 
     const openForumModal = () => {
-        logger.logEvent("Clicou p abrir forum");
+        logger.logEvent("Clicou para abrir o forum da class:", params.sclass);
         setIsForumModalOpen(true);
     }
 
@@ -138,7 +123,7 @@ function PostCard({ post }: PostCardProps) {
                             color="grayOne"
                             numberOfLines={2}
                             variant="heading">
-                            {post.date} </Typography>
+                            {post.createdAt} </Typography>
                     </HStack>
                 </VStack>
             </HStack>
