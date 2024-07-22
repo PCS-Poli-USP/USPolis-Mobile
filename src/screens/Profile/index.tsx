@@ -184,21 +184,36 @@ export const Profile = () => {
             <Box alignContent="flex-end">
 
               <Typography variant={'heading'} color='grayOne' textAlign="center" marginBottom="s" fontSize={16} ml={'s'}>Você ainda não está logado</Typography>
-              <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'}>Clique no botão abaixo para entrar com o <Typography color="white">e-mail USP</Typography></Typography>
             
 
               <Box marginVertical="l" alignItems="center" justifyContent="center">
                 {!isLoggedIn && isRegisteredUser && 
-                <GoogleSigninButton
-                  style={{ width: 192, height: 48 }}
-                  size={GoogleSigninButton.Size.Wide}
-                  color={GoogleSigninButton.Color.Dark}
-                  onPress={signIn} />}
-                {!isLoggedIn && !isRegisteredUser && <GoogleSigninButton
-                  style={{ width: 192, height: 48 }}
-                  size={GoogleSigninButton.Size.Wide}
-                  color={GoogleSigninButton.Color.Dark}
-                  onPress={registerUser} />}
+                  <Box alignItems="center" justifyContent="center">
+                    <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="s">
+                      Clique no botão abaixo para entrar com o <Typography color="white">e-mail USP</Typography>
+                    </Typography>
+                    <GoogleSigninButton
+                      style={{ width: 192, height: 48 }}
+                      size={GoogleSigninButton.Size.Wide}
+                      color={GoogleSigninButton.Color.Dark}
+                      onPress={signIn} />
+                  </Box>
+                }
+                {!isLoggedIn && !isRegisteredUser && 
+                  <Box alignItems="center" justifyContent="center">
+                    <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="s">
+                      Clique no botão abaixo para cadastar no USPolis com o <Typography color="white">e-mail USP</Typography>
+                    </Typography>
+
+                    <GoogleSigninButton
+                      
+                      style={{ width: 192, height: 48 }}
+                      size={GoogleSigninButton.Size.Wide}
+                      color={GoogleSigninButton.Color.Dark}
+                      onPress={registerUser} />
+
+                  </Box>
+                }
               </Box>
             </Box>
             :

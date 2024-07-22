@@ -73,6 +73,12 @@ export const AppRoutes = () => {
           fontSize: Platform.OS === 'ios' ? 28 : 20,
           fontWeight: '700',
         },
+        headerRight: () => (
+          <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
+            <FeatherIcons name="user" color="white" size={iconSize} />
+          </Box>
+        ),
+
       }}
     >
       <Screen
@@ -95,11 +101,6 @@ export const AppRoutes = () => {
           headerLeft: () => (
             <Box ml={'m'}>
               <Image source={Logo} />
-            </Box>
-          ),
-          headerRight: () => (
-            <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
-              <FeatherIcons name="user" color="white" size={iconSize} />
             </Box>
           ),
         }}
@@ -126,12 +127,6 @@ export const AppRoutes = () => {
               <Image source={Logo} />
             </Box>
           ),
-          headerRight: () => (
-            <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
-              <FeatherIcons name="user" color="white" size={iconSize} />
-            </Box>
-          ),
-
         }}
       />
       <Screen
@@ -151,12 +146,6 @@ export const AppRoutes = () => {
             <FeatherIcons name="home" color={color} size={iconSize} />
           ),
           title: 'Minhas Aulas',
-          headerRight: () => (
-            <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
-              <FeatherIcons name="user" color="white" size={iconSize} />
-            </Box>
-          ),
-
         }}
       />
       <Screen
@@ -176,33 +165,9 @@ export const AppRoutes = () => {
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
           title: 'Mapa dos Prédios da POLI',
-          headerRight: () => (
-            <Box ml={'m'}>
-              <FeatherIcons name="user" color="white" size={iconSize} />
-            </Box>
-          ),
 
         }}
       />
-      {/* <Screen
-        name="Profile"
-        component={Profile}
-        listeners={({ route }) => ({
-          tabPress: () => onTabPress(route.name),
-        })}
-        options={{
-          tabBarLabel: ({ color }) => (
-            <Typography fontSize={10} style={{ color }}>
-              Perfil
-            </Typography>
-          ),
-          tabBarShowLabel: true,
-          tabBarIcon: ({ color }) => (
-            <FeatherIcons name="user" color={color} size={iconSize} />
-          ),
-          title: 'Perfil',
-        }}
-      /> */} 
       <Screen
         name="About"
         component={About}
