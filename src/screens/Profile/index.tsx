@@ -10,12 +10,16 @@ import api from "@/services/api";
 import Toast from "react-native-toast-message";
 import { AuthResponse } from "@/dtos/auth";
 import { AxiosResponse } from "axios";
+import  Logo from "@/assets/logo.png"
+import { Image, Platform, Dimensions  } from 'react-native'
+import FeatherIcons from '@expo/vector-icons/Feather'
+import { Center } from "native-base";
+
 
 export const Profile = () => {
   const { authUser, isLoggedIn, isRegisteredUser, updateLoggedIn, updateRegisteredUser, updateUser } = useGoogleAuthContext();
-
+  const { width } = Dimensions.get('window');
   useEffect(() => {
-    console.log("Auth context refreshed (remove me!)");
     GoogleSignin.configure({
       webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
       offlineAccess: true,
@@ -52,6 +56,13 @@ export const Profile = () => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log('PLAY_SERVICES_NOT_AVAILABLE');
         // serviços de execução não disponível ou desatualizado
+      }else if (error.code === "12500"){
+        // 12500 -> wrong domain code
+        Toast.show({
+          type: 'info',
+          text1: 'Domínio Errado!',
+          text2: "Use um e-mail USP para continuar"
+        });
       } else {
         // algum outro erro ocorreu
         console.log("Outro erro :( ", error.code, error)
@@ -82,6 +93,13 @@ export const Profile = () => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log('PLAY_SERVICES_NOT_AVAILABLE');
         // serviços de execução não disponível ou desatualizado
+      } else if (error.code === "12500"){
+        // 12500 -> wrong e-mail domain code
+        Toast.show({
+          type: 'info',
+          text1: 'Domínio Errado!',
+          text2: "Use um e-mail USP para continuar"
+        });
       } else {
         // algum outro erro ocorreu
         console.log("Outro erro :( ", error.code, error)
@@ -118,34 +136,106 @@ export const Profile = () => {
   };
 
   return (
-    <VStack flex={1} backgroundColor='graySeven' paddingHorizontal="m" paddingBottom={'l'}>
-      <Box marginVertical="l" alignItems="center" justifyContent="center">
-        <Typography variant={'heading'} color='grayOne' fontSize={24} ml={'s'}>{isRegisteredUser ? "Login" : "Cadastro"}</Typography>
-      </Box>
+    <VStack 
+      flex={1} 
+      backgroundColor='graySeven' 
+      paddingHorizontal="m" 
+      paddingVertical={'l'}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Box width={width * 0.8}marginBottom="s"  marginHorizontal="l"  justifyContent="center" backgroundColor="graySix">
+        <Box justifyContent="center" alignItems="center" borderRadius={90} marginVertical="m">
+          {isLoggedIn?
+          <Box >
+            <Typography 
+              variant={'heading'}  
+              color='grayOne' 
+              textAlign="center" 
+              fontSize={16} ml={'s'} 
+              marginBottom="m"
+            >
+              Você está logado como:
+            </Typography>
 
-      <VStack flex={1} backgroundColor='graySeven' paddingHorizontal="m" paddingBottom={'l'}>
-        <Box marginVertical="l" alignItems="center" justifyContent="center">
-          {!isLoggedIn && isRegisteredUser && <GoogleSigninButton
-            style={{ width: 192, height: 48 }}
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={signIn} />}
-          {!isLoggedIn && !isRegisteredUser && <GoogleSigninButton
-            style={{ width: 48, height: 48 }}
-            size={GoogleSigninButton.Size.Icon}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={registerUser} />}
+            <Box  alignContent="center" alignItems="center">
+              <Image  
+                style={{ width: 120, height: 120, borderRadius:90 }} 
+                source={ {uri:authUser?.picture_url}} />
+            </Box>
+
+          </Box>
+          : 
+            <Box  
+              justifyContent="center" 
+              alignItems="center" 
+              width={120} 
+              height={120} 
+              borderRadius={90} 
+              backgroundColor="grayOne"
+              
+            >
+              <FeatherIcons name="user" color="graySeven" size={100} />
+            </Box>
+          }
         </Box>
-        {!isLoggedIn && <Typography variant={'heading'} color='grayOne' fontSize={24} ml={'s'}>Você atualmente não está logado</Typography>}
-        {isLoggedIn && (<VStack>
-          <Typography variant={'heading'} color='grayOne' fontSize={24} ml={'s'}>Bem vindo,</Typography>
-          <Typography variant={'heading'} color='grayOne' fontSize={24} ml={'s'} marginBottom="l" >{authUser?.given_name + " " + authUser?.family_name}</Typography>
-          <Button
-            variant="outlined"
-            onPress={signOut}
-            title="Logout"></Button>
-        </VStack>)}
-      </VStack>
+        <Box paddingTop="s" paddingBottom="m" alignItems="center" justifyContent="center">
+          {!isLoggedIn?
+            <Box alignContent="flex-end">
+
+              <Typography variant={'heading'} color='grayOne' textAlign="center" marginBottom="s" fontSize={16} ml={'s'}>Você ainda não está logado</Typography>
+            
+
+              <Box marginVertical="l" alignItems="center" justifyContent="center">
+                {!isLoggedIn && isRegisteredUser && 
+                  <Box alignItems="center" justifyContent="center">
+                    <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="s">
+                      Clique no botão abaixo para entrar com o <Typography color="white">e-mail USP</Typography>
+                    </Typography>
+                    <GoogleSigninButton
+                      style={{ width: 192, height: 48 }}
+                      size={GoogleSigninButton.Size.Wide}
+                      color={GoogleSigninButton.Color.Dark}
+                      onPress={signIn} />
+                  </Box>
+                }
+                {!isLoggedIn && !isRegisteredUser && 
+                  <Box alignItems="center" justifyContent="center">
+                    <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="s">
+                      Clique no botão abaixo para cadastar no USPolis com o <Typography color="white">e-mail USP</Typography>
+                    </Typography>
+
+                    <GoogleSigninButton
+                      
+                      style={{ width: 192, height: 48 }}
+                      size={GoogleSigninButton.Size.Wide}
+                      color={GoogleSigninButton.Color.Dark}
+                      onPress={registerUser} />
+
+                  </Box>
+                }
+              </Box>
+            </Box>
+            :
+            <VStack alignContent="center" alignItems="center">
+              <Typography variant={'heading'} textAlign="center" color='grayOne' fontSize={20} ml={'s'} marginBottom="l" >
+                {authUser?.given_name + " " + authUser?.family_name}
+              </Typography>
+              <Box  flexDirection="row" justifyContent="space-around">
+
+                <Button
+                  style={{width:200, margin: 10}}
+                  variant="outlined"
+                  onPress={signOut}
+                  title="Logout"
+                />
+              </Box>
+                
+            </VStack>
+          }
+        </Box>
+      
+      </Box>
     </VStack>
   );
 };

@@ -5,6 +5,7 @@ import {
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { Image, Platform } from 'react-native'
 import Logo from '@/assets/logo.png'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 
 import { Home, Maps, About, MyClasses, Events, SignIn, SignUp, Profile } from '@/screens'
 import { Building, IClass } from '@/dtos/classes'
@@ -14,6 +15,7 @@ import { Box, Typography } from '@/components'
 import { logger } from '@/services/logger'
 import { Forum } from '@/screens/Forum/Forum'
 import React from 'react'
+import { type StackRoutesType } from '@/routes'
 
 export type AppRoutesType = {
   Home: undefined
@@ -38,6 +40,11 @@ export const AppRoutes = () => {
 
   const onTabPress = (routeName: string) => {
     logger.logEvent(`Clicou na tab ${routeName}`)
+  }
+  const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
+
+  const openUserPage = () => {
+    navigationStack.navigate('User')
   }
 
   return (
@@ -66,6 +73,12 @@ export const AppRoutes = () => {
           fontSize: Platform.OS === 'ios' ? 28 : 20,
           fontWeight: '700',
         },
+        headerRight: () => (
+          <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
+            <FeatherIcons name="user" color="white" size={iconSize} />
+          </Box>
+        ),
+
       }}
     >
       <Screen
@@ -152,25 +165,7 @@ export const AppRoutes = () => {
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
           title: 'Mapa dos Prédios da POLI',
-        }}
-      />
-      <Screen
-        name="Profile"
-        component={Profile}
-        listeners={({ route }) => ({
-          tabPress: () => onTabPress(route.name),
-        })}
-        options={{
-          tabBarLabel: ({ color }) => (
-            <Typography fontSize={10} style={{ color }}>
-              Perfil
-            </Typography>
-          ),
-          tabBarShowLabel: true,
-          tabBarIcon: ({ color }) => (
-            <FeatherIcons name="user" color={color} size={iconSize} />
-          ),
-          title: 'Perfil',
+
         }}
       />
       <Screen
@@ -189,6 +184,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="info" color={color} size={iconSize} />
           ),
+
           title: 'Sobre o USPolis',
         }}
       />
