@@ -10,9 +10,7 @@ export const scheduleFactory = (
   classes?: IClass[],
 ): ClassesGroupedByWeekday[] => {
   const classesOnSchedule =
-    classes?.filter((c) => schedule.includes(c.id)) ?? []
-console.log("classesonschedule:", classesOnSchedule)
-console.log("allClasses:", classesOnSchedule)
+    classes?.filter((c) => schedule.includes(c.id)) ?? [];
   const allClasses: ScheduledClasses[] = classesOnSchedule
     .map((c) =>
       c.schedules.map((s) => ({
@@ -23,18 +21,18 @@ console.log("allClasses:", classesOnSchedule)
         class_code: c.code,
       })),
     )
-    .flat(1)
-    
+    .flat(1);
+
   const weekDaysWithClasses: string[] = getUniqueValues(
     allClasses.map((c) => c.week_day),
   ).sort(
     (a: string, b: string) =>
       parse(a, 'EEEE', new Date(), { locale: ptBR }).getDay() -
       parse(b, 'EEEE', new Date(), { locale: ptBR }).getDay(),
-  )
-  console.log("allClasses:", weekDaysWithClasses)
+  );
+  
   return weekDaysWithClasses.map((weekDay) => ({
     week_day: weekDay,
     classes: allClasses.filter((c) => c.week_day === weekDay),
-  }))
+  }));
 }
