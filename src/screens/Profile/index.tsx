@@ -1,5 +1,5 @@
 import { Box, Button, Typography, VStack } from "@/components";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -12,11 +12,14 @@ import { AuthResponse } from "@/dtos/auth";
 import { AxiosResponse } from "axios";
 import { Image, Dimensions } from 'react-native'
 import FeatherIcons from '@expo/vector-icons/Feather'
+import { AlertModal } from "@/components/AlertModal/AlertModal";
 
 
 export const Profile = () => {
   const { authUser, isLoggedIn, isRegisteredUser, updateLoggedIn, updateRegisteredUser, updateUser } = useGoogleAuthContext();
   const { width } = Dimensions.get('window');
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
@@ -42,11 +45,13 @@ export const Profile = () => {
       } else if (response.status == 404) {
         //console.log("recebeu 404");
         signOut();
+        setIsRegisterModalOpen(true);
         updateRegisteredUser(false);
       } else {
         //console.log("sign in: sign out")
         signOut();
       }
+      showLoginToast(response);
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // usuário cancelou o fluxo de login
@@ -139,6 +144,8 @@ export const Profile = () => {
     }
   };
 
+
+
   return (
     <VStack
       flex={1}
@@ -146,8 +153,8 @@ export const Profile = () => {
       paddingHorizontal="m"
       paddingVertical={'l'}
       alignItems="center"
-      justifyContent="center"
-    >
+      justifyContent="center">
+
       <Box width={width * 0.8} marginBottom="s" marginHorizontal="l" justifyContent="center" backgroundColor="graySix">
         <Box justifyContent="center" alignItems="center" borderRadius={90} marginVertical="m">
           {isLoggedIn ?
@@ -191,7 +198,7 @@ export const Profile = () => {
 
 
               <Box marginVertical="l" alignItems="center" justifyContent="center">
-                {!isLoggedIn && isRegisteredUser &&
+                {!isLoggedIn &&
                   <Box alignItems="center" justifyContent="center">
                     <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="s">
                       Clique no botão abaixo para entrar com o <Typography color="white">e-mail USP</Typography>
@@ -201,21 +208,6 @@ export const Profile = () => {
                       size={GoogleSigninButton.Size.Wide}
                       color={GoogleSigninButton.Color.Dark}
                       onPress={signIn} />
-                  </Box>
-                }
-                {!isLoggedIn && !isRegisteredUser &&
-                  <Box alignItems="center" justifyContent="center">
-                    <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="s">
-                      Clique no botão abaixo para cadastar no USPolis com o <Typography color="white">e-mail USP</Typography>
-                    </Typography>
-
-                    <GoogleSigninButton
-
-                      style={{ width: 192, height: 48 }}
-                      size={GoogleSigninButton.Size.Wide}
-                      color={GoogleSigninButton.Color.Dark}
-                      onPress={registerUser} />
-
                   </Box>
                 }
               </Box>
@@ -238,7 +230,32 @@ export const Profile = () => {
             </VStack>
           }
         </Box>
-
+        {!isRegisteredUser &&
+          <AlertModal
+            isOpen={isRegisterModalOpen}
+            onClose={() => setIsRegisterModalOpen(false)}
+            title="Usuário não encontrado"
+            message="Deseja cadastrar essa conta no USPolis?">
+            <Box marginBottom={'m'} marginHorizontal="xl">
+              <Button
+                variant={'solid'}
+                title={'Cadastrar'}
+                onPress={() => {
+                  registerUser();
+                }}
+              />
+            </Box>
+            <Box marginBottom={'m'} marginHorizontal="xl">
+              <Button
+                variant={'outlined'}
+                title={'Cancelar'}
+                onPress={() => {
+                  setIsRegisterModalOpen(false);
+                }}
+              />
+            </Box>
+          </AlertModal>
+        }
       </Box>
     </VStack>
   );
@@ -257,18 +274,6 @@ async function authenticateInBackend(idToken: string): Promise<AxiosResponse<Aut
 
     const response = await api.post('/authentication', null, config);
 
-    if (response.status == 200) {
-      Toast.show({
-        type: 'info',
-        text1: 'Login efetuado com sucesso!'
-      });
-    } else if (response.status == 404) {
-      Toast.show({
-        type: 'info',
-        text1: 'Usuário não encontrado',
-        text2: "por favor cadastre-se"
-      });
-    }
     return response;
   } catch (err: any) {
     Toast.show({
@@ -277,6 +282,21 @@ async function authenticateInBackend(idToken: string): Promise<AxiosResponse<Aut
       text2: 'Ocorreu um erro, tente novamente mais tarde.' + { err }
     });
     return err;
+  }
+}
+
+function showLoginToast(response: AxiosResponse<AuthResponse>) {
+  if (response.status == 200) {
+    Toast.show({
+      type: 'info',
+      text1: 'Login efetuado com sucesso!'
+    });
+  } else if (response.status == 404) {
+    Toast.show({
+      type: 'info',
+      text1: 'Usuário não encontrado',
+      text2: "por favor cadastre-se"
+    });
   }
 }
 
