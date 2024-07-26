@@ -10,7 +10,6 @@ export function usePosts(sclass: IClass) {
                 class_id: sclass.id
             }
         });
-        //console.log("ForumGetResponse=",response.data);
         return response.data;
     });
     return query;
@@ -18,8 +17,6 @@ export function usePosts(sclass: IClass) {
 
 export function useCreatePost() {
     const handlePost = async (postDTO: PostRequest) => {
-        console.log("entrou aqui")
-        
         const response = await api.post<PostResponse>('forum/posts', postDTO);
         return response.data;
     };
