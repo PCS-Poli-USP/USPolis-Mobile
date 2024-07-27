@@ -7,7 +7,7 @@ export const scheduleStorage = {
     const schedule = await AsyncStorage.getItem(SCHEDULE_STORAGE)
     return schedule ? JSON.parse(schedule) : null
   },
-  save: async (classes: Array<string>) => {
+  save: async (classes: Array<number>) => {
     await AsyncStorage.setItem(SCHEDULE_STORAGE, JSON.stringify(classes))
   },
   delete: async () => {

@@ -33,7 +33,7 @@ export const MyClasses = () => {
 
   const classesGroupedByWeekday = scheduleFactory(schedule, classes)
 
-  const onOpenModal = (classId: string, className: string) => {
+  const onOpenModal = (classId: number, className: string) => {
     const sclass = classes?.find((c) => c.id === classId)
 
     logger.logEvent('Aula Visualizada', {

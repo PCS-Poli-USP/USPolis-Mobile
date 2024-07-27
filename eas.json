@@ -3,10 +3,20 @@
     "version": ">= 3.7.2"
   },
   "build": {
+    "development-simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development"
+      "channel": "development",
+      "env": {
+        "ANDROID_HOME": "/Users/jmakiyama/Library/Android/sdk"
+      }
     },
     "preview": {
       "autoIncrement": true,
@@ -41,6 +51,9 @@
       "ios": {
         "image": "latest",
         "autoIncrement": "buildNumber"
+      },
+      "env": {
+        "ANDROID_HOME": "/Users/jmakiyama/Library/Android/sdk"
       }
     }
   },

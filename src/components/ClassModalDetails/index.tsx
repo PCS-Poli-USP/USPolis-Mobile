@@ -12,6 +12,9 @@ import { useTheme } from "@shopify/restyle";
 import { Box, HStack, Typography, VStack } from "../ui";
 import { logger } from "@/services/logger";
 import { Modal } from "../Modal";
+import { type StackRoutesType } from "@/routes"
+import { useState } from "react";
+import React from "react";
 
 interface ClassModalDetailsProps {
   sclass?: IClass | null;
@@ -24,11 +27,13 @@ export const ClassModalDetails = ({
   isOpen,
   onClose,
 }: ClassModalDetailsProps) => {
-  const navigation = useNavigation<NavigationProp<AppRoutesType>>();
-  const { colors } = useTheme<Theme>();
-  const { schedule, toggleClassOnSchedule } = useSchedule();
+  const navigation = useNavigation<NavigationProp<AppRoutesType>>()
+  const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
+  const { colors } = useTheme<Theme>()
+  const { schedule, toggleClassOnSchedule } = useSchedule()
+  const [ isForumModalOpen, setIsForumModalOpen] = useState(false)
 
-  const handleToggleClassOnSchedule = (classId: string, className: string) => {
+  const handleToggleClassOnSchedule = (classId: number, className: string) => {
     if (schedule.includes(classId)) {
       logger.logEvent("Aula Removida no Cronograma", { class: className });
     } else {
@@ -42,11 +47,11 @@ export const ClassModalDetails = ({
   if (!sclass) return <></>;
 
   const progressValue =
-    differenceInDays(new Date(), parseISO(sclass.end_period)) > 0
-      ? (differenceInDays(new Date(), parseISO(sclass.end_period)) /
+    differenceInDays(new Date(), parseISO(sclass.end_date)) > 0
+      ? (differenceInDays(new Date(), parseISO(sclass.end_date)) /
           differenceInDays(
-            parseISO(sclass.start_period),
-            parseISO(sclass.end_period)
+            parseISO(sclass.start_date),
+            parseISO(sclass.end_date)
           )) *
         100
       : 0;
@@ -58,6 +63,19 @@ export const ClassModalDetails = ({
     });
     onClose();
   };
+
+  const navigateToForum = (sclass: IClass) => {
+    navigationStack.navigate('Forum', 
+      {sclass}
+    )
+    onClose();
+  }
+  const openForumModal = () => {
+    logger.logEvent("Clicou p abrir forum");
+    navigateToForum(sclass);
+    //setIsForumModalOpen(true);
+  }
+
 
   return (
     <Box flex={1}>
@@ -103,7 +121,7 @@ export const ClassModalDetails = ({
                 {sclass.subject_name}
               </Typography>
               <Typography color="grayTwo" fontSize={14} marginBottom={"s"}>
-                Turma {sclass.class_code.slice(-2)}
+                Turma {sclass.code.slice(-2)}
               </Typography>
               <Typography color="grayTwo" fontSize={14}>
                 {sclass.professors.join(", ")}
@@ -116,7 +134,7 @@ export const ClassModalDetails = ({
             paddingBottom={"s"}
           >
             <VStack backgroundColor="graySeven" marginBottom="m">
-              {sclass.schedule
+              {sclass.schedules
                 .sort(sortEventsByScheduleTime)
                 .map((event, index) => (
                   <Box key={`${event.id}-${index}`} marginBottom={"s"}>
@@ -157,10 +175,10 @@ export const ClassModalDetails = ({
                     </Pressable>
                   </Box>
                 ))}
-              {!!sclass.professor && (
+              {!!sclass.professors && (
                 <Box marginBottom="m">
                   <Typography color="grayTwo">Docente:</Typography>
-                  <Typography color="white">{sclass.professor}</Typography>
+                  <Typography color="white">{sclass.professors}</Typography>
                 </Box>
               )}
               <Box marginBottom="m">
@@ -168,13 +186,13 @@ export const ClassModalDetails = ({
                   <Box>
                     <Typography color="grayTwo">Início</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.start_period), "dd/MM/yyyy")}
+                      {format(parseISO(sclass.start_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                   <Box>
                     <Typography color="grayTwo">Fim</Typography>
                     <Typography color="white">
-                      {format(parseISO(sclass.end_period), "dd/MM/yyyy")}
+                      {format(parseISO(sclass.end_date), 'dd/MM/yyyy')}
                     </Typography>
                   </Box>
                 </Box>
@@ -187,6 +205,16 @@ export const ClassModalDetails = ({
                   }}
                 /> */}
               </Box>
+              <Button 
+                variant={"outlined"}
+                title={
+                  "Abrir Fórum da Disciplina"
+                }
+                onPress={() =>
+                  {onClose();
+                  openForumModal();}
+                }
+              />
               <Button
                 variant={"outlined"}
                 title={

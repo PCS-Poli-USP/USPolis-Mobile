@@ -6,23 +6,22 @@ import { parse } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 export const scheduleFactory = (
-  schedule: string[],
+  schedule: number[],
   classes?: IClass[],
 ): ClassesGroupedByWeekday[] => {
   const classesOnSchedule =
-    classes?.filter((c) => schedule.includes(c.id)) ?? []
-
+    classes?.filter((c) => schedule.includes(c.id)) ?? [];
   const allClasses: ScheduledClasses[] = classesOnSchedule
     .map((c) =>
-      c.schedule.map((s) => ({
+      c.schedules.map((s) => ({
         ...s,
         class_subject_name: c.subject_name,
         class_subject_code: c.subject_code,
         class_id: c.id,
-        class_code: c.class_code,
+        class_code: c.code,
       })),
     )
-    .flat(1)
+    .flat(1);
 
   const weekDaysWithClasses: string[] = getUniqueValues(
     allClasses.map((c) => c.week_day),
@@ -30,10 +29,10 @@ export const scheduleFactory = (
     (a: string, b: string) =>
       parse(a, 'EEEE', new Date(), { locale: ptBR }).getDay() -
       parse(b, 'EEEE', new Date(), { locale: ptBR }).getDay(),
-  )
-
+  );
+  
   return weekDaysWithClasses.map((weekDay) => ({
     week_day: weekDay,
     classes: allClasses.filter((c) => c.week_day === weekDay),
-  }))
+  }));
 }

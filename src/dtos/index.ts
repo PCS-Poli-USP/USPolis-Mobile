@@ -1,6 +1,6 @@
-import { User } from './auth'
+import { AuthUser } from './auth'
 import { IClass, Schedule } from './classes'
 import { IComment } from './comment'
 import { AbTesting } from './ab-testing'
 
-export { User, IClass, Schedule, IComment, AbTesting }
+export { AuthUser as User, IClass, Schedule, IComment, AbTesting }

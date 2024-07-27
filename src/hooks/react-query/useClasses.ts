@@ -7,6 +7,6 @@ export const useClasses = () => {
     const response = await api.get<IClass[]>('/classes')
     return response.data
   })
-
+  //console.log(query.data?.at(0)?.schedule.at(0)?.start_time)
   return query
 }
