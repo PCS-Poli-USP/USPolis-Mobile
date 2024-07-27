@@ -186,7 +186,7 @@ export const Profile = () => {
               backgroundColor="grayOne"
 
             >
-              <FeatherIcons name="user" color="graySeven" size={100} />
+              <FeatherIcons name="user" color="black" size={100} />
             </Box>
           }
         </Box>
