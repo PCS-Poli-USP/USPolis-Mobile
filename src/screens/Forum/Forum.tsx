@@ -23,7 +23,7 @@ export type Post = {
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
-    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);;
+    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
     const { authUser } = useGoogleAuthContext()
@@ -147,7 +147,7 @@ export function Forum() {
 
 
         </VStack>
-    )
+    );
 }
 
 type PostCardProps = {
@@ -207,6 +207,6 @@ function PostCard({ post, sclass }: PostCardProps) {
                 </VStack>
             </HStack>
         </Pressable>
-    )
+    );
 }
 const MemoPost = React.memo(PostCard);

@@ -10,7 +10,6 @@ export function usePosts(sclass: IClass) {
                 class_id: sclass.id
             }
         });
-        //console.log("ForumGetResponse=",response.data);
         return response.data;
     });
     return query;

@@ -11,7 +11,7 @@ export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
   const parsedWeekDay = parse(classesGroup.week_day, "EEEE", new Date(), {
     locale: ptBR,
   });
-  console.log("Debugging: ", classesGroup.week_day, classesGroup.week_day)
+  
   const weekdayAbbreviated = format(parsedWeekDay, "EEEEEE", { locale: ptBR });
   
   const orderedClasses = classesGroup.classes.sort((a, b) => {
