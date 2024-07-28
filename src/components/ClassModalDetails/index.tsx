@@ -205,16 +205,18 @@ export const ClassModalDetails = ({
                   }}
                 /> */}
               </Box>
-              <Button 
-                variant={"outlined"}
-                title={
-                  "Abrir Fórum da Disciplina"
-                }
-                onPress={() =>
-                  {onClose();
-                  openForumModal();}
-                }
-              />
+              <Box marginBottom="s">
+                <Button 
+                  variant={"outlined"}
+                  title={
+                    "Abrir Fórum da Disciplina"
+                  }
+                  onPress={() =>
+                    {onClose();
+                    openForumModal();}
+                  }
+                />
+              </Box>
               <Button
                 variant={"outlined"}
                 title={

@@ -1,8 +1,11 @@
+import React from 'react'
 import { Button } from '../Button'
 import { IClass } from '../../dtos/classes'
-import { Box, Typography, VStack } from '../ui'
+import { Box, HStack, Typography, VStack } from "../ui";
 import { Modal } from '../Modal'
 import { Input } from '../Input'
+import { Dimensions, ScrollView } from 'react-native'
+
 
 interface ForumModalProps {
 	sclass?: IClass | null
@@ -18,6 +21,9 @@ export const ForumModal = ({
 	onHandleNewPost
 }: ForumModalProps) => {
 	let postText = "";
+    const { width, height } = Dimensions.get('window');
+    const screenWidth = width
+    const screenHeight = height
 
 	return (
 		<Box flex={1}>
@@ -59,11 +65,16 @@ export const ForumModal = ({
 							</Typography>
 						</VStack>
 					</Box>
+
 					<Input
+						maxLength={240}
+						multiline={true}
+						height={screenHeight*0.2}
 						variation="secondary"
 						placeholder={'Escreva algo para postar!'}
 						onChangeText={(text) => postText = text}
 					/>
+					
 					<Button
 						variant={'outlined'}
 						title={

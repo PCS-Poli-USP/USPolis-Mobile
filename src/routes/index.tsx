@@ -1,3 +1,4 @@
+import React from 'react'
 import { Loading } from '@/components'
 import { useAuth } from '@/hooks'
 import { Theme } from '@/theme/theme'
@@ -10,12 +11,17 @@ import { Forum } from '@/screens/Forum/Forum'
 import { type IClass } from '@/dtos'
 import { Platform } from 'react-native'
 import { Header } from 'react-native/Libraries/NewAppScreen'
-import { Profile } from '@/screens'
+import { Profile, ForumContent } from '@/screens'
+import { type Post } from '@/screens/Forum/Forum'
 // import { AuthRoutes } from "./auth.routes"
 
 export type StackRoutesType = {
   HomeStack: undefined;
   Forum: {
+    sclass?: IClass
+  }
+  ForumContent:{
+    post?: Post
     sclass?: IClass
   }
   User: undefined
@@ -49,10 +55,17 @@ export const Routes = () => {
         />
         <Screen options={({route}) => ({
           headerShown: true,
-          headerTitle: "Forum de "+route.params.sclass?.subject_code
+          headerTitle: "Fórum de "+route.params.sclass?.subject_code
         })}
           name="Forum"
           component={Forum}
+        />
+        <Screen options={({route}) => ({
+          headerShown: true,
+          headerTitle: "Fórum de "+ route.params.sclass?.subject_code
+        })}
+          name="ForumContent"
+          component={ForumContent}
         />
         <Screen options={({route}) => ({
           headerShown: true,
