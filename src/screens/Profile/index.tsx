@@ -1,5 +1,5 @@
 import { Box, Button, Typography, VStack } from "@/components";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -19,18 +19,6 @@ export const Profile = () => {
   const { authUser, isLoggedIn, isRegisteredUser, updateLoggedIn, updateRegisteredUser, updateUser } = useGoogleAuthContext();
   const { width } = Dimensions.get('window');
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
-      offlineAccess: true,
-      iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
-      hostedDomain: process.env.EXPO_PUBLIC_AUTH_EMAIL_DOMAIN
-    });
-    if (GoogleSignin.hasPreviousSignIn()) {
-      silentlySignIn();
-    }
-  }, []);
 
   async function signIn() {
     try {
@@ -113,24 +101,6 @@ export const Profile = () => {
       }
       signOut();
     }
-  }
-
-  const silentlySignIn = async () => {
-    try {
-      const { idToken } = await GoogleSignin.signInSilently();
-      const response = await authenticateInBackend(idToken!);
-      if (response.status == 200) {
-        //console.log(response);
-        updateLoggedIn(true);
-        updateRegisteredUser(true);
-        updateUser(response.data.user);
-      }
-    } catch (err: any) {
-      console.error("Silent Signin err: ", err);
-      updateLoggedIn(false);
-      updateUser(null);
-      signOut();
-    }
   };
 
   const signOut = async () => {
@@ -143,8 +113,6 @@ export const Profile = () => {
       console.error(error);
     }
   };
-
-
 
   return (
     <VStack

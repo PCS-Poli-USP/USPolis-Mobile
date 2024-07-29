@@ -1,13 +1,12 @@
 import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
 import { ForumModal } from "@/components/ForumModal";
-import { PostRequest, PostResponse, ReportPostRequest } from "@/dtos/forum";
+import { PostRequest } from "@/dtos/forum";
 import { useCreatePost, usePosts } from "@/hooks/react-query/usePosts";
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import api from "@/services/api";
 import { logger } from "@/services/logger";
-import { RouteProp, useRoute,  } from "@react-navigation/native";
+import { RouteProp, useRoute, } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import { Dimensions, ScrollView } from 'react-native'
@@ -81,33 +80,33 @@ export function Forum() {
         <VStack flex={1} width={screenWidth} >
 
             <Box backgroundColor="grayFive" paddingHorizontal="m" paddingVertical="m" marginTop="s" alignItems="center">
-                <Typography color="grayOne" fontSize={20} > 
-                BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
+                <Typography color="grayOne" fontSize={20} >
+                    BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
                 </Typography>
-                <Typography color="grayOne" fontSize={16}> 
+                <Typography color="grayOne" fontSize={16}>
                     Tenha educação e respeito com os outros 😊
                 </Typography>
 
             </Box>
-            <Box 
-                backgroundColor="transparent" 
-                paddingHorizontal="m" 
-                paddingVertical="m" 
-                marginTop="s" 
-                alignItems="center" 
-                height={screenHeight-300}
+            <Box
+                backgroundColor="transparent"
+                paddingHorizontal="m"
+                paddingVertical="m"
+                marginTop="s"
+                alignItems="center"
+                height={screenHeight - 300}
             >
                 {posts?.length === 0 ?
                     <Box alignContent="center">
-                        <Typography color="grayOne" fontSize={16}> 
-                            Ainda ninguém postou neste fórum 😞 {"\n"} 
+                        <Typography color="grayOne" fontSize={16}>
+                            Ainda ninguém postou neste fórum 😞 {"\n"}
                             Seja o primeiro a postar!
                         </Typography>
                     </Box>
-                :   
+                    :
                     <ScrollView>
                         <VStack>
-                            <Box width={screenWidth*0.95}>
+                            <Box width={screenWidth * 0.95}>
                                 {posts.map((post, index) => {
                                     return <MemoPost key={index} post={post} sclass={params.sclass} />
                                 })}
@@ -115,7 +114,7 @@ export function Forum() {
                         </VStack>
 
                     </ScrollView>
-                }                                                                   
+                }
 
             </Box>
             <Box
@@ -135,16 +134,13 @@ export function Forum() {
                 />
             </Box>
 
-            <Box flex={1}>
+            {isForumModalOpen && <Box flex={1}>
                 <ForumModal
                     sclass={params.sclass}
                     isOpen={isForumModalOpen}
                     onClose={() => setIsForumModalOpen(false)}
-                    onHandleNewPost={handleAddNewPost}
-                />
-            </Box>
-
-
+                    onHandleNewPost={handleAddNewPost} />
+            </Box>}
 
         </VStack>
     );
@@ -156,23 +152,23 @@ type PostCardProps = {
 }
 function PostCard({ post, sclass }: PostCardProps) {
     const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
-    
+
     const selectPost = () => {
         console.log(sclass)
-        navigationStack.navigate('ForumContent', 
-            {post, sclass}
+        navigationStack.navigate('ForumContent',
+            { post, sclass }
         )
 
     }
-    const formatDatetime = (datetime : string) => {
+    const formatDatetime = (datetime: string) => {
         const date = new Date(datetime);
 
         const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'long', day: 'numeric' });
-        
+
         return formatter.format(date);
     }
 
-     
+
     return (
         <Pressable onPress={selectPost}>
             <HStack
@@ -194,14 +190,14 @@ function PostCard({ post, sclass }: PostCardProps) {
                             paddingRight={"xxs"}
                             numberOfLines={2}
                         >
-                            {post.author} 
+                            {post.author}
                         </Typography>
                         <Typography
                             color="grayOne"
                             numberOfLines={2}
                             variant="heading"
                         >
-                            {formatDatetime(post.createdAt)} 
+                            {formatDatetime(post.createdAt)}
                         </Typography>
                     </HStack>
                 </VStack>
