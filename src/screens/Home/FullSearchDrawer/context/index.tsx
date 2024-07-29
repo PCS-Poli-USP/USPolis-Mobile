@@ -1,7 +1,5 @@
-import { User } from '@/dtos'
 import { useCourses } from '@/hooks/react-query/useCourses'
-import { userStorage } from '@/storage/user'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { useEffect } from 'react'
 import { createContext, useState } from 'react'
 
