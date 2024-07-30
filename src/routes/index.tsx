@@ -1,44 +1,41 @@
 import React from 'react'
-import { Loading } from '@/components'
-import { useAuth } from '@/hooks'
 import { Theme } from '@/theme/theme'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { useTheme } from '@shopify/restyle'
 
-import { AppRoutes, AppRoutesType } from './app.routes'
+import { AppRoutes } from './app.routes'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Forum } from '@/screens/Forum/Forum'
 import { type IClass } from '@/dtos'
 import { Platform } from 'react-native'
-import { Header } from 'react-native/Libraries/NewAppScreen'
 import { Profile, ForumContent } from '@/screens'
 import { type Post } from '@/screens/Forum/Forum'
-// import { AuthRoutes } from "./auth.routes"
 
 export type StackRoutesType = {
-  HomeStack: undefined;
+  HomeBottomTab: undefined;
   Forum: {
     sclass?: IClass
-  }
-  ForumContent:{
+  };
+  ForumContent: {
     post?: Post
     sclass?: IClass
-  }
-  User: undefined
+  };
+  UserProfile: undefined;
 };
 
 export const Routes = () => {
-  const { colors } = useTheme<Theme>()
+  const { colors } = useTheme<Theme>();
 
   const { Navigator, Screen } = createNativeStackNavigator<StackRoutesType>();
 
-  const theme = DefaultTheme
-  theme.colors.background = colors.graySeven
+  const theme = DefaultTheme;
+  theme.colors.background = colors.graySeven;
 
   return (
     <NavigationContainer theme={theme} >
       <Navigator screenOptions={{
-        headerShown: false,
+        headerBackTitleVisible: false,
+        headerShown: true,
         headerStyle: {
           backgroundColor: colors.graySix,
         },
@@ -48,41 +45,33 @@ export const Routes = () => {
           fontWeight: '700',
         },
         headerTintColor: colors.white,
-        }} >
-        <Screen 
-          name="HomeStack"
+      }} >
+        <Screen
+          options={{
+            headerShown: false
+          }}
+          name="HomeBottomTab"
           component={AppRoutes}
         />
-        <Screen options={({route}) => ({
-          headerShown: true,
-          headerTitle: "Fórum de "+route.params.sclass?.subject_code
+        <Screen options={({ route }) => ({
+          headerTitle: "Fórum de " + route.params.sclass?.subject_code
         })}
           name="Forum"
           component={Forum}
         />
-        <Screen options={({route}) => ({
-          headerShown: true,
-          headerTitle: "Fórum de "+ route.params.sclass?.subject_code
+        <Screen options={({ route }) => ({
+          headerTitle: "Fórum de " + route.params.sclass?.subject_code
         })}
           name="ForumContent"
           component={ForumContent}
         />
-        <Screen options={({route}) => ({
-          headerShown: true,
-          headerTitle: "User"
+        <Screen options={({ route }) => ({
+          headerTitle: "Perfil"
         })}
-          name="User"
+          name="UserProfile"
           component={Profile}
         />
       </Navigator>
     </NavigationContainer>
-  )
-
-  // return (
-  //   <Box flex={1} bg='gray.700'>
-  //     <NavigationContainer>
-  //       {user?.id ? <AppRoutes /> : <AuthRoutes />}
-  //     </NavigationContainer>
-  //   </Box>
-  // )
+  );
 }

@@ -14,13 +14,9 @@ export const About = () => {
   const [comment, setComment] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const {authUser, silentlyLogin} = useGoogleAuthContext(); 
+  const {authUser} = useGoogleAuthContext(); 
 
   const { colors } = useTheme<Theme>();
-  
-  useEffect(() => {
-    silentlyLogin();
-  }, []);
 
   const handleSendComment = async () => {
     setIsLoading(true);

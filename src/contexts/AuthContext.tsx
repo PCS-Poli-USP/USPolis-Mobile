@@ -2,7 +2,7 @@ import { type AuthResponse, type AuthUser } from '@/dtos/auth';
 import api from '@/services/api';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { type AxiosResponse } from 'axios';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createContext, useReducer } from 'react'
 
 type GAuthState = {
@@ -80,6 +80,18 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
     a change of state    */
   const [gAuthState, dispatch] = useReducer(gAuthReducer, initialState);
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
+      offlineAccess: true,
+      iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
+      hostedDomain: process.env.EXPO_PUBLIC_AUTH_EMAIL_DOMAIN
+    });
+    if (GoogleSignin.hasPreviousSignIn()) {
+      signInSilently();
+    }
+  }, []);
+
   const ctx: GAuthContextValue = {
     isLoggedIn: gAuthState.isLoggedIn,
     isRegisteredUser: gAuthState.isRegisteredUser,
@@ -94,30 +106,35 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
       dispatch({ type: "UPDATE_USER", user: user });
     },
     silentlyLogin() {
-      if (!this.isLoggedIn) {
-        const silentlySignIn = async () => {
-          try {
-            const { idToken } = await GoogleSignin.signInSilently();
-            const response = await authenticateInBackend(idToken!);
-            if (response.status == 200) {
-              //console.log(response);
-              dispatch({ type: "UPDATE_LOGGED_IN", isLoggedIn: true });
-              dispatch({ type: "UPDATE_REGISTERED_USER", isRegisteredUser: true });
-              dispatch({ type: "UPDATE_USER", user: response.data.user });
-            }
-          } catch (err: any) {
-            // -4 is user never logged in before or signed out
-            if (err.code != -4) {
-              console.error("Silent Signin err: ", err);
-            }
-            dispatch({ type: "UPDATE_REGISTERED_USER", isRegisteredUser: false });
-            dispatch({ type: "UPDATE_USER", user: null });
-          }
-        };
-        silentlySignIn()
-      }
+      signInSilently();
     }
   };
+
+  function signInSilently() {
+    if (GoogleSignin.hasPreviousSignIn()) {
+      const silentlySignIn = async () => {
+        try {
+          const { idToken } = await GoogleSignin.signInSilently();
+          const response = await authenticateInBackend(idToken!);
+          if (response.status == 200) {
+            //console.log(response);
+            dispatch({ type: "UPDATE_LOGGED_IN", isLoggedIn: true });
+            dispatch({ type: "UPDATE_REGISTERED_USER", isRegisteredUser: true });
+            dispatch({ type: "UPDATE_USER", user: response.data.user });
+          }
+        } catch (err: any) {
+          // -4 is user never logged in before or signed out
+          if (err.code != -4) {
+            console.error("Silent Signin err: ", err);
+          }
+          dispatch({ type: "UPDATE_REGISTERED_USER", isRegisteredUser: false });
+          dispatch({ type: "UPDATE_USER", user: null });
+          GoogleSignin.signOut();
+        }
+      };
+      silentlySignIn()
+    }
+  }
 
   async function authenticateInBackend(idToken: string): Promise<AxiosResponse<AuthResponse>> {
     try {
