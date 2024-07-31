@@ -53,7 +53,7 @@ export const Profile = () => {
       } else if (error.code === "12500") {
         // 12500 -> wrong domain code
         Toast.show({
-          type: 'warning',
+          type: 'error',
           text1: 'Domínio Errado!',
           text2: "Use um e-mail USP para continuar"
         });
