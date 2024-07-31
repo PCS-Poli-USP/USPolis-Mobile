@@ -25,7 +25,8 @@ export function Forum() {
     const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
-    const { authUser } = useGoogleAuthContext()
+    const { authUser, isLoggedIn } = useGoogleAuthContext()
+
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
     const screenHeight = height
@@ -154,7 +155,6 @@ function PostCard({ post, sclass }: PostCardProps) {
     const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
 
     const selectPost = () => {
-        console.log(sclass)
         navigationStack.navigate('ForumContent',
             { post, sclass }
         )
