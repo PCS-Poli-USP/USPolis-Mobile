@@ -123,8 +123,8 @@ export const Profile = () => {
       alignItems="center"
       justifyContent="center">
 
-      <Box width={width * 0.8} marginBottom="s" marginHorizontal="l" justifyContent="center" backgroundColor="graySix">
-        <Box justifyContent="center" alignItems="center" borderRadius={90} marginVertical="m">
+      <Box width={width * 0.8} marginBottom="s" marginHorizontal="l" justifyContent="center" backgroundColor="graySix" paddingTop="l">
+        <Box justifyContent="center" alignItems="center" borderRadius={90} marginVertical="m" >
           {isLoggedIn ?
             <Box >
               <Typography
@@ -162,20 +162,20 @@ export const Profile = () => {
           {!isLoggedIn ?
             <Box alignContent="flex-end">
 
-              <Typography variant={'heading'} color='grayOne' textAlign="center" marginBottom="s" fontSize={16} ml={'s'}>Você ainda não está logado</Typography>
+              <Typography variant={'heading'} color='grayOne' textAlign="center" marginBottom="s" fontSize={16} ml={'s'}>Você ainda não está logado...</Typography>
 
 
               <Box marginVertical="l" alignItems="center" justifyContent="center">
                 {!isLoggedIn &&
-                  <Box alignItems="center" justifyContent="center">
-                    <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="s">
-                      Clique no botão abaixo para entrar com o <Typography color="white">e-mail USP</Typography>
+                  <Box alignItems="center" justifyContent="center" >
+                    <Typography variant={'heading'} color='grayOne' textAlign="center" fontSize={16} ml={'s'} marginBottom="m" lineHeight={24}>
+                      Clique no botão abaixo para entrar com o <Typography color="red" fontWeight="bold" textDecorationLine="underline">E-MAIL USP</Typography>
                     </Typography>
                     <GoogleSigninButton
                       style={{ width: 192, height: 48 }}
                       size={GoogleSigninButton.Size.Wide}
                       color={GoogleSigninButton.Color.Dark}
-                      onPress={signIn} />
+                      onPress={signIn} /> 
                   </Box>
                 }
               </Box>
