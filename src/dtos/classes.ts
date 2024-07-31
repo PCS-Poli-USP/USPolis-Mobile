@@ -26,6 +26,7 @@ export type IClass = {
   start_date: string
   end_date: string
   schedules: Array<Schedule>
+  subject_id: number
 }
 
 export type ScheduledClasses = {

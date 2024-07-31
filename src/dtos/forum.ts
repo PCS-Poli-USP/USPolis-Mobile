@@ -2,6 +2,7 @@ export type PostRequest = {
     user_id: number;
     content: string;
     class_id: number;
+    subject_id: number;
 };
 
 export type PostResponse = {
@@ -10,6 +11,7 @@ export type PostResponse = {
     user_name: string;
     content: string;
     class_id: number;
+    subject_id: number;
     created_at: string;
 }
 

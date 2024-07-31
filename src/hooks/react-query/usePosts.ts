@@ -5,9 +5,10 @@ import { useQuery } from "react-query";
 
 export function usePosts(sclass: IClass) {
     const query = useQuery(['posts'], async () => {
+        console.log(sclass.subject_id)
         const response = await api.get<PostResponse[]>('forum/posts', {
             params: {
-                class_id: sclass.id
+                subject_id: sclass.subject_id
             }
         });
         return response.data;

@@ -52,6 +52,7 @@ export function Forum() {
                 user_id: authUser.id,
                 content: body,
                 class_id: params.sclass!.id,
+                subject_id: params.sclass!.subject_id
             };
             const newPost = await handlePost(newPostDTO);
             setPosts([
