@@ -83,10 +83,12 @@ export const ForumModal = ({
 							<Input
 								maxLength={240}
 								multiline={true}
-								height={screenHeight*0.2}
+								height={screenHeight*0.15}
 								variation="secondary"
 								placeholder={'Escreva algo para postar!'}
 								onChangeText={(text) => postText = text}
+								textAlignVertical='top'
+								padding='s'								
 							/>
 							
 							<Button

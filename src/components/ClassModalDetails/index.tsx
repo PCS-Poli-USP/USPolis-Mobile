@@ -5,7 +5,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { differenceInDays, format, parseISO } from "date-fns";
 import { Pressable } from "react-native";
 import { Button } from "../Button";
-import { sortEventsByScheduleTime } from "./utils";
+import { sortEventsByScheduleTime, formatTime } from "./utils";
 import { Building, IClass } from "../../dtos/classes";
 import { Theme } from "@/theme/theme";
 import { useTheme } from "@shopify/restyle";
@@ -139,8 +139,8 @@ export const ClassModalDetails = ({
                 .map((event, index) => (
                   <Box key={`${event.id}-${index}`} marginBottom={"s"}>
                     <Typography variant={"heading"} color="white" mb={"xs"}>
-                      {event.week_day}, das {event.start_time} às{" "}
-                      {event.end_time}
+                      {event.week_day}, das {formatTime(event.start_time)} às{" "}
+                      {formatTime(event.end_time)}
                     </Typography>
                     <Pressable
                       onPress={() => navigateToMap(event.building, event.floor)}
