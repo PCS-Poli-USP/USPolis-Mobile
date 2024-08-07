@@ -2,7 +2,7 @@
   "expo": {
     "name": "USPolis",
     "slug": "uspolis",
-    "version": "7.2.3",
+    "version": "8.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,13 +18,19 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    //This is set inside app.config.ts for a safe use of credentials
-    "plugins": [
-    ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "22",
-      "bundleIdentifier": "Lunadros.Uspolis"
+      "buildNumber": "26",
+      "bundleIdentifier": "Lunadros.Uspolis",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.370044874397-rbq7vv4d9sgorj4boso4i5nohn5u3mc1"
+            ]
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -32,7 +38,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "uspolis.lunadros",
-      "versionCode": 72
+      "versionCode": 78
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,7 +48,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "7897098c-0fa4-4492-ae0f-6359bd5a063d"
+        "projectId": "e8ff3ab1-1c5e-4c53-b7c8-9dab42186dc3"
       }
     }
   }

@@ -25,6 +25,7 @@ export const Profile = () => {
       await GoogleSignin.hasPlayServices();
       const { idToken } = await GoogleSignin.signIn();
       const response = await authenticateInBackend(idToken!);
+      
       if (response.status == 200) {
         //console.log(response);
         updateLoggedIn(true);

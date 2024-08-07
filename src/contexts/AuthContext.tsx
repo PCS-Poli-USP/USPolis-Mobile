@@ -1,5 +1,6 @@
 import { type AuthResponse, type AuthUser } from '@/dtos/auth';
 import api from '@/services/api';
+import { EXPO_PUBLIC_AUTH_EMAIL_DOMAIN, EXPO_PUBLIC_IOS_CLIENT_ID, EXPO_PUBLIC_WEB_CLIENT_ID } from '@env';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { type AxiosResponse } from 'axios';
 import React, { useEffect } from 'react'
@@ -82,10 +83,10 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
+      webClientId: EXPO_PUBLIC_WEB_CLIENT_ID,
       offlineAccess: true,
-      iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
-      hostedDomain: process.env.EXPO_PUBLIC_AUTH_EMAIL_DOMAIN
+      iosClientId: EXPO_PUBLIC_IOS_CLIENT_ID,
+      hostedDomain: EXPO_PUBLIC_AUTH_EMAIL_DOMAIN
     });
     if (GoogleSignin.hasPreviousSignIn()) {
       signInSilently();

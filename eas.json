@@ -13,16 +13,13 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development",
-      "env": {
-        "ANDROID_HOME": "/Users/jmakiyama/Library/Android/sdk"
-      }
+      "channel": "development"
     },
     "preview": {
-      "autoIncrement": true,
+      //"autoIncrement": true,
       "distribution": "internal",
       "android": {
-        "autoIncrement": "versionCode",
+        //"autoIncrement": "versionCode",
         "buildType": "apk"
       },
       "channel": "preview",
@@ -51,9 +48,6 @@
       "ios": {
         "image": "latest",
         "autoIncrement": "buildNumber"
-      },
-      "env": {
-        "ANDROID_HOME": "/Users/jmakiyama/Library/Android/sdk"
       }
     }
   },
