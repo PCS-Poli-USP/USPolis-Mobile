@@ -21,16 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "26",
-      "bundleIdentifier": "Lunadros.Uspolis",
-      "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.370044874397-rbq7vv4d9sgorj4boso4i5nohn5u3mc1"
-            ]
-          }
-        ]
-      }
+      "bundleIdentifier": "Lunadros.Uspolis"
     },
     "android": {
       "adaptiveIcon": {
@@ -50,6 +41,9 @@
       "eas": {
         "projectId": "e8ff3ab1-1c5e-4c53-b7c8-9dab42186dc3"
       }
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
