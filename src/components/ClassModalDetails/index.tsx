@@ -13,7 +13,6 @@ import { Box, HStack, Typography, VStack } from "../ui";
 import { logger } from "@/services/logger";
 import { Modal } from "../Modal";
 import { type StackRoutesType } from "@/routes"
-import { useState } from "react";
 import React from "react";
 
 interface ClassModalDetailsProps {
@@ -31,7 +30,6 @@ export const ClassModalDetails = ({
   const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
   const { colors } = useTheme<Theme>()
   const { schedule, toggleClassOnSchedule } = useSchedule()
-  const [ isForumModalOpen, setIsForumModalOpen] = useState(false)
 
   const handleToggleClassOnSchedule = (classId: number, className: string) => {
     if (schedule.includes(classId)) {
@@ -71,9 +69,8 @@ export const ClassModalDetails = ({
     onClose();
   }
   const openForumModal = () => {
-    logger.logEvent("Clicou p abrir forum");
+    logger.logEvent("Clicou para abrir forum", sclass);
     navigateToForum(sclass);
-    //setIsForumModalOpen(true);
   }
 
 

@@ -25,7 +25,7 @@ export function Forum() {
     const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
-    const { authUser, isLoggedIn } = useGoogleAuthContext()
+    const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
 
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
@@ -64,7 +64,7 @@ export function Forum() {
                     createdAt: newPost.created_at,
                 }
             ]);
-            logger.setUserProperty("Posts: ", posts.toString());
+            logger.logEvent("Novo post no forum", {user_id: authUser.id, subject: params.sclass?.subject_code});
         } else {
             Toast.show({
                 type: 'error',
@@ -74,7 +74,7 @@ export function Forum() {
         }
     }
     const openForumModal = () => {
-        logger.logEvent("Clicou para abrir o forum da class:", params.sclass);
+        //logger.logEvent("Clicou para abrir o forum da class:", params.sclass);
         setIsForumModalOpen(true);
     }
 
