@@ -3,7 +3,7 @@ import api from '@/services/api';
 import { EXPO_PUBLIC_AUTH_EMAIL_DOMAIN, EXPO_PUBLIC_IOS_CLIENT_ID, EXPO_PUBLIC_WEB_CLIENT_ID } from '@env';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { type AxiosResponse } from 'axios';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createContext, useReducer } from 'react'
 
 type GAuthState = {
@@ -18,6 +18,7 @@ export type GAuthContextValue = GAuthState & {
   updateRegisteredUser: (isRegistered: boolean) => void;
   updateUser: (user: AuthUser | null) => void;
   silentlyLogin: () => void;
+  getUserToken: () => string | null;
 };
 
 type GAuthContextProviderProps = {
@@ -80,6 +81,7 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
     an action is dispatched (using the 'dispatch' return) to the Reducer, triggering 
     a change of state    */
   const [gAuthState, dispatch] = useReducer(gAuthReducer, initialState);
+  const [idToken, setIdToken] = useState<string | null>(null)
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -108,7 +110,10 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
     },
     silentlyLogin() {
       signInSilently();
-    }
+    },
+    getUserToken() {
+      return getGoogleAuthToken()
+    },
   };
 
   function signInSilently() {
@@ -135,6 +140,18 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
       };
       silentlySignIn()
     }
+  }
+
+  function getGoogleAuthToken(): string | null {
+    if (GoogleSignin.hasPreviousSignIn()) {
+      const fecthIdTokens = async () => {
+        const { idToken } = await GoogleSignin.getTokens()
+        setIdToken(idToken)
+      }
+      fecthIdTokens()
+      return idToken
+    }
+    return null
   }
 
   async function authenticateInBackend(idToken: string): Promise<AxiosResponse<AuthResponse>> {

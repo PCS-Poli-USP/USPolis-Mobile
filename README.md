@@ -22,7 +22,8 @@ O aplicativo oficial da faculdade para consulta de salas de aula, matérias e ma
     ```bash
     npm install
     ```
-4. Inicie o projeto:
+4. Obtenha o .env (no drive de desenvolvedores do USPolis) ou obtenha as credenciais necessárias para o [Google Authentication](https://react-native-google-signin.github.io/docs/setting-up/get-config-file) (sem Firebase)
+5. Inicie o projeto:
     ```bash
     npm start
     ```
@@ -67,26 +68,33 @@ src/
 ### Android
 
 A fim de realizar o deploy para a loja do android, os seguintes passos devem ser seguidos:
-1. Criar uma conta em http://expo.dev
+1. Criar uma conta em http://expo.dev ou utilize a conta do USPolis (nesse caso, pode pular para o item 3)
 2. Configurar as credenciais de android para tal conta: 
+    
     2.1 Conseguir Alias
+
     2.2 Conseguir Senha
-3. Logar na sua conta expo em seu terminar ``npx expo login -h``
-3. Rodar ```npx eas build --profile preview --platform android``` e seguir as instruções
+3. Logar na conta expo em seu terminar ``npx expo login -h``
+3. Rodar ```npx eas build --profile production --platform android``` e seguir as instruções
 
 ### iOS
 
 A fim de realizar o deploy para a loja do iOS, os seguintes passos devem ser seguidos:
-1. Criar uma conta em http://expo.dev
+1. Criar uma conta em http://expo.dev ou utilize a conta do USPolis (nesse caso, pode pular para o item 3)
 2. Configurar as credenciais de iOS para tal conta: 
+    
     2.1 Conseguir Apple ID
+    
     2.2 Conseguir Apple Team ID
+    
     2.3 Conseguir Apple Provisioning Profile
+    
     2.4 Conseguir Apple Push Notifications Key
+    
     2.5 Conseguir Apple Push Notifications Certificate
 
-3. Logar na sua conta expo em seu terminar ``npx expo login -h``
-3. Rodar ```npx eas build --profile preview --platform ios``` e seguir as instruções. Para isso você precisará de uma conta na apple connect que tenha permissões para realizar o build de aplicativos.
+3. Logar na conta expo em seu terminal ``npx expo login -h``
+3. Rodar ```npx eas build --profile production --platform ios``` e seguir as instruções. Para isso você precisará de uma conta na apple connect que tenha permissões para realizar o build de aplicativos.
 4. Após o build ser realizado, rodar o comando ```npx eas submit --platform ios``` e seguir as instruções. Dessa forma o build irá automaticamente para a Apple como um build válido.
 
 ## Contribuição
