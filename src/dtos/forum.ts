@@ -20,3 +20,21 @@ export type ReportPostRequest = {
     post_id: number;
 
 }
+
+export type ForumPostReplyResponse = {
+    id: number;
+    forum_post_id: number;
+    class_id: number;
+    subject_id: number;
+    content: string;
+    user_id: number;
+    user_name: string;
+    created_at: string;
+}
+
+export type ForumPostReply = {
+    class_id: number;
+    content: string;
+    user_id: number;
+    subject_id: number;
+}

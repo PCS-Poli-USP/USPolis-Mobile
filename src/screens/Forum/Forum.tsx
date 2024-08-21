@@ -81,11 +81,18 @@ export function Forum() {
     return (
         <VStack flex={1} width={screenWidth} >
 
-            <Box backgroundColor="grayFive" paddingHorizontal="m" paddingVertical="m" marginTop="s" alignItems="center">
-                <Typography color="grayOne" fontSize={20} >
+            <Box 
+                backgroundColor="graySix"
+                paddingHorizontal="s"
+                paddingVertical="m"
+                marginTop="s"
+                alignItems="center"
+                borderRadius={5}
+            >
+                <Typography color="grayOne" fontSize={18} >
                     BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
                 </Typography>
-                <Typography color="grayOne" fontSize={16}>
+                <Typography color="grayOne" fontSize={14} paddingTop="s">
                     Tenha educação e respeito com os outros 😊
                 </Typography>
 
