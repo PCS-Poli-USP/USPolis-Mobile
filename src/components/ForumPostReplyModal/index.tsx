@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button } from '../Button'
 import { IClass } from '../../dtos/classes'
-import { Box, HStack, Typography, VStack } from "../ui";
+import { Box, HStack, Typography } from "../ui";
 import { Modal } from '../Modal'
 import { Input } from '../Input'
-import { Dimensions, ScrollView } from 'react-native'
+import { Dimensions} from 'react-native'
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { StackRoutesType } from "@/routes";
@@ -29,8 +29,7 @@ export const ForumPostReplyModal = ({
 	const { isLoggedIn } = useGoogleAuthContext()
 
 	let postText = "";
-    const { width, height } = Dimensions.get('window');
-    const screenWidth = width
+    const { height } = Dimensions.get('window');
     const screenHeight = height
 
 	const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()

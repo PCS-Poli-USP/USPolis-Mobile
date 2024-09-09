@@ -270,13 +270,16 @@ export function ForumContent(){
                     style={{ height: 50, width:'80%' }}
                 />
             </Box>
+            
+            {isForumPostReplyModalOpen &&
+                <ForumPostReplyModal
+                    post={post}
+                    isOpen={isForumPostReplyModalOpen}
+                    onClose={closeReplyModal}
+                    onHandleNewPostReply={handleAddNewReply}
+                />
 
-            <ForumPostReplyModal
-                post={post}
-                isOpen={isForumPostReplyModalOpen}
-                onClose={closeReplyModal}
-                onHandleNewPostReply={handleAddNewReply}
-            />
+            }
 
         </VStack>
     )
