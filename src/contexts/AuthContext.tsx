@@ -18,7 +18,7 @@ export type GAuthContextValue = GAuthState & {
   updateRegisteredUser: (isRegistered: boolean) => void;
   updateUser: (user: AuthUser | null) => void;
   silentlyLogin: () => void;
-  getUserToken: () => string | null;
+  getUserToken: () => Promise<string | null>;
 };
 
 type GAuthContextProviderProps = {
@@ -81,7 +81,6 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
     an action is dispatched (using the 'dispatch' return) to the Reducer, triggering 
     a change of state    */
   const [gAuthState, dispatch] = useReducer(gAuthReducer, initialState);
-  const [idToken, setIdToken] = useState<string | null>(null)
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -142,13 +141,9 @@ export const GAuthContextProvider = ({ children }: GAuthContextProviderProps) =>
     }
   }
 
-  function getGoogleAuthToken(): string | null {
+  async function getGoogleAuthToken(): Promise<string | null> {
     if (GoogleSignin.hasPreviousSignIn()) {
-      const fecthIdTokens = async () => {
-        const { idToken } = await GoogleSignin.getTokens()
-        setIdToken(idToken)
-      }
-      fecthIdTokens()
+      const { idToken } = await GoogleSignin.getTokens()
       return idToken
     }
     return null
