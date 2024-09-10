@@ -43,9 +43,6 @@ export function ForumContent() {
     const [postReplies, setPostReplies] = useState<ForumPostReplyResponse[]>([]);
     const { data: fetchedPostReplies } = usePostReplies(post ? post?.id : -1)
     useEffect(() => {
-        /*const logToken = async () => {const token = await getUserToken();
-        console.log("token: ", token)};
-        logToken();*/
         if (fetchedPostReplies) {
             setPostReplies(fetchedPostReplies.map((postReply) => {
                 return {
