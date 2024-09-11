@@ -3,56 +3,57 @@ import { ReportPostRequest, ForumPostReply, ForumPostReplyResponse } from "@/dto
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import api from "@/services/api";
-import { useCreatePostReply, usePostReplies} from "@/hooks/react-query/usePosts";
+import { useCreatePostReply, usePostReplies } from "@/hooks/react-query/usePosts";
 
-import {ForumPostReplyModal} from "@/components/ForumPostReplyModal"
+import { ForumPostReplyModal } from "@/components/ForumPostReplyModal"
 import FeatherIcons from '@expo/vector-icons/Feather'
 
 import { RouteProp, useRoute } from "@react-navigation/native";
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Toast from "react-native-toast-message";
 import { Dimensions, ScrollView } from 'react-native'
+import { logger } from "@/services/logger";
 
-export function ForumContent(){
+export function ForumContent() {
     const { authUser, getUserToken } = useGoogleAuthContext()
     const [isForumPostReplyModalOpen, setIsForumPostReplyModalOpen] = useState(false)
     const { params } = useRoute<RouteProp<StackRoutesType, "ForumContent">>();
-    const post  = params.post
+    const post = params.post
     const sclass = params.sclass
 
     const { width, height } = Dimensions.get('window');
 
-    
+
     const handlePostReply = useCreatePostReply();
-    const formatDatetime = (datetime : string) => {
+    const formatDatetime = (datetime: string) => {
         const date = new Date(datetime);
         const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'short', day: 'numeric' });
-        
+
         return formatter.format(date);
     }
-    
+
     const openReplyModal = () => {
         setIsForumPostReplyModalOpen(true)
     }
-    
+
     const closeReplyModal = () => {
         setIsForumPostReplyModalOpen(false)
     }
-    
+
     const [postReplies, setPostReplies] = useState<ForumPostReplyResponse[]>([]);
-    const {data: fetchedPostReplies} = usePostReplies(post? post?.id : -1)
-    useEffect(()=>{
-        if(fetchedPostReplies) {
-            setPostReplies(fetchedPostReplies.map((postReply)=>{
-                return{
+    const { data: fetchedPostReplies } = usePostReplies(post ? post?.id : -1)
+    useEffect(() => {
+        if (fetchedPostReplies) {
+            setPostReplies(fetchedPostReplies.map((postReply) => {
+                return {
                     id: postReply.id,
-                    forum_post_id:postReply.forum_post_id,
+                    forum_post_id: postReply.forum_post_id,
                     class_id: postReply.class_id,
-                    subject_id:postReply.subject_id,
-                    content:postReply.content,
+                    subject_id: postReply.subject_id,
+                    content: postReply.content,
                     user_id: postReply.user_id,
-                    user_name:postReply.user_name,
-                    created_at:postReply.created_at,
+                    user_name: postReply.user_name,
+                    created_at: postReply.created_at,
                 }
 
             }))
@@ -64,27 +65,28 @@ export function ForumContent(){
         if (authUser) {
 
             const newPostReplyDTO: ForumPostReply = {
-                class_id: sclass? sclass.id : -1,
+                class_id: sclass ? sclass.id : -1,
                 content: body,
                 user_id: authUser.id,
-                subject_id: sclass? sclass?.subject_id : -1,
-            } 
-            const userToken = getUserToken()
-            const newPostReply = await handlePostReply(post? post.id:-1, newPostReplyDTO, `${userToken}`)
+                subject_id: sclass ? sclass?.subject_id : -1,
+            }
+            const userToken = await getUserToken()
+            const newPostReply = await handlePostReply(post ? post.id : -1, newPostReplyDTO, `${userToken}`)
 
             setPostReplies([
                 ...postReplies,
                 {
                     id: newPostReply.id,
-                    forum_post_id:newPostReply.forum_post_id,
+                    forum_post_id: newPostReply.forum_post_id,
                     class_id: newPostReply.class_id,
-                    subject_id:newPostReply.subject_id,
-                    content:newPostReply.content,
+                    subject_id: newPostReply.subject_id,
+                    content: newPostReply.content,
                     user_id: newPostReply.user_id,
-                    user_name:newPostReply.user_name,
-                    created_at:newPostReply.created_at,
+                    user_name: newPostReply.user_name,
+                    created_at: newPostReply.created_at,
                 }
             ]);
+            logger.logEvent("Novo reply de um post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code, reply_of_post_id: post?.id });
         } else {
             Toast.show({
                 type: 'error',
@@ -95,23 +97,23 @@ export function ForumContent(){
     }
 
 
-    async function reportPost () {
+    async function reportPost(reportedPostId: number) {
 
         if (authUser) {
             const reportPostDTO: ReportPostRequest = {
                 user_id: authUser.id,
-                post_id: post? post.id : 0,
+                post_id: reportedPostId,
             };
 
-            try{
-                await api.post('/forum/report-post', reportPostDTO)
+            try {
+                await api.post('/forum/report', reportPostDTO)
                 Toast.show({
                     type: 'info',
                     text1: 'Muito obrigado!',
                     text2: 'Sua solicitação foi enviada para análise.'
                 });
 
-            } catch (e){
+            } catch (e) {
                 Toast.show({
                     type: 'error',
                     text1: 'Ops!',
@@ -130,7 +132,7 @@ export function ForumContent(){
     }
 
     return (
-       <VStack flex={1} marginRight={"xs"}>
+        <VStack flex={1} marginRight={"xs"}>
             <Box
                 max-height={'90%'}
                 paddingHorizontal="m"
@@ -149,15 +151,15 @@ export function ForumContent(){
                             fontWeight="bold"
                             numberOfLines={1}
                             ellipsizeMode="tail"
-                        
+
                         >
                             {post?.author}
                         </Typography>
                     </Box>
 
-                    <Box 
+                    <Box
                         paddingRight="xxs"
-                        onTouchEnd={reportPost}
+                        onTouchEnd={() => { reportPost(post ? post.id : -1) }}
                     >
                         <HStack alignItems="center" justifyContent="center" paddingHorizontal="xxs">
                             <Typography
@@ -167,9 +169,9 @@ export function ForumContent(){
                                 fontWeight="bold"
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
-                            
+
                             >
-                                Reportar  
+                                Reportar
                             </Typography>
 
                             <FeatherIcons name="flag" color="white" size={12} />
@@ -192,7 +194,7 @@ export function ForumContent(){
                         fontSize={16}
                         color="white"
                     >
-                            
+
                         {post?.body}
                         {'\n'}
                     </Typography>
@@ -206,9 +208,9 @@ export function ForumContent(){
                         <Typography
                             color="grayThree"
                             fontSize={12}
-                            
+
                         >
-                            {formatDatetime(post? post?.createdAt:'')} 
+                            {formatDatetime(post ? post?.createdAt : '')}
                         </Typography>
                     </Box>
                 </Box>
@@ -224,32 +226,32 @@ export function ForumContent(){
                     Comentários
                 </Typography>
 
-                <Box 
-                    maxHeight={height*0.8}
+                <Box
+                    maxHeight={height * 0.8}
                 >
                     <ScrollView>
-                        {postReplies?
+                        {postReplies ?
                             <Box>
-                                {postReplies.map((postReply, index)=>{
-                                    return(
-                                       <Box key={index}>
-                                            {ReplyCard(postReply, index)}
-                                            {index===postReplies.length-1 &&
-                                                <Box 
+                                {postReplies.map((postReply, index) => {
+                                    return (
+                                        <Box key={index}>
+                                            {ReplyCard(postReply, index, reportPost)}
+                                            {index === postReplies.length - 1 &&
+                                                <Box
                                                     height={250}
                                                 />
                                             }
-                                       </Box>
+                                        </Box>
                                     )
                                 })}
-                               
-                            </Box>     
-                        :
-                            <Box/>
+
+                            </Box>
+                            :
+                            <Box />
                         }
 
                     </ScrollView>
-                </Box>    
+                </Box>
             </Box>
 
             <Box
@@ -267,10 +269,10 @@ export function ForumContent(){
                     variant="outlined"
                     title={"Responder postagem"}
                     onPress={openReplyModal}
-                    style={{ height: 50, width:'80%' }}
+                    style={{ height: 50, width: '80%' }}
                 />
             </Box>
-            
+
             {isForumPostReplyModalOpen &&
                 <ForumPostReplyModal
                     post={post}
@@ -285,23 +287,23 @@ export function ForumContent(){
     )
 }
 
-function ReplyCard (postReply:ForumPostReplyResponse, index:number){
-    const formatDatetime = (datetime : string) => {
+function ReplyCard(postReply: ForumPostReplyResponse, index: number, reportPost: (reportedPostId: number) => Promise<void>) {
+    const formatDatetime = (datetime: string) => {
         const date = new Date(datetime);
         const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'short', day: 'numeric' });
-        
+
         return formatter.format(date);
     }
 
-    return(
+    return (
         <Box
             key={index}
             paddingHorizontal="m"
             paddingVertical="xs"
         >
 
-            <Box 
-                
+            <Box
+
                 padding="s"
                 backgroundColor="graySix"
                 borderRadius={5}
@@ -327,9 +329,9 @@ function ReplyCard (postReply:ForumPostReplyResponse, index:number){
                     <Typography
                         color="grayThree"
                         fontSize={12}
-                        
+
                     >
-                        {formatDatetime(postReply.created_at)} 
+                        {formatDatetime(postReply.created_at)}
                     </Typography>
 
                 </Box>
@@ -339,18 +341,11 @@ function ReplyCard (postReply:ForumPostReplyResponse, index:number){
                     top={0}
                     padding="xs"
                     paddingTop="xxs"
-                >
-                    <Typography
-                        color="grayThree"
-                        fontSize={16}
-                        
-                    >
-                        ... 
-                    </Typography>
-
+                    onTouchEnd={() => { reportPost(postReply.id) }} >
+                    <FeatherIcons name="flag" color="white" size={12} />
                 </Box>
 
             </Box>
         </Box>
-    )
+    );
 }

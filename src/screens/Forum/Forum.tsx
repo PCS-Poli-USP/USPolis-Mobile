@@ -1,4 +1,5 @@
 import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
+import FeatherIcons from '@expo/vector-icons/Feather'
 import { ForumModal } from "@/components/ForumModal";
 import { PostRequest } from "@/dtos/forum";
 import { useCreatePost, usePosts } from "@/hooks/react-query/usePosts";
@@ -17,6 +18,7 @@ export type Post = {
     author: string;
     body: string;
     createdAt: string;
+    replies_count: number;
 };
 
 export function Forum() {
@@ -34,13 +36,13 @@ export function Forum() {
 
     useEffect(() => {
         if (fetchedPosts) {
-            console.log("Atualizou os posts, total:", fetchedPosts.length);
             setPosts(fetchedPosts.map((post) => {
                 return {
                     id: post.id,
                     author: post.user_name,
                     body: post.content,
-                    createdAt: post.created_at
+                    createdAt: post.created_at,
+                    replies_count: post.replies_count
                 };
             }));
         }
@@ -54,7 +56,9 @@ export function Forum() {
                 class_id: params.sclass!.id,
                 subject_id: params.sclass!.subject_id
             };
-            const newPost = await handlePost(newPostDTO);
+
+            const idToken = await getUserToken()
+            const newPost = await handlePost(newPostDTO, idToken);
             setPosts([
                 ...posts,
                 {
@@ -62,9 +66,10 @@ export function Forum() {
                     author: newPost.user_name,
                     body: newPost.content,
                     createdAt: newPost.created_at,
+                    replies_count: newPost.replies_count
                 }
             ]);
-            logger.logEvent("Novo post no forum", {user_id: authUser.id, subject: params.sclass?.subject_code});
+            logger.logEvent("Novo post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code });
         } else {
             Toast.show({
                 type: 'error',
@@ -74,14 +79,13 @@ export function Forum() {
         }
     }
     const openForumModal = () => {
-        //logger.logEvent("Clicou para abrir o forum da class:", params.sclass);
         setIsForumModalOpen(true);
     }
 
     return (
         <VStack flex={1} width={screenWidth} >
 
-            <Box 
+            <Box
                 backgroundColor="graySix"
                 paddingHorizontal="s"
                 paddingVertical="m"
@@ -200,6 +204,14 @@ function PostCard({ post, sclass }: PostCardProps) {
                         >
                             {post.author}
                         </Typography>
+
+                        <HStack>
+                            <Typography color="grayOne" paddingRight={"xs"}>
+                                {post.replies_count}
+                            </Typography>
+                            <FeatherIcons name="message-square" color="white" size={12} />
+                        </HStack>
+
                         <Typography
                             color="grayOne"
                             numberOfLines={2}
