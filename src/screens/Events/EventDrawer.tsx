@@ -36,8 +36,6 @@ export const EventModal = ({ event, isOpen, onClose }: EventModalProps) => {
     }
     onClose()
   }
-  console.log(event)
-  console.log(dayjs(event.end_datetime).format('YYYY-MM-DD HH:mm'))
 
   return (
     <Box flex={1}>

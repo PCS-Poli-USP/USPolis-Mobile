@@ -1,5 +1,6 @@
+import React from "react";
 import { AnalyticsContextProvider } from "./AnalyticsContext";
-import { AuthContextProvider } from "./AuthContext";
+import { GAuthContextProvider } from "./AuthContext";
 import { ScheduleContextProvider } from "./ScheduleContext";
 
 type ContextsProps = {
@@ -8,10 +9,10 @@ type ContextsProps = {
 
 export const Contexts = ({ children }: ContextsProps) => {
   return (
-    <AuthContextProvider>
+    <GAuthContextProvider>
       <AnalyticsContextProvider>
         <ScheduleContextProvider>{children}</ScheduleContextProvider>
       </AnalyticsContextProvider>
-    </AuthContextProvider>
+    </GAuthContextProvider>
   );
 };

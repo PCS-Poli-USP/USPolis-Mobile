@@ -1,5 +1,5 @@
 import { Theme } from "@/theme/theme";
-import { createBox } from "@shopify/restyle";
+import { createBox, ResponsiveValue } from "@shopify/restyle";
 import { PressableProps, Pressable as NativePressable } from "react-native";
 import { Typography } from "../ui";
 import { Loading } from "../Loading/index";

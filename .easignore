@@ -23,5 +23,4 @@ gradle.properties
 ios/
 android/
 
-# Environment
-.env
+package-lock.json

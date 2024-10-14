@@ -8,7 +8,7 @@ export type Building =
   | 'Civil'
 
 export type Schedule = {
-  id: string
+  id: number
   week_day: string
   start_time: string
   end_time: string
@@ -18,20 +18,21 @@ export type Schedule = {
 }
 
 export type IClass = {
-  id: string
-  class_code: string
-  professors: string[]
+  id: number
+  code: string
+  professors: Array<string>
   subject_code: string
   subject_name: string
-  start_period: string
-  end_period: string
-  schedule: Array<Schedule>
+  start_date: string
+  end_date: string
+  schedules: Array<Schedule>
+  subject_id: number
 }
 
 export type ScheduledClasses = {
   class_subject_name: string
   class_subject_code: string
-  class_id: string
+  class_id: number
   class_code: string
   week_day: string
   start_time: string

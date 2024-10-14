@@ -13,3 +13,9 @@ export const sortEventsByScheduleTime = (current: Schedule, next: Schedule) => {
 
   return parsedCurrentWeekDay.getDay() - parsedNextWeekDay.getDay()
 }
+
+export const formatTime = (timeString:string) => {
+  const [hours, minutes] = timeString.split(':');
+  
+  return `${hours}:${minutes}`;
+};

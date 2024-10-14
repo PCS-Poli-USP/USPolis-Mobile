@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "uspolis",
+    "name": "USPolis",
     "slug": "uspolis",
-    "version": "7.2.3",
+    "version": "8.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "22",
+      "buildNumber": "26",
       "bundleIdentifier": "Lunadros.Uspolis"
     },
     "android": {
@@ -29,7 +29,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "uspolis.lunadros",
-      "versionCode": 71
+      "versionCode": 78
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,6 +41,9 @@
       "eas": {
         "projectId": "e8ff3ab1-1c5e-4c53-b7c8-9dab42186dc3"
       }
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

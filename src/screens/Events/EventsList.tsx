@@ -12,13 +12,13 @@ import { Theme } from '@/theme/theme'
 import { getFilteredEvents } from './utils'
 import { logger } from '@/services/logger'
 import { useEvents } from '@/hooks/react-query/useEvents'
-import { IEvent } from '@/dtos/events'
+import { type EventLikeDTO, IEvent } from '@/dtos/events'
 import { EventModal } from './EventDrawer'
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { useLikeStore } from '@/store/likes-store'
-import { useHandleLike } from '@/hooks/react-query/mutations/useHandleLike'
-import { useHandleRemoveLike } from '@/hooks/react-query/mutations/useHandleRemoveLike'
 import { AxiosError } from 'axios'
+import { useGoogleAuthContext } from '@/hooks/useAuth'
+import { useHandleEventLike } from '@/hooks/react-query/mutations/useHandleEventLike'
 
 interface EventsListProps {
   buildingFilter: string
@@ -27,10 +27,17 @@ interface EventsListProps {
 
 export const EventsList = ({ buildingFilter, nameFilter }: EventsListProps) => {
   const { data: events, isLoading: isLoadingEvents } = useEvents()
-  console.log('isLoadingEvents', isLoadingEvents)
   const [filteredEvents, setFilteredEvents] = useState<IEvent[]>([])
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const { isLoggedIn, silentlyLogin } = useGoogleAuthContext()
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      silentlyLogin()
+    }
+  }, [])
 
   useEffect(() => {
     setIsLoading(true)
@@ -68,7 +75,7 @@ export const EventsList = ({ buildingFilter, nameFilter }: EventsListProps) => {
       {isLoadingEvents && <ActivityIndicator />}
       {!isLoadingEvents &&
         filteredEvents.map((item, index) => (
-          <MemoEventCard event={item} key={`${item._id}-${index}`} />
+          <MemoEventCard event={item} key={`${item.id}-${index}`} />
         ))}
     </VStack>
   )
@@ -79,16 +86,17 @@ interface EventCardProps {
 }
 
 export const EventCard = ({ event }: EventCardProps) => {
-  const { mutateAsync: handleLike } = useHandleLike()
-  const { mutateAsync: handleRemove } = useHandleRemoveLike()
+  const { mutateAsync: handleEventLike } = useHandleEventLike()
+
+  const { authUser } = useGoogleAuthContext()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { colors } = useTheme<Theme>()
 
   const { isLiked, like, removeLike } = useLikeStore((state) => ({
-    isLiked: state.likes?.[event._id],
-    like: () => state.like(event._id),
-    removeLike: () => state.removeLike(event._id),
+    isLiked: state.likes?.[event.id],
+    like: () => state.like(event.id),
+    removeLike: () => state.removeLike(event.id),
   }))
 
   const selectEvent = () => {
@@ -96,25 +104,32 @@ export const EventCard = ({ event }: EventCardProps) => {
     logger.logEvent('Evento Visualizado', {
       class: event.title,
       screen: 'Home',
-      id: event._id,
+      id: event.id,
     })
   }
 
   const handleInteractWithLike = async () => {
     try {
+      const dto: EventLikeDTO = {
+        event_id: event.id,
+        user_id: authUser?.id ? authUser.id : -1,
+        like: true
+      };
       if (isLiked) {
         logger.logEvent('Aula Descurtida', {
           class: event.title,
-          id: event._id,
-        })
-        await handleRemove(event._id)
+          id: event.id,
+        });
+        dto.like = false;
+        await handleEventLike(dto)
         removeLike()
       } else {
         logger.logEvent('Aula Curtida', {
           class: event.title,
-          id: event._id,
-        })
-        await handleLike(event._id)
+          id: event.id,
+        });
+        dto.like = true;
+        await handleEventLike(dto)
         like()
       }
     } catch (err) {
@@ -142,7 +157,7 @@ export const EventCard = ({ event }: EventCardProps) => {
                 color="white"
                 variant={'heading'}
                 fontWeight="bold"
-                // numberOfLines={1}
+              // numberOfLines={1}
               >
                 {event.title}
               </Typography>

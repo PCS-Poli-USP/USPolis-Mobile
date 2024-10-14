@@ -120,14 +120,14 @@ export const HomeClassCard = ({ sclass }: HomeClassCardProps) => {
   const { colors } = useTheme<Theme>()
 
   const classRooms = useMemo(() => {
-    const classes = sclass.schedule.map((s) => s.classroom)
+    const classes = sclass.schedules.map((s) => s.classroom)
     const classrooms = getUniqueValues(classes)
 
     return classrooms.join(' | ')
   }, [sclass])
 
   const buildings = useMemo(() => {
-    const classes = sclass.schedule.map((s) => s.building)
+    const classes = sclass.schedules.map((s) => s.building)
     const classrooms = getUniqueValues(classes)
 
     return classrooms.join(', ')
@@ -164,7 +164,7 @@ export const HomeClassCard = ({ sclass }: HomeClassCardProps) => {
             </Typography>
 
             <Typography color="grayTwo" marginBottom={'xxs'} numberOfLines={2}>
-              Turma {sclass.class_code.slice(-2)} - {buildings}
+              Turma {sclass.code.slice(-2)} - {buildings}
             </Typography>
             <Typography color="grayOne" numberOfLines={2} variant="heading">
               {classRooms}

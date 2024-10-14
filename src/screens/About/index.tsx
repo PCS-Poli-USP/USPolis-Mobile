@@ -2,16 +2,19 @@ import Toast from 'react-native-toast-message';
 
 import { Layout, TextArea, Input, Button, VStack, Typography } from "@/components";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IComment } from "@/dtos";
 import api from "@/services/api";
 import { Theme } from "@/theme/theme";
 import { useTheme } from '@shopify/restyle';
+import React from 'react';
+import { useGoogleAuthContext } from '@/hooks/useAuth';
 
 export const About = () => {
   const [comment, setComment] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const {authUser} = useGoogleAuthContext(); 
 
   const { colors } = useTheme<Theme>();
 
@@ -24,11 +27,13 @@ export const About = () => {
     if (email.length > 0) {
       formData.email = email;
     }
+    formData.created_by = authUser?.id;
 
+    console.log("comment", formData)
     try {
-      await api.post('/comments', formData)
+      await api.post('/comments', formData);
       Toast.show({
-        type: 'info',
+        type: 'success',
         text1: 'Muito obrigado!',
         text2: 'Seu comentário foi enviado.'
       });
@@ -36,7 +41,7 @@ export const About = () => {
       setEmail("")
     } catch (e) {
       Toast.show({
-        type: 'info',
+        type: 'error',
         text1: 'Ops!',
         text2: 'Ocorreu um erro, tente novamente mais tarde.'
       });
@@ -56,9 +61,11 @@ export const About = () => {
           aplicativo para sua visualização pelos alunos da faculdade.{"\n"}
           {"\n"}
           <Bold>Desenvolvedores:</Bold>{"\n"}
+            {`\u2022`} Daniel Hiroki Yamashita{"\n"}
             {`\u2022`} Gabriel Di Vanna Camargo{"\n"}
             {`\u2022`} Henrique Fuga Duran{"\n"}
             {`\u2022`} Jorge Habib El Khouri{"\n"}
+            {`\u2022`} José Vitor Martins Makiyama{"\n"}
             {`\u2022`} Luiz Roberto Akio Higuti{"\n"}
             {`\u2022`} Marcel Makoto Kondo{"\n"}
             {`\u2022`} Rodrigo Kenji Aguena{"\n"}

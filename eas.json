@@ -3,16 +3,23 @@
     "version": ">= 3.7.2"
   },
   "build": {
+    "development-simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development"
     },
     "preview": {
-      "autoIncrement": true,
+      //"autoIncrement": true,
       "distribution": "internal",
       "android": {
-        "autoIncrement": "versionCode",
+        //"autoIncrement": "versionCode",
         "buildType": "apk"
       },
       "channel": "preview",

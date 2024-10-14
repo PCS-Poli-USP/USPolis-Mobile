@@ -7,6 +7,5 @@ export const useClasses = () => {
     const response = await api.get<IClass[]>('/classes')
     return response.data
   })
-
   return query
 }

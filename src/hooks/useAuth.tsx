@@ -1,12 +1,14 @@
-import { AuthContext } from "@/contexts/AuthContext"
+import { GAuthContext } from "@/contexts/AuthContext"
 import { useContext } from "react"
 
-export const useAuth = () => {
-  const context = useContext(AuthContext)
+export function useGoogleAuthContext() {
+  // uses the object that was created by createContext(), in this case GAuthContext
+  const gAuthCtx = useContext(GAuthContext)
 
-  if (!context) {
+  // Type guard: makes sures it's not null!
+  if (gAuthCtx == null) {
     throw new Error('useAuth must be used within an AuthProvider')
   }
 
-  return context
+  return gAuthCtx
 }

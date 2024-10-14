@@ -44,7 +44,7 @@ export const getFilteredClasses = ({
 
   if (buildingFilter) {
     classesFiltered = classesFiltered?.filter((c) => {
-      const classesInBuilding = c.schedule.filter(
+      const classesInBuilding = c.schedules.filter(
         (s) => s.building === buildingFilter
       );
       return !!classesInBuilding.length;
@@ -52,8 +52,8 @@ export const getFilteredClasses = ({
   }
 
   return classesFiltered.sort((a, b) => {
-    const aDate = new Date(a.start_period);
-    const bDate = new Date(b.start_period);
+    const aDate = new Date(a.start_date);
+    const bDate = new Date(b.start_date);
 
     return aDate.getTime() - bDate.getTime();
   });

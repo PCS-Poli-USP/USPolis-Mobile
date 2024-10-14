@@ -2,8 +2,10 @@ import { Box, HStack, Pressable, Typography, VStack } from "@/components";
 import { ClassesGroupedByWeekday } from "@/dtos/classes";
 import { parse, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import React from "react";
+
 interface DayClassesProps {
-  onOpenModal: (classId: string, name: string) => void;
+  onOpenModal: (classId: number, name: string) => void;
   classesGroup: ClassesGroupedByWeekday;
 }
 
@@ -11,12 +13,17 @@ export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
   const parsedWeekDay = parse(classesGroup.week_day, "EEEE", new Date(), {
     locale: ptBR,
   });
-
+  
   const weekdayAbbreviated = format(parsedWeekDay, "EEEEEE", { locale: ptBR });
   
   const orderedClasses = classesGroup.classes.sort((a, b) => {
     return a.start_time.localeCompare(b.start_time);
   });
+
+  const formatTime = (timeString:string) => {
+    const [hours, minutes] = timeString.split(':');
+    return `${hours}:${minutes}`;
+  };
 
   return (
     <Box width="100%" flexDirection="row" justifyContent="space-between">
@@ -45,7 +52,7 @@ export const DayClasses = ({ onOpenModal, classesGroup }: DayClassesProps) => {
             </Typography>
             <Box flexDirection="row" justifyContent="space-between">
               <Typography color="grayTwo">
-                {sclass.start_time} - {sclass.end_time}
+                {formatTime(sclass.start_time)} - {formatTime(sclass.end_time)}
               </Typography>
               <HStack gap={'s'}>
                 <Typography color="grayTwo" marginRight={'s'}>{sclass.building}</Typography>
