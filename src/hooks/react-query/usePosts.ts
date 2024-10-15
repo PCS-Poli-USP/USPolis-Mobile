@@ -1,5 +1,12 @@
 import { IClass } from "@/dtos";
-import { type PostRequest, type PostResponse, type ReportPostRequest, type ForumPostReplyResponse, type ForumPostReply } from "@/dtos/forum";
+import { 
+    type PostRequest,
+    type PostResponse, 
+    type ReportPostRequest, 
+    type ForumPostReplyResponse, 
+    type ForumPostReply, 
+    type ForumPostLikesResponse
+} from "@/dtos/forum";
 import api from "@/services/api";
 import { useQuery } from "react-query";
 
@@ -69,3 +76,17 @@ export function useCreatePostReply() {
     return handlePostReply;
 }
 
+export function useForumLikes(user_id: number) {
+
+    const query = useQuery(['post-likes'], async () => {
+
+        const response = await api.get<ForumPostLikesResponse[]>('forum/userLikes',{
+            params: {
+                user_id: user_id
+            }
+        })
+        return response.data
+    });
+
+    return query
+}
