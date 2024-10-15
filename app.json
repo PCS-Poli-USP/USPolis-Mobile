@@ -2,7 +2,7 @@
   "expo": {
     "name": "USPolis",
     "slug": "uspolis",
-    "version": "8.0.0",
+    "version": "9.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
