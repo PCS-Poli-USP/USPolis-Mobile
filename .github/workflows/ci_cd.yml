@@ -66,8 +66,8 @@ jobs:
       - name: Build
         run: > 
               EXPO_APPLE_APP_SPECIFIC_PASSWORD=${{ secrets.EAS_APPLE_APP_SPECIFIC_PASSWORD }}
-              EXPO_PUBLIC_WEB_CLIENT_ID=${{ secrets.EXPO_PUBLIC_WEB_CLIENT_ID }}
-              EXPO_PUBLIC_IOS_CLIENT_ID=${{ secrets.EXPO_PUBLIC_IOS_CLIENT_ID }}
-              EXPO_PUBLIC_IOS_URL_SCHEME=${{ secrets.EXPO_PUBLIC_IOS_URL_SCHEME }}
-              EXPO_PUBLIC_AUTH_EMAIL_DOMAIN=${{ secrets.EXPO_PUBLIC_IOS_URL_SCHEME }}
+              EXPO_PUBLIC_WEB_CLIENT_ID=${{ vars.EXPO_PUBLIC_WEB_CLIENT_ID }}
+              EXPO_PUBLIC_IOS_CLIENT_ID=${{ vars.EXPO_PUBLIC_IOS_CLIENT_ID }}
+              EXPO_PUBLIC_IOS_URL_SCHEME=${{ vars.EXPO_PUBLIC_IOS_URL_SCHEME }}
+              EXPO_PUBLIC_AUTH_EMAIL_DOMAIN=${{ vars.EXPO_PUBLIC_IOS_URL_SCHEME }}
               eas build --platform all --profile production --non-interactive --auto-submit-with-profile=preview --no-wait
