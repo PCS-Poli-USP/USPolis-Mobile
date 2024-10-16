@@ -39,6 +39,12 @@
       "channel": "preview3"
     },
     "production": {
+      "env": {
+        "EXPO_PUBLIC_WEB_CLIENT_ID": "370044874397-sjaofbsufennb2h6dp286mtqe240noqg.apps.googleusercontent.com",
+        "EXPO_PUBLIC_IOS_CLIENT_ID": "370044874397-rbq7vv4d9sgorj4boso4i5nohn5u3mc1.apps.googleusercontent.com",
+        "EXPO_PUBLIC_IOS_URL_SCHEME": "com.googleusercontent.apps.370044874397-rbq7vv4d9sgorj4boso4i5nohn5u3mc1",
+        "EXPO_PUBLIC_AUTH_EMAIL_DOMAIN": "usp.br"
+      },
       "channel": "production",
       "autoIncrement": true,
       "android": {
