@@ -20,8 +20,17 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "28",
-      "bundleIdentifier": "Lunadros.Uspolis"
+      "buildNumber": "31",
+      "bundleIdentifier": "Lunadros.Uspolis",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.xxx"
+            ]
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -43,7 +52,13 @@
       }
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.370044874397-rbq7vv4d9sgorj4boso4i5nohn5u3mc1"
+        }
+      ]
     ]
   }
 }
