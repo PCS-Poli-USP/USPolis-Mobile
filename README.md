@@ -22,8 +22,14 @@ O aplicativo oficial da faculdade para consulta de salas de aula, matérias e ma
     ```bash
     npm install
     ```
-4. Obtenha o .env (no drive de desenvolvedores do USPolis) ou obtenha as credenciais necessárias para o [Google Authentication](https://react-native-google-signin.github.io/docs/setting-up/get-config-file) (sem Firebase)
-5. Inicie o projeto:
+4. Obtenha o .env (no drive de desenvolvedores do USPolis) ou obtenha as credenciais necessárias para o [Google Authentication](https://react-native-google-signin.github.io/docs/setting-up/get-config-file) (sem Firebase) 
+5. O uso da biblioteca de Google Sign-in React Native necessita de arquivos nativos de cada plataforma, para gerar e rodar a versão nativa:
+    ```bash
+    npx expo prebuild --clean
+
+    npx expo run:android && npx expo run:ios
+    ```
+6. Inicie o projeto:
     ```bash
     npm start
     ```
@@ -60,10 +66,15 @@ src/
 - 🖼️ **UI/UX**: `react-native-modal`, `react-native-toast-message`
 - 📦 **Armazenamento**: `@react-native-async-storage/async-storage`
 - 📝 **Validação**: `yup`, `react-hook-form`
+- 👤 **Perfil/Login**: `@react-native-google-signin/google-signin`
 
 > ⚠️ Nota: Estamos transitando de `native-base` para `@shopify/restyle` para estilização. Por favor, evite usar `native-base` em novos desenvolvimentos.
 
 ## Deploy para as Lojas
+
+O projeto está configurado para utilizar o GitHub Actions e a plataforma Expo para criar a build e submeter os arquivos às lojas em modo draft ou teste. Para isso basta abrir um PR, revisá-lo, aprová-lo e fazer o merge com a branch `main`.
+
+## Deploy para as Lojas Manual
 
 ### Android
 

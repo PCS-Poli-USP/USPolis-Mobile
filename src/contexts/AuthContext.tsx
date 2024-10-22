@@ -3,7 +3,7 @@ import api from '@/services/api';
 import { EXPO_PUBLIC_AUTH_EMAIL_DOMAIN, EXPO_PUBLIC_IOS_CLIENT_ID, EXPO_PUBLIC_WEB_CLIENT_ID } from '@env';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { type AxiosResponse } from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { createContext, useReducer } from 'react'
 
 type GAuthState = {
