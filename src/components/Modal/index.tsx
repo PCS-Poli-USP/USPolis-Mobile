@@ -1,5 +1,6 @@
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
+import React from 'react'
 import { useEffect } from 'react'
 import { BackHandler } from 'react-native'
 import ModalComponent from 'react-native-modal'
@@ -40,6 +41,7 @@ export const Modal = ({
       onSwipeComplete={() => onClose(false)}
       coverScreen
       style={{ margin: 0 }}
+      avoidKeyboard
     >
       {children}
     </ModalComponent>
