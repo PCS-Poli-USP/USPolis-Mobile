@@ -10,11 +10,12 @@ import {
 import api from "@/services/api";
 import { useQuery } from "react-query";
 
-export function usePosts(sclass: IClass) {
+export function usePosts(sclass: IClass, user_id: number) {
     const query = useQuery(['posts'], async () => {
         const response = await api.get<PostResponse[]>('forum/posts', {
             params: {
-                subject_id: sclass.subject_id
+                subject_id: sclass.subject_id,
+                user_id: user_id
             }
         });
         return response.data;
@@ -49,10 +50,14 @@ export function useReportPost() {
     return handleReportPost;
 }
 
-export function usePostReplies(post_id: number) {
+export function usePostReplies(post_id: number, user_id: number) {
     const query = useQuery(['post-replies'], async () => {
 
-        const response = await api.get<ForumPostReplyResponse[]>(`forum/posts/${post_id}`)
+        const response = await api.get<ForumPostReplyResponse[]>(`forum/posts/${post_id}`, {
+            params: {
+                user_id: user_id
+            }
+        })
         return response.data
     });
 
@@ -74,19 +79,4 @@ export function useCreatePostReply() {
         return response.data;
     };
     return handlePostReply;
-}
-
-export function useForumLikes(user_id: number) {
-
-    const query = useQuery(['post-likes'], async () => {
-
-        const response = await api.get<ForumPostLikesResponse[]>('forum/userLikes',{
-            params: {
-                user_id: user_id
-            }
-        })
-        return response.data
-    });
-
-    return query
 }

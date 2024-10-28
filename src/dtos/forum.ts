@@ -15,6 +15,7 @@ export type PostResponse = {
     created_at: string;
     replies_count: number;
     likes_count: number;
+    user_liked: boolean;
 };
 
 export type ReportPostRequest = {
@@ -32,6 +33,7 @@ export type ForumPostReplyResponse = {
     user_name: string;
     created_at: string;
     likes_count: number;
+    user_liked: boolean;  
 };
 
 export type ForumPostReply = {

@@ -2,18 +2,20 @@ import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { ForumModal } from "@/components/ForumModal";
 import { PostRequest, ForumPostLikesResponse } from "@/dtos/forum";
-import { useCreatePost, usePosts, useForumLikes } from "@/hooks/react-query/usePosts";
+import { useCreatePost, usePosts } from "@/hooks/react-query/usePosts";
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { logger } from "@/services/logger";
-import { RouteProp, useRoute, } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import { RouteProp, useRoute, useFocusEffect} from "@react-navigation/native";
+import React, { useEffect, useState, useCallback } from "react";
 import Toast from "react-native-toast-message";
 import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
 import { IClass } from "@/dtos";
 import { Input } from '@/components/Input'
 import { ForumSearchModal } from "@/components/ForumSearchModal";
+import { useTheme } from '@shopify/restyle'
+import { Theme } from '@/theme/theme'
 
 
 export type Post = {
@@ -23,17 +25,18 @@ export type Post = {
     createdAt: string;
     replies_count: number;
     likes_count: number;
+    user_liked: boolean;
 };
 
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
     const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
-    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!);
+    const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
+    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!, authUser? authUser.id : -1);
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
-    const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
-
+    
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
     const screenHeight = height
@@ -48,7 +51,8 @@ export function Forum() {
                     body: post.content,
                     createdAt: post.created_at,
                     replies_count: post.replies_count,
-                    likes_count: post.likes_count
+                    likes_count: post.likes_count,
+                    user_liked: post.user_liked
                 };
             }));
         }
@@ -73,7 +77,8 @@ export function Forum() {
                     body: newPost.content,
                     createdAt: newPost.created_at,
                     replies_count: newPost.replies_count,
-                    likes_count: newPost.likes_count
+                    likes_count: newPost.likes_count,
+                    user_liked: newPost.user_liked,
                 }
             ]);
             logger.logEvent("Novo post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code });
@@ -236,6 +241,7 @@ type PostCardProps = {
     sclass: IClass | undefined
 }
 function PostCard({ post, sclass }: PostCardProps) {
+    const { colors } = useTheme<Theme>()
     const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
 
     const selectPost = () => {
@@ -261,10 +267,10 @@ function PostCard({ post, sclass }: PostCardProps) {
                 borderRadius={8}
                 padding="m"
                 paddingTop="s"
-                marginBottom="xs"
+                marginBottom="s"
             >
                 <VStack flex={1} paddingRight="m">
-                    <HStack paddingBottom="xs">
+                    <HStack paddingBottom="m">
 
                         <Typography
                             color="grayThree"
@@ -282,36 +288,54 @@ function PostCard({ post, sclass }: PostCardProps) {
                             {formatDatetime(post.createdAt)}
                         </Typography>
                     </HStack>
+                    <HStack marginBottom={"l"} >
+                        <Typography
+                            
+                            fontSize={18}
+                            color="white"
+                            variant={"heading"} 
+                        >      
+                            {post.body}
+                        </Typography>
 
-                    <Typography
-                        marginBottom={"s"}
-                        fontSize={18}
-                        color="white"
-                        variant={"heading"} 
-                    >      
-                        {post.body}
-                    </Typography>
+                        <FeatherIcons
+                            name="chevron-right"
+                            color={colors.grayThree}
+                            size={24}
+                            style={{
+                                marginTop: 5
+                            }}
+                        />
 
-                    <HStack>
+
+                    </HStack>
+                    <HStack 
+                        flexDirection="row" 
+                        alignItems="center"
+                        marginVertical="s"
+                        padding="s"
+                    >
                         <Box
-                            backgroundColor="grayThree"
+                            position="absolute"
+                            left={'80%'}
+                            backgroundColor="graySix"
                             paddingVertical="xs"
                             paddingHorizontal="s"
                             borderRadius={10}
                         >
-                            <HStack >
+                            <HStack margin="xxs">
                                 <HStack >
                                     <Typography color="grayOne" paddingRight={"xxs"}>
                                         {post.replies_count}
                                     </Typography>
-                                    <FeatherIcons name="message-square" color="white" size={12} />
+                                    <FeatherIcons name="message-square" color="white" size={20} />
                                 </HStack>
 
                                 <HStack paddingLeft="s">
                                     <Typography color="grayOne" paddingRight={"xxs"}>
                                         {post.likes_count? post.likes_count : 0}
                                     </Typography>
-                                    <FeatherIcons name="thumbs-up" color="white" size={12} />
+                                    <FeatherIcons name="thumbs-up" color="white" size={20} />
                                 </HStack>
                             </HStack>
                         </Box>
