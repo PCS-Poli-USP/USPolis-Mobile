@@ -3,14 +3,14 @@ import { ReportPostRequest, ForumPostReply, ForumPostReplyResponse, LikedPostReq
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import api from "@/services/api";
-import { useCreatePostReply, usePostReplies } from "@/hooks/react-query/usePosts";
+import { useCreatePostReply } from "@/hooks/react-query/usePosts";
 import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
 
 import { ForumPostReplyModal } from "@/components/ForumPostReplyModal"
 import FeatherIcons from '@expo/vector-icons/Feather'
 
-import { RouteProp, useRoute } from "@react-navigation/native";
-import React, { useState, useEffect } from "react";
+import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
+import React, { useState, useEffect, useCallback } from "react";
 import Toast from "react-native-toast-message";
 import { logger } from "@/services/logger";
 
@@ -36,27 +36,62 @@ export function ForumContent() {
     }
 
     const [postReplies, setPostReplies] = useState<ForumPostReplyResponse[]>([]);
-    const { data: fetchedPostReplies } = usePostReplies(post ? post.id : -1, authUser? authUser.id : -1)
-    useEffect(() => {
-        if (fetchedPostReplies) {
-            setPostReplies(fetchedPostReplies.map((postReply) => {
-                return {
-                    id: postReply.id,
-                    forum_post_id: postReply.forum_post_id,
-                    class_id: postReply.class_id,
-                    subject_id: postReply.subject_id,
-                    content: postReply.content,
-                    user_id: postReply.user_id,
-                    user_name: postReply.user_name,
-                    created_at: postReply.created_at,
-                    likes_count: postReply.likes_count,
-                    user_liked: postReply.user_liked
+    // const { data: fetchedPostReplies } = usePostReplies(post ? post.id : -1, authUser? authUser.id : -1)
+    // useEffect(() => {
+    //     if (fetchedPostReplies) {
+    //         setPostReplies(fetchedPostReplies.map((postReply) => {
+    //             return {
+    //                 id: postReply.id,
+    //                 forum_post_id: postReply.forum_post_id,
+    //                 class_id: postReply.class_id,
+    //                 subject_id: postReply.subject_id,
+    //                 content: postReply.content,
+    //                 user_id: postReply.user_id,
+    //                 user_name: postReply.user_name,
+    //                 created_at: postReply.created_at,
+    //                 likes_count: postReply.likes_count,
+    //                 user_liked: postReply.user_liked
+    //             }
+
+    //         }))
+    //     }
+
+    // }, [fetchedPostReplies]);
+    const fetchPostReplies = async () => {
+        try {
+            const response = await api.get<ForumPostReplyResponse[]>(`forum/posts/${post? post.id : -1}`, {
+                params: {
+                    user_id: authUser? authUser.id : -1
                 }
-
-            }))
+            })
+            
+            if (response.data) {
+                setPostReplies(response.data.map((postReply) => {
+                    return {
+                        id: postReply.id,
+                        forum_post_id: postReply.forum_post_id,
+                        class_id: postReply.class_id,
+                        subject_id: postReply.subject_id,
+                        content: postReply.content,
+                        user_id: postReply.user_id,
+                        user_name: postReply.user_name,
+                        created_at: postReply.created_at,
+                        likes_count: postReply.likes_count,
+                        user_liked: postReply.user_liked
+                    }
+    
+                }))
+            }
+        } catch (error) {
+            console.log('erro:', error)
         }
+    }
 
-    }, [fetchedPostReplies]);
+    useFocusEffect(
+        useCallback(() => {
+            fetchPostReplies();
+        }, [])
+    );
 
     async function handleAddNewReply(body: string) {
         if (authUser) {
@@ -155,7 +190,7 @@ export function ForumContent() {
             Toast.show({
                 type: 'error',
                 text1: 'Ops!',
-                text2: 'É preciso logar para reportar!'
+                text2: 'É preciso logar para reagir à postagem!'
             });
         }
     }

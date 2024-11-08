@@ -2,7 +2,7 @@ import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { ForumModal } from "@/components/ForumModal";
 import { PostRequest, ForumPostLikesResponse } from "@/dtos/forum";
-import { useCreatePost, usePosts } from "@/hooks/react-query/usePosts";
+import { useCreatePost } from "@/hooks/react-query/usePosts";
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -16,6 +16,9 @@ import { Input } from '@/components/Input'
 import { ForumSearchModal } from "@/components/ForumSearchModal";
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '@/theme/theme'
+import { type PostResponse } from "@/dtos/forum";
+import api from "@/services/api";
+
 
 
 export type Post = {
@@ -33,7 +36,6 @@ export function Forum() {
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
     const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
     const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
-    const { data: fetchedPosts, isLoading: isLoadingPosts } = usePosts(params.sclass!, authUser? authUser.id : -1);
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
     
@@ -41,22 +43,38 @@ export function Forum() {
     const screenWidth = width
     const screenHeight = height
     
-
-    useEffect(() => {
-        if (fetchedPosts) {
-            setPosts(fetchedPosts.map((post) => {
-                return {
-                    id: post.id,
-                    author: post.user_name,
-                    body: post.content,
-                    createdAt: post.created_at,
-                    replies_count: post.replies_count,
-                    likes_count: post.likes_count,
-                    user_liked: post.user_liked
-                };
-            }));
+    const fetchPosts = async () => {
+        try {
+            const response = await api.get<PostResponse[]>('forum/posts', {
+                params: {
+                    subject_id: params.sclass?.subject_id,
+                    user_id: authUser? authUser.id : -1
+                }
+            });            
+            const data = response.data
+            
+            if (data) {
+                setPosts(data.map((post) => {
+                    return {
+                        id: post.id,
+                        author: post.user_name,
+                        body: post.content,
+                        createdAt: post.created_at,
+                        replies_count: post.replies_count,
+                        likes_count: post.likes_count,
+                        user_liked: post.user_liked
+                    };
+                }));
+            }
+        } catch (error) {
+            console.log('erro:', error)
         }
-    }, [fetchedPosts]);
+    }
+    useFocusEffect(
+        useCallback(() => {
+          fetchPosts();
+        }, [])
+    );
 
     async function handleAddNewPost(body: string) {
         if (authUser) {
