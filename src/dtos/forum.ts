@@ -14,6 +14,8 @@ export type PostResponse = {
     subject_id: number;
     created_at: string;
     replies_count: number;
+    likes_count: number;
+    user_liked: boolean;
 };
 
 export type ReportPostRequest = {
@@ -30,6 +32,8 @@ export type ForumPostReplyResponse = {
     user_id: number;
     user_name: string;
     created_at: string;
+    likes_count: number;
+    user_liked: boolean;  
 };
 
 export type ForumPostReply = {
@@ -38,3 +42,15 @@ export type ForumPostReply = {
     user_id: number;
     subject_id: number;
 };
+
+
+export type LikedPostRequest = {
+    user_id: number;
+    post_id: number;
+    like_state: boolean;
+};
+
+export type ForumPostLikesResponse = {
+    post_id: number;
+    like_state: boolean;
+}

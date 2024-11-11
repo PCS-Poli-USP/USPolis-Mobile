@@ -1,19 +1,14 @@
 import { IClass } from "@/dtos";
-import { type PostRequest, type PostResponse, type ReportPostRequest, type ForumPostReplyResponse, type ForumPostReply } from "@/dtos/forum";
+import { 
+    type PostRequest,
+    type PostResponse, 
+    type ReportPostRequest, 
+    type ForumPostReplyResponse, 
+    type ForumPostReply, 
+} from "@/dtos/forum";
 import api from "@/services/api";
 import { useQuery } from "react-query";
 
-export function usePosts(sclass: IClass) {
-    const query = useQuery(['posts'], async () => {
-        const response = await api.get<PostResponse[]>('forum/posts', {
-            params: {
-                subject_id: sclass.subject_id
-            }
-        });
-        return response.data;
-    });
-    return query;
-}
 
 export function useCreatePost() {
     const handlePost = async (postDTO: PostRequest, idToken: string |  null) => {
@@ -42,15 +37,6 @@ export function useReportPost() {
     return handleReportPost;
 }
 
-export function usePostReplies(post_id: number) {
-    const query = useQuery(['post-replies'], async () => {
-
-        const response = await api.get<ForumPostReplyResponse[]>(`forum/posts/${post_id}`)
-        return response.data
-    });
-
-    return query;
-}
 
 export function useCreatePostReply() {
     const handlePostReply = async (post_id: number, forumPostReplyDTO: ForumPostReply, idToken: string) => {
@@ -68,4 +54,3 @@ export function useCreatePostReply() {
     };
     return handlePostReply;
 }
-

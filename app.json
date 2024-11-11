@@ -2,7 +2,7 @@
   "expo": {
     "name": "USPolis",
     "slug": "uspolis",
-    "version": "9.0.1",
+    "version": "9.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "31",
+      "buildNumber": "32",
       "bundleIdentifier": "Lunadros.Uspolis",
       "infoPlist": {
         "CFBundleURLTypes": [
@@ -38,7 +38,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "uspolis.lunadros",
-      "versionCode": 81
+      "versionCode": 82
     },
     "web": {
       "favicon": "./assets/favicon.png"

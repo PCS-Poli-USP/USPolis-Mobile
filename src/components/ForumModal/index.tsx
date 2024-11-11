@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import FeatherIcons from '@expo/vector-icons/Feather'
 import { Button } from '../Button'
 import { IClass } from '../../dtos/classes'
 import { Box, HStack, Typography, VStack } from "../ui";
@@ -24,6 +25,9 @@ export const ForumModal = ({
 	onClose,
 	onHandleNewPost
 }: ForumModalProps) => {
+	const FilterTags = ['Prova', 'Sala', 'Dúvida', 'Atividade','Off']
+	const [moreInformation, setMoreInformation] = useState<boolean>(false)
+
 	const { isLoggedIn } = useGoogleAuthContext()
 
 	let postText = "";
@@ -91,6 +95,70 @@ export const ForumModal = ({
 								padding='s'								
 							/>
 							
+							
+
+							{/*  TAGS feature
+								
+								{moreInformation?
+								<Box backgroundColor="grayFour" borderRadius={10} padding="s" marginBottom='m'>
+
+									<Typography 
+										color="grayTwo" 
+										fontSize={16}
+										variant='heading'
+									>
+										Adicionar Tag {'\n'}
+									</Typography>
+
+									<HStack
+										paddingHorizontal='s'
+										marginBottom='m'
+									>
+										{FilterTags.map((tagName)=>{
+											return(
+												<Box
+													borderColor='secondary'
+													borderWidth={1}
+													borderRadius={10}
+													width={screenWidth*0.21}
+													alignItems='center'
+												>
+													<Typography 
+														color="grayTwo" 
+														fontSize={16}
+														padding='s'
+														variant='heading'
+													>
+														{tagName}
+													</Typography>
+									
+													
+												</Box>
+											)
+
+										})}
+
+									</HStack>
+								</Box>
+
+							:
+								<Box backgroundColor="grayFour" borderRadius={10} padding="s" onTouchEnd={() => setMoreInformation(true)}>
+									<HStack>
+										<FeatherIcons name="plus" color="white" size={20} />
+										<Typography 
+											color="grayTwo" 
+											fontSize={16}
+											variant='heading'
+										>
+											Mais Opções
+										</Typography>
+
+									</HStack>
+									
+								</Box>
+
+							}
+ 							*/}
 							<Button
 								variant={'outlined'}
 								title={
