@@ -36,27 +36,7 @@ export function ForumContent() {
     }
 
     const [postReplies, setPostReplies] = useState<ForumPostReplyResponse[]>([]);
-    // const { data: fetchedPostReplies } = usePostReplies(post ? post.id : -1, authUser? authUser.id : -1)
-    // useEffect(() => {
-    //     if (fetchedPostReplies) {
-    //         setPostReplies(fetchedPostReplies.map((postReply) => {
-    //             return {
-    //                 id: postReply.id,
-    //                 forum_post_id: postReply.forum_post_id,
-    //                 class_id: postReply.class_id,
-    //                 subject_id: postReply.subject_id,
-    //                 content: postReply.content,
-    //                 user_id: postReply.user_id,
-    //                 user_name: postReply.user_name,
-    //                 created_at: postReply.created_at,
-    //                 likes_count: postReply.likes_count,
-    //                 user_liked: postReply.user_liked
-    //             }
-
-    //         }))
-    //     }
-
-    // }, [fetchedPostReplies]);
+   
     const fetchPostReplies = async () => {
         try {
             const response = await api.get<ForumPostReplyResponse[]>(`forum/posts/${post? post.id : -1}`, {
