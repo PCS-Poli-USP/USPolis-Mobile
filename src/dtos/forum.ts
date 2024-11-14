@@ -54,3 +54,8 @@ export type ForumPostLikesResponse = {
     post_id: number;
     like_state: boolean;
 }
+
+export type PostTag = {
+    name: string,
+    tag: number,
+};

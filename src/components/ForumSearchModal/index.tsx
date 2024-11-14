@@ -11,8 +11,6 @@ interface ForumSearchModalProps {
     onClose: () => void
 }
 
-
-
 export const ForumSearchModal = ({
     isOpen,
     onClose
@@ -21,9 +19,9 @@ export const ForumSearchModal = ({
 
     return (
 
-        <Box 
+        <Box
             flex={1}
-        
+
         >
             <Modal
                 isOpen={isOpen}
@@ -37,13 +35,13 @@ export const ForumSearchModal = ({
                     padding='s'
                     borderWidth={2}
                     borderStartColor='secondary'
-                    borderStartWidth={5} 
+                    borderStartWidth={5}
                     borderTopColor='secondary'
-                    borderTopWidth={5}     
+                    borderTopWidth={5}
                     borderBottomColor='white'
-                    borderEndColor='white'         
+                    borderEndColor='white'
                 >
-                    <Box 
+                    <Box
                         position="absolute"
                         right={-16}
                         top={-16}
@@ -55,9 +53,9 @@ export const ForumSearchModal = ({
 
                         onTouchEnd={onClose}
 
-                        
+
                     >
-                        <FeatherIcons name="x" color="white" size={24}/>
+                        <FeatherIcons name="x" color="white" size={24} />
 
                     </Box>
 
@@ -69,7 +67,7 @@ export const ForumSearchModal = ({
                         paddingHorizontal='m'
                     >
                         <Button
-                            style = {{width:'100%'}}
+                            style={{ width: '100%' }}
                             title='Pesquisar'
                         />
 
@@ -102,11 +100,11 @@ export const ForumSearchModal = ({
                             fontSize={18}
                             marginBottom={'s'}
                             textAlign='left'
-                        >   
+                        >
                             Palavras-chave:
                         </Typography>
 
-                       
+
 
                         <Input
                             borderColor='primary'
@@ -133,7 +131,7 @@ export const ForumSearchModal = ({
                         <Box
                             paddingTop='m'
                             paddingRight='s'
-                        
+
                         >
 
                         </Box>
@@ -143,7 +141,7 @@ export const ForumSearchModal = ({
                     <Box
                         paddingTop='m'
                         paddingRight='s'
-                        
+
                     >
                         <Typography
                             variant='heading'
@@ -153,17 +151,17 @@ export const ForumSearchModal = ({
                             textAlign='left'
                             paddingLeft='s'
                         >
-                            Semestre: 
+                            Semestre:
                         </Typography>
 
-                        <HStack 
+                        <HStack
                             paddingRight='m'
                             paddingLeft='l'
                         >
-                            <Box 
+                            <Box
                                 paddingVertical='s'
-                                width={'45%'} 
-                                alignItems='center'    
+                                width={'45%'}
+                                alignItems='center'
                                 backgroundColor="transparent"
                                 borderRadius={10}
                                 borderColor='secondary'
@@ -176,15 +174,15 @@ export const ForumSearchModal = ({
                                     fontSize={18}
                                     marginBottom={'s'}
                                     textAlign='left'
-                                    
+
                                 >
-                                    Atual 
+                                    Atual
                                 </Typography>
                             </Box>
                             <Box
                                 paddingVertical='s'
-                                width={'45%'}    
-                                alignItems='center' 
+                                width={'45%'}
+                                alignItems='center'
                                 backgroundColor="transparent"
                                 borderRadius={10}
                                 borderColor='secondary'
@@ -198,12 +196,12 @@ export const ForumSearchModal = ({
                                     marginBottom={'s'}
                                     textAlign='left'
                                 >
-                                    Passados 
+                                    Passados
                                 </Typography>
                             </Box>
 
                         </HStack>
-                        
+
                     </Box>
                     <Box
                         paddingTop='m'
@@ -221,21 +219,14 @@ export const ForumSearchModal = ({
                         <Box
                             paddingTop='m'
                             paddingRight='s'
-                        
+
                         >
-                            
+
                         </Box>
 
                     </Box>
 
-
-
-
-
-
-
                 </Box>
-                
 
             </Modal>
         </Box>

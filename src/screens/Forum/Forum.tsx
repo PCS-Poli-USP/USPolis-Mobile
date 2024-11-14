@@ -1,25 +1,22 @@
 import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { ForumModal } from "@/components/ForumModal";
-import { PostRequest, ForumPostLikesResponse } from "@/dtos/forum";
+import { PostRequest, PostTag } from "@/dtos/forum";
 import { useCreatePost } from "@/hooks/react-query/usePosts";
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { logger } from "@/services/logger";
-import { RouteProp, useRoute, useFocusEffect} from "@react-navigation/native";
-import React, { useEffect, useState, useCallback } from "react";
+import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
+import React, { useState, useCallback } from "react";
 import Toast from "react-native-toast-message";
-import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from 'react-native'
 import { IClass } from "@/dtos";
-import { Input } from '@/components/Input'
 import { ForumSearchModal } from "@/components/ForumSearchModal";
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '@/theme/theme'
-import { type PostResponse } from "@/dtos/forum";
-import api from "@/services/api";
-
-
+import { fetchFilteredPosts, fetchPosts } from "@/services/ForumService";
+import { ForumPostsFilter } from "@/components/ForumPostsFilter/ForumPostsFilter";
 
 export type Post = {
     id: number;
@@ -34,45 +31,21 @@ export type Post = {
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
-    const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(true);
+    const [activeFilters, setActiveFilters] = useState<PostTag[]>([]);
     const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
-    
+
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
     const screenHeight = height
-    
-    const fetchPosts = async () => {
-        try {
-            const response = await api.get<PostResponse[]>('forum/posts', {
-                params: {
-                    subject_id: params.sclass?.subject_id,
-                    user_id: authUser? authUser.id : -1
-                }
-            });            
-            const data = response.data
-            
-            if (data) {
-                setPosts(data.map((post) => {
-                    return {
-                        id: post.id,
-                        author: post.user_name,
-                        body: post.content,
-                        createdAt: post.created_at,
-                        replies_count: post.replies_count,
-                        likes_count: post.likes_count,
-                        user_liked: post.user_liked
-                    };
-                }));
-            }
-        } catch (error) {
-            console.log('erro:', error)
-        }
-    }
+
     useFocusEffect(
         useCallback(() => {
-          fetchPosts();
+            fetchPosts(params.sclass!, authUser, setPosts);
+            // Reset filters
+            setActiveFilters([]);
         }, [])
     );
 
@@ -108,43 +81,54 @@ export function Forum() {
             });
         }
     }
+
     const openForumModal = () => {
         setIsForumModalOpen(true);
+    };
+
+    function filterPosts(postFilterTag: PostTag, isActive: boolean): void {
+        let newFilters
+        if (isActive) {
+            newFilters = activeFilters.filter((e) => { return postFilterTag.name != e.name });
+            setActiveFilters(newFilters);
+        } else {
+            newFilters = [...activeFilters, postFilterTag]
+            setActiveFilters(newFilters);
+        }
+        fetchFilteredPosts(params.sclass!, authUser, newFilters, setPosts);
     }
 
-
-    // FILTER FEATURE
-    // const openFilterModal = () => {
-    //     setIsSearchModalOpen(true)
-    // }
-
     return (
-        <VStack flex={1} width={screenWidth} >            
+        <VStack flex={1} width={screenWidth} >
             <Box
                 paddingHorizontal="m"
                 paddingVertical="m"
                 marginTop="s"
                 height={screenHeight - 210}
             >
-            
-                <Box
-                    backgroundColor="graySix"
-                    paddingHorizontal="s"
-                    paddingVertical="m"
-                    marginTop="s"
-                    alignItems="center"
-                    borderRadius={5}
-                >
-                    <Typography color="grayOne" fontSize={18} >
-                        BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
-                    </Typography>
-                    <Typography color="grayOne" fontSize={14} paddingTop="s">
-                        Tenha educação e respeito com os outros 😊
-                    </Typography>
+                <ScrollView>
+                    <Box
+                        backgroundColor="graySix"
+                        paddingHorizontal="s"
+                        paddingVertical="m"
+                        marginTop="s"
+                        alignItems="center"
+                        borderRadius={5}
+                    >
+                        <Typography color="grayOne" fontSize={18} >
+                            BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
+                        </Typography>
+                        <Typography color="grayOne" fontSize={14} paddingTop="s">
+                            Tenha educação e respeito com os outros 😊
+                        </Typography>
 
-                </Box>
-                
-                    {/* SEARCH BAR
+                    </Box>
+
+                    <ForumPostsFilter
+                        activeFilters={activeFilters}
+                        filterPosts={filterPosts}
+                    />
+                    { /* SEARCH BAR
                     <Box
                         paddingHorizontal="s"
                         width={screenWidth * 0.9} 
@@ -179,29 +163,28 @@ export function Forum() {
                             </HStack>
 
                         </TouchableOpacity> 
-                    </Box>
-                    */}
-               
+                    </Box>*/
+                    }
 
-                <HStack paddingTop="m">
-                    <Typography color="grayOne" fontSize={20} marginBottom="s" >
-                        Posts
-                    </Typography>
-                    
-                    <Typography color="grayOne" fontSize={16} marginBottom="s" paddingRight="s" >
-                        {posts? posts.length : 0}
-                    </Typography>
-                </HStack>
-
-                {posts?.length === 0 ?
-                    <Box alignContent="center">
-                        <Typography color="grayOne" fontSize={16}>
-                            Ainda ninguém postou neste fórum 😞 {"\n"}
-                            Seja o primeiro a postar!
+                    <HStack paddingTop="m">
+                        <Typography color="grayOne" fontSize={20} marginBottom="s" >
+                            Posts
                         </Typography>
-                    </Box>
-                    :
-                    <ScrollView>
+
+                        <Typography color="grayOne" fontSize={16} marginBottom="s" paddingRight="s" >
+                            {posts ? posts.length : 0}
+                        </Typography>
+                    </HStack>
+
+                    {posts?.length === 0 ?
+                        <Box alignContent="center">
+                            <Typography color="grayOne" fontSize={16}>
+                                Ainda ninguém postou neste fórum 😞 {"\n"}
+                                Seja o primeiro a postar!
+                            </Typography>
+                        </Box>
+                        :
+
                         <VStack>
                             <Box width={screenWidth * 0.95}>
                                 {posts.map((post, index) => {
@@ -209,11 +192,11 @@ export function Forum() {
                                 })}
                             </Box>
                         </VStack>
+                    }
 
-                    </ScrollView>
-                }
-
+                </ScrollView>
             </Box>
+
             <Box
                 backgroundColor="transparent"
 
@@ -231,7 +214,7 @@ export function Forum() {
                 />
             </Box>
 
-            {isForumModalOpen && 
+            {isForumModalOpen &&
                 <Box flex={1}>
                     <ForumModal
                         sclass={params.sclass}
@@ -239,7 +222,7 @@ export function Forum() {
                         onClose={() => setIsForumModalOpen(false)}
                         onHandleNewPost={handleAddNewPost} />
                 </Box>
-            
+
             }
             {isSearchModalOpen &&
                 <Box >
@@ -257,7 +240,7 @@ export function Forum() {
 type PostCardProps = {
     post: Post;
     sclass: IClass | undefined
-}
+};
 function PostCard({ post, sclass }: PostCardProps) {
     const { colors } = useTheme<Theme>()
     const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
@@ -267,15 +250,15 @@ function PostCard({ post, sclass }: PostCardProps) {
             { post, sclass }
         )
 
-    }
+    };
+
     const formatDatetime = (datetime: string) => {
         const date = new Date(datetime);
 
         const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'long', day: 'numeric' });
 
         return formatter.format(date);
-    }
-
+    };
 
     return (
         <Pressable onPress={selectPost}>
@@ -308,11 +291,11 @@ function PostCard({ post, sclass }: PostCardProps) {
                     </HStack>
                     <HStack marginBottom={"l"} >
                         <Typography
-                            
+
                             fontSize={18}
                             color="white"
-                            variant={"heading"} 
-                        >      
+                            variant={"heading"}
+                        >
                             {post.body}
                         </Typography>
 
@@ -327,8 +310,8 @@ function PostCard({ post, sclass }: PostCardProps) {
 
 
                     </HStack>
-                    <HStack 
-                        flexDirection="row" 
+                    <HStack
+                        flexDirection="row"
                         alignItems="center"
                         marginVertical="s"
                         padding="s"
@@ -351,7 +334,7 @@ function PostCard({ post, sclass }: PostCardProps) {
 
                                 <HStack paddingLeft="s">
                                     <Typography color="grayOne" paddingRight={"xxs"}>
-                                        {post.likes_count? post.likes_count : 0}
+                                        {post.likes_count ? post.likes_count : 0}
                                     </Typography>
                                     <FeatherIcons name="thumbs-up" color="white" size={20} />
                                 </HStack>
