@@ -3,6 +3,7 @@ export type PostRequest = {
     content: string;
     class_id: number;
     subject_id: number;
+    filter_tags: number[];
 };
 
 export type PostResponse = {

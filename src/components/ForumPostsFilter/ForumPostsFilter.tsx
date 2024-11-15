@@ -1,5 +1,5 @@
 import { Theme } from "@/theme/theme";
-import { createBox } from "@shopify/restyle";
+import { createBox, ResponsiveValue } from "@shopify/restyle";
 import {
     FlatList,
     Pressable as NativePressable,
@@ -10,6 +10,7 @@ import React from "react";
 import { PostTag } from "@/dtos/forum";
 
 interface ForumPostsFilterProps {
+    myProperty: ResponsiveValue<"xxs" | "xs" | "s" | "m" | "l" | "xl" | "auto", undefined>;
     activeFilters: PostTag[];
     filterPosts: (postFilterTag: PostTag, isActive: boolean) => void;
 };
@@ -24,11 +25,12 @@ const postsTags: PostTag[] = [
 const Pressable = createBox<Theme, PressableProps>(NativePressable);
 
 export const ForumPostsFilter = ({
+    myProperty,
     activeFilters,
     filterPosts,
 }: ForumPostsFilterProps) => {
     return (
-        <Box my={"l"}>
+        <Box my={myProperty}>
             <FlatList
                 horizontal
                 data={postsTags}

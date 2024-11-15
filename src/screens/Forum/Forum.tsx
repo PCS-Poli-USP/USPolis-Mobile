@@ -12,7 +12,6 @@ import React, { useState, useCallback } from "react";
 import Toast from "react-native-toast-message";
 import { Dimensions, ScrollView } from 'react-native'
 import { IClass } from "@/dtos";
-import { ForumSearchModal } from "@/components/ForumSearchModal";
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '@/theme/theme'
 import { fetchFilteredPosts, fetchPosts } from "@/services/ForumService";
@@ -31,7 +30,7 @@ export type Post = {
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
-    const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(true);
+    //const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
     const [activeFilters, setActiveFilters] = useState<PostTag[]>([]);
     const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
     const handlePost = useCreatePost();
@@ -49,19 +48,19 @@ export function Forum() {
         }, [])
     );
 
-    async function handleAddNewPost(body: string) {
+    async function handleAddNewPost(body: string, tags: PostTag[]) {
         if (authUser) {
             const newPostDTO: PostRequest = {
                 user_id: authUser.id,
                 content: body,
                 class_id: params.sclass!.id,
-                subject_id: params.sclass!.subject_id
+                subject_id: params.sclass!.subject_id,
+                filter_tags: tags.map((tag) => tag.tag),
             };
 
-            const idToken = await getUserToken()
+            const idToken = await getUserToken();
             const newPost = await handlePost(newPostDTO, idToken);
             setPosts([
-                ...posts,
                 {
                     id: newPost.id,
                     author: newPost.user_name,
@@ -70,7 +69,8 @@ export function Forum() {
                     replies_count: newPost.replies_count,
                     likes_count: newPost.likes_count,
                     user_liked: newPost.user_liked,
-                }
+                },
+                ...posts,
             ]);
             logger.logEvent("Novo post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code });
         } else {
@@ -125,6 +125,7 @@ export function Forum() {
                     </Box>
 
                     <ForumPostsFilter
+                        myProperty="l"
                         activeFilters={activeFilters}
                         filterPosts={filterPosts}
                     />
@@ -224,14 +225,14 @@ export function Forum() {
                 </Box>
 
             }
-            {isSearchModalOpen &&
+            {/* isSearchModalOpen &&
                 <Box >
                     <ForumSearchModal
                         isOpen={isSearchModalOpen}
                         onClose={() => setIsSearchModalOpen(false)}
                     />
                 </Box>
-            }
+            */}
 
         </VStack>
     );
