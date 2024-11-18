@@ -3,7 +3,7 @@ import {
   BottomTabNavigationProp,
 } from '@react-navigation/bottom-tabs'
 import FeatherIcons from '@expo/vector-icons/Feather'
-import { Image, Platform } from 'react-native'
+import { BackHandler, Image, Platform } from 'react-native'
 import Logo from '@/assets/logo.png'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 
@@ -13,8 +13,9 @@ import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
 import { Box, Typography } from '@/components'
 import { logger } from '@/services/logger'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { type StackRoutesType } from '@/routes'
+import 'react-native-gesture-handler';
 
 export type AppRoutesType = {
   Home: undefined
@@ -40,15 +41,30 @@ export const AppRoutes = () => {
   const onTabPress = (routeName: string) => {
     logger.logEvent(`Clicou na tab ${routeName}`)
   }
-  const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
+  const navigationStack = useNavigation<NavigationProp<StackRoutesType>>();
 
+  // Listener for Android Back Button
+  const backListener: () => boolean = () => {
+    if (navigationStack.canGoBack()) {
+      navigationStack.goBack();
+      return true;
+    }
+    return false;
+  }
+
+  useEffect(() => {
+    // Setting the listener for Android Back Button
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backListener);
+    return () => { backHandler.remove }
+  }, []);
   const openUserPage = () => {
     navigationStack.navigate("UserProfile")
   }
 
   return (
     <Navigator
-      initialRouteName={'Home'}
+      initialRouteName={"Home"}
+      backBehavior="history"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primary,
@@ -56,28 +72,27 @@ export const AppRoutes = () => {
         tabBarStyle: {
           backgroundColor: colors.graySix,
           borderTopWidth: 0,
-          height: Platform.OS === 'ios' ? 110 : 102,
-          paddingBottom: Platform.OS === 'ios' ? spacing.xl : spacing.m,
+          height: Platform.OS === "ios" ? 110 : 102,
+          paddingBottom: Platform.OS === "ios" ? spacing.xl : spacing.m,
           paddingTop: spacing.l,
           paddingHorizontal: spacing.l,
         },
         headerShown: true,
         headerStyle: {
           backgroundColor: colors.graySix,
-          shadowColor: 'transparent',
-          height: Platform.OS === 'ios' ? 148 : 120,
+          shadowColor: "transparent",
+          height: Platform.OS === "ios" ? 148 : 120,
         },
         headerTitleStyle: {
-          color: 'white',
-          fontSize: Platform.OS === 'ios' ? 28 : 20,
-          fontWeight: '700',
+          color: "white",
+          fontSize: Platform.OS === "ios" ? 28 : 20,
+          fontWeight: "700",
         },
         headerRight: () => (
-          <Box ml={'m'} paddingRight='l' onTouchStart={()=>openUserPage()}>
+          <Box ml={"m"} paddingRight="l" onTouchStart={() => openUserPage()}>
             <FeatherIcons name="user" color="white" size={iconSize} />
           </Box>
         ),
-
       }}
     >
       <Screen
@@ -96,9 +111,9 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="calendar" color={color} size={iconSize} />
           ),
-          title: 'Eventos',
+          title: "Eventos",
           headerLeft: () => (
-            <Box ml={'m'}>
+            <Box ml={"m"}>
               <Image source={Logo} />
             </Box>
           ),
@@ -120,9 +135,9 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="search" color={color} size={iconSize} />
           ),
-          title: 'Início',
+          title: "Início",
           headerLeft: () => (
-            <Box ml={'m'}>
+            <Box ml={"m"}>
               <Image source={Logo} />
             </Box>
           ),
@@ -144,7 +159,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="home" color={color} size={iconSize} />
           ),
-          title: 'Minhas Aulas',
+          title: "Minhas Aulas",
         }}
       />
       <Screen
@@ -163,7 +178,7 @@ export const AppRoutes = () => {
           tabBarIcon: ({ color }) => (
             <FeatherIcons name="map" color={color} size={iconSize} />
           ),
-          title: 'Mapa da POLI',
+          title: "Mapa da POLI",
 
         }}
       />
@@ -184,7 +199,7 @@ export const AppRoutes = () => {
             <FeatherIcons name="info" color={color} size={iconSize} />
           ),
 
-          title: 'Sobre o USPolis',
+          title: "Sobre o USPolis",
         }}
       />
     </Navigator>
