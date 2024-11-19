@@ -1,7 +1,7 @@
 import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { ForumModal } from "@/components/ForumModal";
-import { PostRequest, ForumPostLikesResponse } from "@/dtos/forum";
+import { PostRequest, ForumPostReplyResponse } from "@/dtos/forum";
 import { useCreatePost } from "@/hooks/react-query/usePosts";
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
@@ -29,6 +29,11 @@ export type Post = {
     replies_count: number;
     likes_count: number;
     user_liked: boolean;
+    reply_of_post_id: number | null;
+};
+
+export type ForumSearch = {
+    keyword: string;
 };
 
 export function Forum() {
@@ -38,11 +43,13 @@ export function Forum() {
     const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
+    const [tempPosts, setTempPosts] = useState<Post[]>([]);
+    const [searchKeyword, setSearchKeyword] = useState<string>()
     
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
     const screenHeight = height
-    
+
     const fetchPosts = async () => {
         try {
             const response = await api.get<PostResponse[]>('forum/posts', {
@@ -54,25 +61,28 @@ export function Forum() {
             const data = response.data
             
             if (data) {
-                setPosts(data.map((post) => {
-                    return {
-                        id: post.id,
-                        author: post.user_name,
-                        body: post.content,
-                        createdAt: post.created_at,
-                        replies_count: post.replies_count,
-                        likes_count: post.likes_count,
-                        user_liked: post.user_liked
-                    };
+                const mappedPosts = data.map((post) => ({
+                    id: post.id,
+                    author: post.user_name,
+                    body: post.content,
+                    createdAt: post.created_at,
+                    replies_count: post.replies_count,
+                    likes_count: post.likes_count,
+                    user_liked: post.user_liked,
+                    reply_of_post_id: null,
                 }));
+
+                setPosts(mappedPosts);
+                setTempPosts(mappedPosts);
             }
-        } catch (error) {
+
+        } catch (error) {1
             console.log('erro:', error)
-        }
+        } 
     }
     useFocusEffect(
         useCallback(() => {
-          fetchPosts();
+            fetchPosts();
         }, [])
     );
 
@@ -97,6 +107,7 @@ export function Forum() {
                     replies_count: newPost.replies_count,
                     likes_count: newPost.likes_count,
                     user_liked: newPost.user_liked,
+                    reply_of_post_id: null
                 }
             ]);
             logger.logEvent("Novo post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code });
@@ -113,11 +124,37 @@ export function Forum() {
     }
 
 
-    // FILTER FEATURE
-    // const openFilterModal = () => {
-    //     setIsSearchModalOpen(true)
-    // }
 
+
+    const searchPosts = async (keyword:string | undefined) =>{
+        try {
+            const response = await api.post(`forum/posts/${params.sclass?.subject_id}/search`, {
+                subject_id: params.sclass?.subject_id,
+                keyword: keyword  
+                 
+            });
+            const data = response.data;
+            console.log(data);
+
+            if (data) {
+                setPosts(data.map((post:PostResponse) => {
+                    return {
+                        id: post.id,
+                        author: post.user_name,
+                        body: post.content,
+                        createdAt: post.created_at,
+                        replies_count: post.replies_count,
+                        likes_count: post.likes_count,
+                        user_liked: post.user_liked,
+                        reply_of_post_id: post.reply_of_post_id
+                    };
+                }));
+            }
+
+        } catch (error) {
+            console.log('erro:', error);
+        }
+    }
     return (
         <VStack flex={1} width={screenWidth} >            
             <Box
@@ -127,7 +164,7 @@ export function Forum() {
                 height={screenHeight - 210}
             >
             
-                <Box
+                {/* <Box
                     backgroundColor="graySix"
                     paddingHorizontal="s"
                     paddingVertical="m"
@@ -140,47 +177,41 @@ export function Forum() {
                     </Typography>
                     <Typography color="grayOne" fontSize={14} paddingTop="s">
                         Tenha educação e respeito com os outros 😊
-                    </Typography>
+                    </Typography> 
 
-                </Box>
+                </Box> */}
                 
-                    {/* SEARCH BAR
-                    <Box
-                        paddingHorizontal="s"
-                        width={screenWidth * 0.9} 
-                        borderRadius={30}
-                        backgroundColor="grayThree"
+                    <HStack
+                        paddingHorizontal="m" 
                     >
-                        <TouchableOpacity >
-                            <HStack>
-                                <Box padding="s">
-                                    <FeatherIcons name="search" color="white" size={20}/>
-                                </Box>
-                                <Box justifyContent='center'>
-                                    <Input
-                                        placeholder="Pesquisar no Fórum"
-                                        placeholderTextColor='white'
-                                        backgroundColor="transparent"
-                                        style={{  color: '#FFFFFF', fontSize: 20, paddingTop: 5}}
-                                        height='auto'
-                                        textAlignVertical="bottom"
-                                        maxWidth={screenWidth * 0.65}
-                                    
-                                    />
+                        <Box marginBottom="xxs">
+                            <Input
+                                variation="secondary"
+                                placeholder={ `  Procure no Fórum de ${params.sclass?.subject_code}` }
+                                onEndEditing={() => searchPosts(searchKeyword)}
+                                onChangeText={(text) => setSearchKeyword(text)}
+                                width={screenWidth*0.7}
+                                height={48}
+                            />
 
-                                </Box>
+                        </Box>
 
-
-
-                                <Box backgroundColor="grayFour" borderRadius={90} padding="s" onTouchStart={openFilterModal}>
-                                    <FeatherIcons name="plus" color="white" size={20} />
-                                </Box>
-
-                            </HStack>
-
-                        </TouchableOpacity> 
-                    </Box>
-                    */}
+                        <Box
+                            width={48}
+                            height={48}
+                            backgroundColor="grayFour"
+                            marginBottom="m"
+                            borderRadius={4}
+                            borderColor="primary"
+                            borderWidth={1}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <FeatherIcons name="filter" color="#18DAD7" size={20} />
+                        </Box>
+                        
+                    </HStack>
+                 
                
 
                 <HStack paddingTop="m">
@@ -205,7 +236,7 @@ export function Forum() {
                         <VStack>
                             <Box width={screenWidth * 0.95}>
                                 {posts.map((post, index) => {
-                                    return <MemoPost key={index} post={post} sclass={params.sclass} />
+                                    return <MemoPost key={index} post={post} sclass={params.sclass} tempPosts={tempPosts} />
                                 })}
                             </Box>
                         </VStack>
@@ -256,16 +287,24 @@ export function Forum() {
 
 type PostCardProps = {
     post: Post;
-    sclass: IClass | undefined
+    sclass: IClass | undefined;
+    tempPosts: Post[]
 }
-function PostCard({ post, sclass }: PostCardProps) {
+function PostCard({ post, sclass, tempPosts }: PostCardProps, ) {
     const { colors } = useTheme<Theme>()
     const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
 
+    const mainPost = tempPosts.find((tempPost) => tempPost.id === post.reply_of_post_id);
     const selectPost = () => {
-        navigationStack.navigate('ForumContent',
-            { post, sclass }
-        )
+        if (mainPost){
+            navigationStack.navigate('ForumContent',
+                { post:mainPost, sclass }
+            )
+        }else{
+            navigationStack.navigate('ForumContent',
+                { post, sclass }
+            )
+        }
 
     }
     const formatDatetime = (datetime: string) => {
@@ -275,7 +314,6 @@ function PostCard({ post, sclass }: PostCardProps) {
 
         return formatter.format(date);
     }
-
 
     return (
         <Pressable onPress={selectPost}>
@@ -306,7 +344,7 @@ function PostCard({ post, sclass }: PostCardProps) {
                             {formatDatetime(post.createdAt)}
                         </Typography>
                     </HStack>
-                    <HStack marginBottom={"l"} >
+                    <HStack marginBottom={"m"} >
                         <Typography
                             
                             fontSize={18}
@@ -315,18 +353,44 @@ function PostCard({ post, sclass }: PostCardProps) {
                         >      
                             {post.body}
                         </Typography>
-
-                        <FeatherIcons
-                            name="chevron-right"
-                            color={colors.grayThree}
-                            size={24}
-                            style={{
-                                marginTop: 5
-                            }}
-                        />
+                        {!post.reply_of_post_id &&
+                            <FeatherIcons
+                                name="chevron-right"
+                                color={colors.grayThree}
+                                size={24}
+                                style={{
+                                    marginTop: 5
+                                }}
+                            />
+                        }
 
 
                     </HStack>
+                    {post.reply_of_post_id &&
+                        <Box 
+                            backgroundColor="grayFour"
+                            borderRadius={5}
+                            marginBottom="m"
+                        >
+                            <HStack>
+                                <Typography
+                                    padding="s" 
+                                    color="white"    
+                                >
+                                    {/* {tempPosts} */}
+                                    Resposta de outro post, clique para abrir
+                                </Typography>
+                                <FeatherIcons
+                                    name="chevron-right"
+                                    color={colors.grayThree}
+                                    size={24}
+                                    style={{
+                                        marginTop: 5
+                                    }}
+                                />
+                            </HStack>
+                        </Box>
+                    }
                     <HStack 
                         flexDirection="row" 
                         alignItems="center"
