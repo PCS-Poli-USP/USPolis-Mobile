@@ -1,8 +1,6 @@
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
 import React from 'react'
-import { useEffect } from 'react'
-import { BackHandler } from 'react-native'
 import ModalComponent from 'react-native-modal'
 
 export const Modal = ({
@@ -16,20 +14,6 @@ export const Modal = ({
 }) => {
   const { colors } = useTheme<Theme>()
 
-  useEffect(() => {
-    const backAction = () => {
-      onClose(false)
-      return true
-    }
-
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    )
-
-    return () => backHandler.remove()
-  }, [])
-
   return (
     <ModalComponent
       propagateSwipe
@@ -42,6 +26,7 @@ export const Modal = ({
       coverScreen
       style={{ margin: 0 }}
       avoidKeyboard
+      onBackButtonPress={() => onClose(false)}
     >
       {children}
     </ModalComponent>
