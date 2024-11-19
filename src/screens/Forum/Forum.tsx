@@ -1,25 +1,21 @@
-import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
+import { Box, Button, Pressable, Typography, VStack, HStack, Input } from "@/components";
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { ForumModal } from "@/components/ForumModal";
-import { PostRequest, ForumPostReplyResponse } from "@/dtos/forum";
+import { PostRequest, PostTag } from "@/dtos/forum";
 import { useCreatePost } from "@/hooks/react-query/usePosts";
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { logger } from "@/services/logger";
-import { RouteProp, useRoute, useFocusEffect} from "@react-navigation/native";
-import React, { useEffect, useState, useCallback } from "react";
+import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
+import React, { useState, useCallback } from "react";
 import Toast from "react-native-toast-message";
-import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from 'react-native'
 import { IClass } from "@/dtos";
-import { Input } from '@/components/Input'
-import { ForumSearchModal } from "@/components/ForumSearchModal";
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '@/theme/theme'
-import { type PostResponse } from "@/dtos/forum";
-import api from "@/services/api";
-
-
+import { fetchFilteredPosts, fetchPosts, searchPosts } from "@/services/ForumService";
+import { ForumPostsFilter } from "@/components/ForumPostsFilter/ForumPostsFilter";
 
 export type Post = {
     id: number;
@@ -39,66 +35,40 @@ export type ForumSearch = {
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
-    const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
+    //const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
+    const [activeFilters, setActiveFilters] = useState<PostTag[]>([]);
     const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
     const [tempPosts, setTempPosts] = useState<Post[]>([]);
     const [searchKeyword, setSearchKeyword] = useState<string>()
     
+
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
     const screenHeight = height
 
-    const fetchPosts = async () => {
-        try {
-            const response = await api.get<PostResponse[]>('forum/posts', {
-                params: {
-                    subject_id: params.sclass?.subject_id,
-                    user_id: authUser? authUser.id : -1
-                }
-            });            
-            const data = response.data
-            
-            if (data) {
-                const mappedPosts = data.map((post) => ({
-                    id: post.id,
-                    author: post.user_name,
-                    body: post.content,
-                    createdAt: post.created_at,
-                    replies_count: post.replies_count,
-                    likes_count: post.likes_count,
-                    user_liked: post.user_liked,
-                    reply_of_post_id: null,
-                }));
-
-                setPosts(mappedPosts);
-                setTempPosts(mappedPosts);
-            }
-
-        } catch (error) {1
-            console.log('erro:', error)
-        } 
-    }
     useFocusEffect(
         useCallback(() => {
-            fetchPosts();
+            fetchPosts(params.sclass!, authUser, setPosts, setTempPosts);
+            // Reset filters
+            setActiveFilters([]);
         }, [])
     );
 
-    async function handleAddNewPost(body: string) {
+    async function handleAddNewPost(body: string, tags: PostTag[]) {
         if (authUser) {
             const newPostDTO: PostRequest = {
                 user_id: authUser.id,
                 content: body,
                 class_id: params.sclass!.id,
-                subject_id: params.sclass!.subject_id
+                subject_id: params.sclass!.subject_id,
+                filter_tags: tags.map((tag) => tag.tag),
             };
 
-            const idToken = await getUserToken()
+            const idToken = await getUserToken();
             const newPost = await handlePost(newPostDTO, idToken);
             setPosts([
-                ...posts,
                 {
                     id: newPost.id,
                     author: newPost.user_name,
@@ -108,7 +78,8 @@ export function Forum() {
                     likes_count: newPost.likes_count,
                     user_liked: newPost.user_liked,
                     reply_of_post_id: null
-                }
+                },
+                ...posts,
             ]);
             logger.logEvent("Novo post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code });
         } else {
@@ -119,84 +90,66 @@ export function Forum() {
             });
         }
     }
+
     const openForumModal = () => {
         setIsForumModalOpen(true);
-    }
+    };
 
-
-
-
-    const searchPosts = async (keyword:string | undefined) =>{
-        try {
-            const response = await api.post(`forum/posts/${params.sclass?.subject_id}/search`, {
-                subject_id: params.sclass?.subject_id,
-                keyword: keyword  
-                 
-            });
-            const data = response.data;
-            console.log(data);
-
-            if (data) {
-                setPosts(data.map((post:PostResponse) => {
-                    return {
-                        id: post.id,
-                        author: post.user_name,
-                        body: post.content,
-                        createdAt: post.created_at,
-                        replies_count: post.replies_count,
-                        likes_count: post.likes_count,
-                        user_liked: post.user_liked,
-                        reply_of_post_id: post.reply_of_post_id
-                    };
-                }));
-            }
-
-        } catch (error) {
-            console.log('erro:', error);
+    function filterPosts(postFilterTag: PostTag, isActive: boolean): void {
+        let newFilters
+        if (isActive) {
+            newFilters = activeFilters.filter((e) => { return postFilterTag.name != e.name });
+            setActiveFilters(newFilters);
+        } else {
+            newFilters = [...activeFilters, postFilterTag]
+            setActiveFilters(newFilters);
         }
+        fetchFilteredPosts(params.sclass!, authUser, newFilters, setPosts);
+        console.log('my', posts)
     }
+
     return (
-        <VStack flex={1} width={screenWidth} >            
+        <VStack flex={1} width={screenWidth} >
             <Box
                 paddingHorizontal="m"
                 paddingVertical="m"
                 marginTop="s"
                 height={screenHeight - 210}
             >
-            
-                {/* <Box
-                    backgroundColor="graySix"
-                    paddingHorizontal="s"
-                    paddingVertical="m"
-                    marginTop="s"
-                    alignItems="center"
-                    borderRadius={5}
-                >
-                    <Typography color="grayOne" fontSize={18} >
-                        BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
-                    </Typography>
-                    <Typography color="grayOne" fontSize={14} paddingTop="s">
-                        Tenha educação e respeito com os outros 😊
-                    </Typography> 
-
-                </Box> */}
-                
-                    <HStack
-                        paddingHorizontal="m" 
+                <ScrollView>
+                    {/* <Box
+                        backgroundColor="graySix"
+                        paddingHorizontal="s"
+                        paddingVertical="m"
+                        marginTop="s"
+                        alignItems="center"
+                        borderRadius={5}
                     >
-                        <Box marginBottom="xxs">
+                        <Typography color="grayOne" fontSize={18} >
+                            BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
+                        </Typography>
+                        <Typography color="grayOne" fontSize={14} paddingTop="s">
+                            Tenha educação e respeito com os outros 😊
+                        </Typography>
+
+                    </Box> */}
+
+                    <HStack
+                        paddingHorizontal="s" 
+                    >
+                        <Box >
                             <Input
                                 variation="secondary"
                                 placeholder={ `  Procure no Fórum de ${params.sclass?.subject_code}` }
-                                onEndEditing={() => searchPosts(searchKeyword)}
+                                onEndEditing={() => searchPosts(searchKeyword, params.sclass! , setPosts)}
                                 onChangeText={(text) => setSearchKeyword(text)}
-                                width={screenWidth*0.7}
-                                height={48}
+                                width={screenWidth*0.85}
+                                // height={48}
                             />
 
                         </Box>
 
-                        <Box
+                        {/* <Box
                             width={48}
                             height={48}
                             backgroundColor="grayFour"
@@ -208,31 +161,36 @@ export function Forum() {
                             alignItems="center"
                         >
                             <FeatherIcons name="filter" color="#18DAD7" size={20} />
-                        </Box>
+                        </Box> */}
                         
                     </HStack>
                  
-               
 
-                <HStack paddingTop="m">
-                    <Typography color="grayOne" fontSize={20} marginBottom="s" >
-                        Posts
-                    </Typography>
-                    
-                    <Typography color="grayOne" fontSize={16} marginBottom="s" paddingRight="s" >
-                        {posts? posts.length : 0}
-                    </Typography>
-                </HStack>
+                    <ForumPostsFilter
+                        myProperty="s"
+                        activeFilters={activeFilters}
+                        filterPosts={filterPosts}
+                    />
 
-                {posts?.length === 0 ?
-                    <Box alignContent="center">
-                        <Typography color="grayOne" fontSize={16}>
-                            Ainda ninguém postou neste fórum 😞 {"\n"}
-                            Seja o primeiro a postar!
+                    <HStack paddingTop="m">
+                        <Typography color="grayOne" fontSize={20} marginBottom="s" >
+                            Posts
                         </Typography>
-                    </Box>
-                    :
-                    <ScrollView>
+
+                        <Typography color="grayOne" fontSize={16} marginBottom="s" paddingRight="s" >
+                            {posts ? posts.length : 0}
+                        </Typography>
+                    </HStack>
+
+                    {posts?.length === 0 ?
+                        <Box alignContent="center">
+                            <Typography color="grayOne" fontSize={16}>
+                                Ainda ninguém postou neste fórum 😞 {"\n"}
+                                Seja o primeiro a postar!
+                            </Typography>
+                        </Box>
+                        :
+
                         <VStack>
                             <Box width={screenWidth * 0.95}>
                                 {posts.map((post, index) => {
@@ -240,11 +198,11 @@ export function Forum() {
                                 })}
                             </Box>
                         </VStack>
+                    }
 
-                    </ScrollView>
-                }
-
+                </ScrollView>
             </Box>
+
             <Box
                 backgroundColor="transparent"
 
@@ -262,7 +220,7 @@ export function Forum() {
                 />
             </Box>
 
-            {isForumModalOpen && 
+            {isForumModalOpen &&
                 <Box flex={1}>
                     <ForumModal
                         sclass={params.sclass}
@@ -270,16 +228,16 @@ export function Forum() {
                         onClose={() => setIsForumModalOpen(false)}
                         onHandleNewPost={handleAddNewPost} />
                 </Box>
-            
+
             }
-            {isSearchModalOpen &&
+            {/* isSearchModalOpen &&
                 <Box >
                     <ForumSearchModal
                         isOpen={isSearchModalOpen}
                         onClose={() => setIsSearchModalOpen(false)}
                     />
                 </Box>
-            }
+            */}
 
         </VStack>
     );
@@ -306,14 +264,15 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps, ) {
             )
         }
 
-    }
+    };
+
     const formatDatetime = (datetime: string) => {
         const date = new Date(datetime);
 
         const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'long', day: 'numeric' });
 
         return formatter.format(date);
-    }
+    };
 
     return (
         <Pressable onPress={selectPost}>
@@ -346,11 +305,11 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps, ) {
                     </HStack>
                     <HStack marginBottom={"m"} >
                         <Typography
-                            
+
                             fontSize={18}
                             color="white"
-                            variant={"heading"} 
-                        >      
+                            variant={"heading"}
+                        >
                             {post.body}
                         </Typography>
                         {!post.reply_of_post_id &&
@@ -415,7 +374,7 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps, ) {
 
                                 <HStack paddingLeft="s">
                                     <Typography color="grayOne" paddingRight={"xxs"}>
-                                        {post.likes_count? post.likes_count : 0}
+                                        {post.likes_count ? post.likes_count : 0}
                                     </Typography>
                                     <FeatherIcons name="thumbs-up" color="white" size={20} />
                                 </HStack>

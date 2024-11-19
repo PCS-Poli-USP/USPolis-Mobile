@@ -7,6 +7,7 @@ import {
   PressableProps,
 } from "react-native";
 import { Box, Typography } from "../ui";
+import React from "react";
 
 interface BuildingFilterProps {
   activeBuilding: string;

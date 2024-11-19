@@ -1,10 +1,8 @@
 import { Theme } from '@/theme/theme'
 import { useTheme } from '@shopify/restyle'
-import { IClass } from '../../dtos/classes'
 import { Box, Typography, VStack } from '../ui'
 import ModalComponent from 'react-native-modal'
-import { BackHandler } from 'react-native'
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode } from 'react'
 
 interface AlertModalProps {
     isOpen: boolean;
@@ -23,20 +21,6 @@ export const AlertModal = ({
 }: AlertModalProps) => {
     const { colors } = useTheme<Theme>()
 
-    useEffect(() => {
-        const backAction = () => {
-            onClose()
-            return true
-        }
-
-        const backHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
-            backAction,
-        )
-
-        return () => backHandler.remove()
-    }, [])
-
     return (
         <Box flex={1}>
             <ModalComponent
@@ -48,6 +32,7 @@ export const AlertModal = ({
                 onBackdropPress={() => onClose()}
                 onSwipeComplete={() => onClose()}
                 coverScreen
+                onBackButtonPress={() => onClose()}
                 style={{ margin: 10 }} >
 
                 <Box

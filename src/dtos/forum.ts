@@ -3,6 +3,7 @@ export type PostRequest = {
     content: string;
     class_id: number;
     subject_id: number;
+    filter_tags: number[];
 };
 
 export type PostResponse = {
@@ -55,3 +56,8 @@ export type ForumPostLikesResponse = {
     post_id: number;
     like_state: boolean;
 }
+
+export type PostTag = {
+    name: string,
+    tag: number,
+};
