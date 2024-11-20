@@ -4,7 +4,7 @@ import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import api from "@/services/api";
 import { useCreatePostReply } from "@/hooks/react-query/usePosts";
-import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from 'react-native'
 
 import { ForumPostReplyModal } from "@/components/ForumPostReplyModal"
 import FeatherIcons from '@expo/vector-icons/Feather'
@@ -81,6 +81,7 @@ export function ForumContent() {
                 content: body,
                 user_id: authUser.id,
                 subject_id: sclass ? sclass?.subject_id : -1,
+                filter_tags: null
             }
             const userToken = await getUserToken()
             const newPostReply = await handlePostReply(post ? post.id : -1, newPostReplyDTO, `${userToken}`)

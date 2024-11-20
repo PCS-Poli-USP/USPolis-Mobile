@@ -14,7 +14,7 @@ import { Dimensions, ScrollView } from 'react-native'
 import { IClass } from "@/dtos";
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '@/theme/theme'
-import { fetchFilteredPosts, fetchPosts, searchPosts } from "@/services/ForumService";
+import { fetchFilteredPosts, fetchPosts} from "@/services/ForumService";
 import { ForumPostsFilter } from "@/components/ForumPostsFilter/ForumPostsFilter";
 
 export type Post = {
@@ -35,7 +35,6 @@ export type ForumSearch = {
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
-    //const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
     const [activeFilters, setActiveFilters] = useState<PostTag[]>([]);
     const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
     const handlePost = useCreatePost();
@@ -104,8 +103,7 @@ export function Forum() {
             newFilters = [...activeFilters, postFilterTag]
             setActiveFilters(newFilters);
         }
-        fetchFilteredPosts(params.sclass!, authUser, newFilters, setPosts);
-        console.log('my', posts)
+        fetchFilteredPosts(params.sclass!, authUser, newFilters, searchKeyword ,setPosts);
     }
 
     return (
@@ -117,23 +115,6 @@ export function Forum() {
                 height={screenHeight - 210}
             >
                 <ScrollView>
-                    {/* <Box
-                        backgroundColor="graySix"
-                        paddingHorizontal="s"
-                        paddingVertical="m"
-                        marginTop="s"
-                        alignItems="center"
-                        borderRadius={5}
-                    >
-                        <Typography color="grayOne" fontSize={18} >
-                            BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
-                        </Typography>
-                        <Typography color="grayOne" fontSize={14} paddingTop="s">
-                            Tenha educação e respeito com os outros 😊
-                        </Typography>
-
-                    </Box> */}
-
                     <HStack
                         paddingHorizontal="s" 
                     >
@@ -141,27 +122,12 @@ export function Forum() {
                             <Input
                                 variation="secondary"
                                 placeholder={ `  Procure no Fórum de ${params.sclass?.subject_code}` }
-                                onEndEditing={() => searchPosts(searchKeyword, params.sclass! , setPosts)}
+                                onEndEditing={() => fetchFilteredPosts(params.sclass!, authUser, activeFilters, searchKeyword ,setPosts)}
                                 onChangeText={(text) => setSearchKeyword(text)}
                                 width={screenWidth*0.85}
-                                // height={48}
                             />
 
                         </Box>
-
-                        {/* <Box
-                            width={48}
-                            height={48}
-                            backgroundColor="grayFour"
-                            marginBottom="m"
-                            borderRadius={4}
-                            borderColor="primary"
-                            borderWidth={1}
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <FeatherIcons name="filter" color="#18DAD7" size={20} />
-                        </Box> */}
                         
                     </HStack>
                  
