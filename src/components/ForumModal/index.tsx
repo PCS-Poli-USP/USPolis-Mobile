@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
-import FeatherIcons from '@expo/vector-icons/Feather'
 import { Button } from '../Button'
 import { IClass } from '../../dtos/classes'
-import { Box, HStack, Typography, VStack } from "../ui";
+import { Box, Typography, VStack } from "../ui";
 import { Modal } from '../Modal'
 import { Input } from '../Input'
-import { Dimensions, ScrollView } from 'react-native'
+import { Dimensions } from 'react-native'
 import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { StackRoutesType } from "@/routes";
-
-
+import { ForumPostsFilter } from '../ForumPostsFilter/ForumPostsFilter';
+import { PostTag } from '@/dtos/forum';
 
 interface ForumModalProps {
 	sclass?: IClass | null
 	isOpen: boolean
 	onClose: () => void
-	onHandleNewPost: (body: string) => void;
+	onHandleNewPost: (body: string, tags: PostTag[]) => void;
 }
 
 export const ForumModal = ({
@@ -25,31 +24,38 @@ export const ForumModal = ({
 	onClose,
 	onHandleNewPost
 }: ForumModalProps) => {
-	const FilterTags = ['Prova', 'Sala', 'Dúvida', 'Atividade','Off']
-	const [moreInformation, setMoreInformation] = useState<boolean>(false)
+	const [activeFilters, setActiveFilters] = useState<PostTag[]>([]);
+	const { isLoggedIn } = useGoogleAuthContext();
 
-	const { isLoggedIn } = useGoogleAuthContext()
+	const [postContentText, setPostContentText] = useState("");
+	const { width, height } = Dimensions.get('window');
+	const screenWidth = width;
+	const screenHeight = height;
 
-	let postText = "";
-    const { width, height } = Dimensions.get('window');
-    const screenWidth = width
-    const screenHeight = height
-
-	const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
+	const navigationStack = useNavigation<NavigationProp<StackRoutesType>>();
 
 	const navigateToProfile = () => {
 		onClose()
-	  	navigationStack.navigate("UserProfile")
+		navigationStack.navigate("UserProfile")
+	};
+
+	function selectedFilterTag(postFilterTag: PostTag, isActive: boolean): void {
+		let newFilters
+		if (isActive) {
+			newFilters = activeFilters.filter((e) => { return postFilterTag.name != e.name });
+			setActiveFilters(newFilters);
+		} else {
+			newFilters = [...activeFilters, postFilterTag]
+			setActiveFilters(newFilters);
+		}
 	}
 
 	return (
 		<Box flex={1}>
 			<Modal
 				isOpen={isOpen}
-				onClose={onClose}
-			>
+				onClose={onClose}>
 				<Box
-
 					width={'100%'}
 					borderTopLeftRadius={8}
 					borderTopRightRadius={8}
@@ -78,110 +84,59 @@ export const ForumModal = ({
 								{sclass!.subject_name}
 							</Typography>
 							<Typography color="grayTwo" fontSize={14}>
-								Turma {sclass!.code}
+								Turma {sclass!.code.substring(sclass!.code.length - 2)}
 							</Typography>
 						</VStack>
 					</Box>
-					{isLoggedIn? 
+					{isLoggedIn ?
 						<Box>
 							<Input
 								maxLength={240}
 								multiline={true}
-								height={screenHeight*0.15}
+								height={screenHeight * 0.15}
 								variation="secondary"
 								placeholder={'Escreva algo para postar!'}
-								onChangeText={(text) => postText = text}
+								onChangeText={(text) => setPostContentText(text)}
 								textAlignVertical='top'
-								padding='s'								
+								padding='s'
 							/>
-							
-							
 
-							{/*  TAGS feature
-								
-								{moreInformation?
-								<Box backgroundColor="grayFour" borderRadius={10} padding="s" marginBottom='m'>
+							<Box backgroundColor="grayFour" borderRadius={10} padding="s" marginBottom='s'>
+								<Typography
+									color="grayTwo"
+									fontSize={16}
+									variant='heading'>
+									Adicionar Tag ao post{'\n'}
+								</Typography>
+								<ForumPostsFilter
+									myProperty='xxs'
+									activeFilters={activeFilters}
+									filterPosts={selectedFilterTag} />
+							</Box>
 
-									<Typography 
-										color="grayTwo" 
-										fontSize={16}
-										variant='heading'
-									>
-										Adicionar Tag {'\n'}
-									</Typography>
-
-									<HStack
-										paddingHorizontal='s'
-										marginBottom='m'
-									>
-										{FilterTags.map((tagName)=>{
-											return(
-												<Box
-													borderColor='secondary'
-													borderWidth={1}
-													borderRadius={10}
-													width={screenWidth*0.21}
-													alignItems='center'
-												>
-													<Typography 
-														color="grayTwo" 
-														fontSize={16}
-														padding='s'
-														variant='heading'
-													>
-														{tagName}
-													</Typography>
-									
-													
-												</Box>
-											)
-
-										})}
-
-									</HStack>
-								</Box>
-
-							:
-								<Box backgroundColor="grayFour" borderRadius={10} padding="s" onTouchEnd={() => setMoreInformation(true)}>
-									<HStack>
-										<FeatherIcons name="plus" color="white" size={20} />
-										<Typography 
-											color="grayTwo" 
-											fontSize={16}
-											variant='heading'
-										>
-											Mais Opções
-										</Typography>
-
-									</HStack>
-									
-								</Box>
-
-							}
- 							*/}
 							<Button
 								variant={'outlined'}
 								title={
 									'Criar postagem'
 								}
 								onPress={() => {
-									if (postText) {
-										onHandleNewPost(postText)
+									if (postContentText) {
+										onHandleNewPost(postContentText, activeFilters)
 										onClose();
 									}
 								}}
 							/>
 						</Box>
-					:
-						<Box 
-							alignItems="center" 
-							marginBottom={'m'} 
-							backgroundColor='grayFour' 
+						:
+						<Box
+							alignItems="center"
+							marginBottom={'m'}
+							backgroundColor='grayFour'
 							borderRadius={10}
 							padding='m'
 							borderColor='graySeven'
 						>
-							
+
 							<Typography color="grayTwo" fontSize={16}>É preciso estar logado para postar no fórum!</Typography>
 							<Box paddingVertical='m' width={'80%'}>
 								<Button
@@ -190,7 +145,7 @@ export const ForumModal = ({
 								/>
 							</Box>
 						</Box>
-					
+
 					}
 				</Box>
 			</Modal>

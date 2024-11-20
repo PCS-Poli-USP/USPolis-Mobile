@@ -4,12 +4,13 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { useTheme } from '@shopify/restyle'
 
 import { AppRoutes } from './app.routes'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Forum } from '@/screens/Forum/Forum'
 import { type IClass } from '@/dtos'
 import { Platform } from 'react-native'
 import { Profile, ForumContent } from '@/screens'
 import { type Post } from '@/screens/Forum/Forum'
+import 'react-native-gesture-handler';
 
 export type StackRoutesType = {
   HomeBottomTab: undefined;
