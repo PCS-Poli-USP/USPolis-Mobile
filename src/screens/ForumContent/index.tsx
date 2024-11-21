@@ -81,7 +81,6 @@ export function ForumContent() {
                 content: body,
                 user_id: authUser.id,
                 subject_id: sclass ? sclass?.subject_id : -1,
-                filter_tags: null
             }
             const userToken = await getUserToken()
             const newPostReply = await handlePostReply(post ? post.id : -1, newPostReplyDTO, `${userToken}`)

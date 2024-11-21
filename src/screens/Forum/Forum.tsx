@@ -14,7 +14,7 @@ import { Dimensions, ScrollView } from 'react-native'
 import { IClass } from "@/dtos";
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '@/theme/theme'
-import { fetchFilteredPosts, fetchPosts} from "@/services/ForumService";
+import { fetchFilteredPosts, fetchPosts } from "@/services/ForumService";
 import { ForumPostsFilter } from "@/components/ForumPostsFilter/ForumPostsFilter";
 
 export type Post = {
@@ -41,7 +41,7 @@ export function Forum() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [tempPosts, setTempPosts] = useState<Post[]>([]);
     const [searchKeyword, setSearchKeyword] = useState<string>()
-    
+
 
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
@@ -103,7 +103,7 @@ export function Forum() {
             newFilters = [...activeFilters, postFilterTag]
             setActiveFilters(newFilters);
         }
-        fetchFilteredPosts(params.sclass!, authUser, newFilters, searchKeyword ,setPosts);
+        fetchFilteredPosts(params.sclass!, authUser, newFilters, searchKeyword, setPosts);
     }
 
     return (
@@ -116,21 +116,21 @@ export function Forum() {
             >
                 <ScrollView>
                     <HStack
-                        paddingHorizontal="s" 
+                        paddingHorizontal="s"
                     >
                         <Box >
                             <Input
                                 variation="secondary"
-                                placeholder={ `  Procure no Fórum de ${params.sclass?.subject_code}` }
-                                onEndEditing={() => fetchFilteredPosts(params.sclass!, authUser, activeFilters, searchKeyword ,setPosts)}
+                                placeholder={`  Procure no Fórum de ${params.sclass?.subject_code}`}
+                                onEndEditing={() => fetchFilteredPosts(params.sclass!, authUser, activeFilters, searchKeyword, setPosts)}
                                 onChangeText={(text) => setSearchKeyword(text)}
-                                width={screenWidth*0.85}
+                                width={screenWidth * 0.85}
                             />
 
                         </Box>
-                        
+
                     </HStack>
-                 
+
 
                     <ForumPostsFilter
                         myProperty="s"
@@ -149,10 +149,11 @@ export function Forum() {
                     </HStack>
 
                     {posts?.length === 0 ?
-                        <Box alignContent="center">
-                            <Typography color="grayOne" fontSize={16}>
+                        <Box  backgroundColor='grayFive' padding='s' borderRadius={5} alignContent="center">
+                            <Typography color="grayOne" fontSize={16} lineHeight={24}>
                                 Ainda ninguém postou neste fórum 😞 {"\n"}
-                                Seja o primeiro a postar!
+                                Seja o primeiro a postar!{"\n"}
+                                Tenha educação e respeito com os outros 😊
                             </Typography>
                         </Box>
                         :
@@ -196,14 +197,6 @@ export function Forum() {
                 </Box>
 
             }
-            {/* isSearchModalOpen &&
-                <Box >
-                    <ForumSearchModal
-                        isOpen={isSearchModalOpen}
-                        onClose={() => setIsSearchModalOpen(false)}
-                    />
-                </Box>
-            */}
 
         </VStack>
     );
@@ -212,22 +205,23 @@ export function Forum() {
 type PostCardProps = {
     post: Post;
     sclass: IClass | undefined;
-    tempPosts: Post[]
-}
-function PostCard({ post, sclass, tempPosts }: PostCardProps, ) {
+    tempPosts: Post[];
+};
+
+function PostCard({ post, sclass, tempPosts }: PostCardProps,) {
     const { colors } = useTheme<Theme>()
     const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
 
     const mainPost = tempPosts.find((tempPost) => tempPost.id === post.reply_of_post_id);
     const selectPost = () => {
-        if (mainPost){
+        if (mainPost) {
             navigationStack.navigate('ForumContent',
-                { post:mainPost, sclass }
-            )
-        }else{
+                { post: mainPost, sclass }
+            );
+        } else {
             navigationStack.navigate('ForumContent',
                 { post, sclass }
-            )
+            );
         }
 
     };
@@ -292,17 +286,16 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps, ) {
 
                     </HStack>
                     {post.reply_of_post_id &&
-                        <Box 
+                        <Box
                             backgroundColor="grayFour"
                             borderRadius={5}
                             marginBottom="m"
                         >
                             <HStack>
                                 <Typography
-                                    padding="s" 
-                                    color="white"    
+                                    padding="s"
+                                    color="white"
                                 >
-                                    {/* {tempPosts} */}
                                     Resposta de outro post, clique para abrir
                                 </Typography>
                                 <FeatherIcons
@@ -316,8 +309,8 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps, ) {
                             </HStack>
                         </Box>
                     }
-                    <HStack 
-                        flexDirection="row" 
+                    <HStack
+                        flexDirection="row"
                         alignItems="center"
                         marginVertical="s"
                         padding="s"

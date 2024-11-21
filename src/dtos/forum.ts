@@ -43,7 +43,6 @@ export type ForumPostReply = {
     content: string;
     user_id: number;
     subject_id: number;
-    filter_tags: number[] | null;
 };
 
 
