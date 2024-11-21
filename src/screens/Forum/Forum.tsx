@@ -1,4 +1,4 @@
-import { Box, Button, Pressable, Typography, VStack, HStack } from "@/components";
+import { Box, Button, Pressable, Typography, VStack, HStack, Input } from "@/components";
 import FeatherIcons from '@expo/vector-icons/Feather'
 import { ForumModal } from "@/components/ForumModal";
 import { PostRequest, PostTag } from "@/dtos/forum";
@@ -25,16 +25,23 @@ export type Post = {
     replies_count: number;
     likes_count: number;
     user_liked: boolean;
+    reply_of_post_id: number | null;
+};
+
+export type ForumSearch = {
+    keyword: string;
 };
 
 export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
-    //const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
     const [activeFilters, setActiveFilters] = useState<PostTag[]>([]);
     const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
+    const [tempPosts, setTempPosts] = useState<Post[]>([]);
+    const [searchKeyword, setSearchKeyword] = useState<string>()
+
 
     const { width, height } = Dimensions.get('window');
     const screenWidth = width
@@ -42,7 +49,7 @@ export function Forum() {
 
     useFocusEffect(
         useCallback(() => {
-            fetchPosts(params.sclass!, authUser, setPosts);
+            fetchPosts(params.sclass!, authUser, setPosts, setTempPosts);
             // Reset filters
             setActiveFilters([]);
         }, [])
@@ -69,6 +76,7 @@ export function Forum() {
                     replies_count: newPost.replies_count,
                     likes_count: newPost.likes_count,
                     user_liked: newPost.user_liked,
+                    reply_of_post_id: null
                 },
                 ...posts,
             ]);
@@ -95,7 +103,7 @@ export function Forum() {
             newFilters = [...activeFilters, postFilterTag]
             setActiveFilters(newFilters);
         }
-        fetchFilteredPosts(params.sclass!, authUser, newFilters, setPosts);
+        fetchFilteredPosts(params.sclass!, authUser, newFilters, searchKeyword, setPosts);
     }
 
     return (
@@ -107,65 +115,28 @@ export function Forum() {
                 height={screenHeight - 210}
             >
                 <ScrollView>
-                    <Box
-                        backgroundColor="graySix"
+                    <HStack
                         paddingHorizontal="s"
-                        paddingVertical="m"
-                        marginTop="s"
-                        alignItems="center"
-                        borderRadius={5}
                     >
-                        <Typography color="grayOne" fontSize={18} >
-                            BEM VINDO AO FÓRUM DE {params.sclass?.subject_code}!
-                        </Typography>
-                        <Typography color="grayOne" fontSize={14} paddingTop="s">
-                            Tenha educação e respeito com os outros 😊
-                        </Typography>
+                        <Box >
+                            <Input
+                                variation="secondary"
+                                placeholder={`  Procure no Fórum de ${params.sclass?.subject_code}`}
+                                onEndEditing={() => fetchFilteredPosts(params.sclass!, authUser, activeFilters, searchKeyword, setPosts)}
+                                onChangeText={(text) => setSearchKeyword(text)}
+                                width={screenWidth * 0.85}
+                            />
 
-                    </Box>
+                        </Box>
+
+                    </HStack>
+
 
                     <ForumPostsFilter
-                        myProperty="l"
+                        myProperty="s"
                         activeFilters={activeFilters}
                         filterPosts={filterPosts}
                     />
-                    { /* SEARCH BAR
-                    <Box
-                        paddingHorizontal="s"
-                        width={screenWidth * 0.9} 
-                        borderRadius={30}
-                        backgroundColor="grayThree"
-                    >
-                        <TouchableOpacity >
-                            <HStack>
-                                <Box padding="s">
-                                    <FeatherIcons name="search" color="white" size={20}/>
-                                </Box>
-                                <Box justifyContent='center'>
-                                    <Input
-                                        placeholder="Pesquisar no Fórum"
-                                        placeholderTextColor='white'
-                                        backgroundColor="transparent"
-                                        style={{  color: '#FFFFFF', fontSize: 20, paddingTop: 5}}
-                                        height='auto'
-                                        textAlignVertical="bottom"
-                                        maxWidth={screenWidth * 0.65}
-                                    
-                                    />
-
-                                </Box>
-
-
-
-                                <Box backgroundColor="grayFour" borderRadius={90} padding="s" onTouchStart={openFilterModal}>
-                                    <FeatherIcons name="plus" color="white" size={20} />
-                                </Box>
-
-                            </HStack>
-
-                        </TouchableOpacity> 
-                    </Box>*/
-                    }
 
                     <HStack paddingTop="m">
                         <Typography color="grayOne" fontSize={20} marginBottom="s" >
@@ -178,10 +149,11 @@ export function Forum() {
                     </HStack>
 
                     {posts?.length === 0 ?
-                        <Box alignContent="center">
-                            <Typography color="grayOne" fontSize={16}>
+                        <Box  backgroundColor='grayFive' padding='s' borderRadius={5} alignContent="center">
+                            <Typography color="grayOne" fontSize={16} lineHeight={24}>
                                 Ainda ninguém postou neste fórum 😞 {"\n"}
-                                Seja o primeiro a postar!
+                                Seja o primeiro a postar!{"\n"}
+                                Tenha educação e respeito com os outros 😊
                             </Typography>
                         </Box>
                         :
@@ -189,7 +161,7 @@ export function Forum() {
                         <VStack>
                             <Box width={screenWidth * 0.95}>
                                 {posts.map((post, index) => {
-                                    return <MemoPost key={index} post={post} sclass={params.sclass} />
+                                    return <MemoPost key={index} post={post} sclass={params.sclass} tempPosts={tempPosts} />
                                 })}
                             </Box>
                         </VStack>
@@ -225,14 +197,6 @@ export function Forum() {
                 </Box>
 
             }
-            {/* isSearchModalOpen &&
-                <Box >
-                    <ForumSearchModal
-                        isOpen={isSearchModalOpen}
-                        onClose={() => setIsSearchModalOpen(false)}
-                    />
-                </Box>
-            */}
 
         </VStack>
     );
@@ -240,16 +204,25 @@ export function Forum() {
 
 type PostCardProps = {
     post: Post;
-    sclass: IClass | undefined
+    sclass: IClass | undefined;
+    tempPosts: Post[];
 };
-function PostCard({ post, sclass }: PostCardProps) {
+
+function PostCard({ post, sclass, tempPosts }: PostCardProps,) {
     const { colors } = useTheme<Theme>()
     const navigationStack = useNavigation<NavigationProp<StackRoutesType>>()
 
+    const mainPost = tempPosts.find((tempPost) => tempPost.id === post.reply_of_post_id);
     const selectPost = () => {
-        navigationStack.navigate('ForumContent',
-            { post, sclass }
-        )
+        if (mainPost) {
+            navigationStack.navigate('ForumContent',
+                { post: mainPost, sclass }
+            );
+        } else {
+            navigationStack.navigate('ForumContent',
+                { post, sclass }
+            );
+        }
 
     };
 
@@ -290,7 +263,7 @@ function PostCard({ post, sclass }: PostCardProps) {
                             {formatDatetime(post.createdAt)}
                         </Typography>
                     </HStack>
-                    <HStack marginBottom={"l"} >
+                    <HStack marginBottom={"m"} >
                         <Typography
 
                             fontSize={18}
@@ -299,18 +272,43 @@ function PostCard({ post, sclass }: PostCardProps) {
                         >
                             {post.body}
                         </Typography>
-
-                        <FeatherIcons
-                            name="chevron-right"
-                            color={colors.grayThree}
-                            size={24}
-                            style={{
-                                marginTop: 5
-                            }}
-                        />
+                        {!post.reply_of_post_id &&
+                            <FeatherIcons
+                                name="chevron-right"
+                                color={colors.grayThree}
+                                size={24}
+                                style={{
+                                    marginTop: 5
+                                }}
+                            />
+                        }
 
 
                     </HStack>
+                    {post.reply_of_post_id &&
+                        <Box
+                            backgroundColor="grayFour"
+                            borderRadius={5}
+                            marginBottom="m"
+                        >
+                            <HStack>
+                                <Typography
+                                    padding="s"
+                                    color="white"
+                                >
+                                    Resposta de outro post, clique para abrir
+                                </Typography>
+                                <FeatherIcons
+                                    name="chevron-right"
+                                    color={colors.grayThree}
+                                    size={24}
+                                    style={{
+                                        marginTop: 5
+                                    }}
+                                />
+                            </HStack>
+                        </Box>
+                    }
                     <HStack
                         flexDirection="row"
                         alignItems="center"

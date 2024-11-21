@@ -4,7 +4,7 @@ import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import api from "@/services/api";
 import { useCreatePostReply } from "@/hooks/react-query/usePosts";
-import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from 'react-native'
 
 import { ForumPostReplyModal } from "@/components/ForumPostReplyModal"
 import FeatherIcons from '@expo/vector-icons/Feather'
