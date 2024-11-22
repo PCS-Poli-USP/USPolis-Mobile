@@ -39,7 +39,7 @@ export type ForumPostReplyResponse = {
 };
 
 export type ForumPostReply = {
-    class_id: number;
+    class_id?: number;
     content: string;
     user_id: number;
     subject_id: number;
