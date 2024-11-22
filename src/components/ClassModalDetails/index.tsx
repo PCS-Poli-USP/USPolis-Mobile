@@ -121,7 +121,7 @@ export const ClassModalDetails = ({
                 Turma {sclass.code.slice(-2)}
               </Typography>
               <Typography color="grayTwo" fontSize={14}>
-                {sclass.professors.join(", ")}
+                {sclass.professors.join("\n")}
               </Typography>
             </VStack>
           </Box>
@@ -175,7 +175,7 @@ export const ClassModalDetails = ({
               {!!sclass.professors && (
                 <Box marginBottom="m">
                   <Typography color="grayTwo">Docente:</Typography>
-                  <Typography color="white">{sclass.professors}</Typography>
+                  <Typography color="white">{sclass.professors.join("\n")}</Typography>
                 </Box>
               )}
               <Box marginBottom="m">
