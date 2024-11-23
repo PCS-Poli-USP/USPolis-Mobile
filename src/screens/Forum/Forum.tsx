@@ -1,5 +1,5 @@
 import { Box, Button, Pressable, Typography, VStack, HStack, Input } from "@/components";
-import FeatherIcons from '@expo/vector-icons/Feather'
+import FeatherIcons from "@expo/vector-icons/Feather"
 import { ForumModal } from "@/components/ForumModal";
 import { PostRequest, PostTag } from "@/dtos/forum";
 import { useCreatePost } from "@/hooks/react-query/usePosts";
@@ -10,10 +10,10 @@ import { logger } from "@/services/logger";
 import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
 import React, { useState, useCallback } from "react";
 import Toast from "react-native-toast-message";
-import { Dimensions, ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from "react-native"
 import { IClass } from "@/dtos";
-import { useTheme } from '@shopify/restyle'
-import { Theme } from '@/theme/theme'
+import { useTheme } from "@shopify/restyle"
+import { Theme } from "@/theme/theme"
 import { fetchFilteredPosts, fetchPosts } from "@/services/ForumService";
 import { ForumPostsFilter } from "@/components/ForumPostsFilter/ForumPostsFilter";
 
@@ -36,16 +36,17 @@ export function Forum() {
     const { params } = useRoute<RouteProp<StackRoutesType, "Forum">>();
     const [isForumModalOpen, setIsForumModalOpen] = useState<boolean>(false);
     const [activeFilters, setActiveFilters] = useState<PostTag[]>([]);
-    const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext()
+    const { authUser, isLoggedIn, getUserToken } = useGoogleAuthContext();
     const handlePost = useCreatePost();
     const [posts, setPosts] = useState<Post[]>([]);
     const [tempPosts, setTempPosts] = useState<Post[]>([]);
-    const [searchKeyword, setSearchKeyword] = useState<string>()
+    const [searchKeyword, setSearchKeyword] = useState<string>();
 
-
-    const { width, height } = Dimensions.get('window');
-    const screenWidth = width
-    const screenHeight = height
+    const { width, height } = Dimensions.get("window");
+    const screenWidth = width;
+    const screenHeight = height;
+    // subject_id == -1 means it is the General Forum
+    const isGeneralForum = params.sclass?.subject_id == -1;
 
     useFocusEffect(
         useCallback(() => {
@@ -83,9 +84,9 @@ export function Forum() {
             logger.logEvent("Novo post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code });
         } else {
             Toast.show({
-                type: 'error',
-                text1: 'Ops!',
-                text2: 'É preciso logar para postar!'
+                type: "error",
+                text1: "Ops!",
+                text2: "É preciso logar para postar!"
             });
         }
     }
@@ -121,7 +122,7 @@ export function Forum() {
                         <Box >
                             <Input
                                 variation="secondary"
-                                placeholder={`  Procure no Fórum de ${params.sclass?.subject_code}`}
+                                placeholder={`Procure no Fórum ${isGeneralForum ? "Geral" : `de ${params.sclass?.subject_code}`}`}
                                 onEndEditing={() => fetchFilteredPosts(params.sclass!, authUser, activeFilters, searchKeyword, setPosts)}
                                 onChangeText={(text) => setSearchKeyword(text)}
                                 width={screenWidth * 0.85}
@@ -149,7 +150,7 @@ export function Forum() {
                     </HStack>
 
                     {posts?.length === 0 ?
-                        <Box  backgroundColor='grayFive' padding='s' borderRadius={5} alignContent="center">
+                        <Box backgroundColor="grayFive" padding="s" borderRadius={5} alignContent="center">
                             <Typography color="grayOne" fontSize={16} lineHeight={24}>
                                 Ainda ninguém postou neste fórum 😞 {"\n"}
                                 Seja o primeiro a postar!{"\n"}
@@ -192,6 +193,7 @@ export function Forum() {
                     <ForumModal
                         sclass={params.sclass}
                         isOpen={isForumModalOpen}
+                        isGeneralForum={isGeneralForum}
                         onClose={() => setIsForumModalOpen(false)}
                         onHandleNewPost={handleAddNewPost} />
                 </Box>
@@ -215,11 +217,11 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps,) {
     const mainPost = tempPosts.find((tempPost) => tempPost.id === post.reply_of_post_id);
     const selectPost = () => {
         if (mainPost) {
-            navigationStack.navigate('ForumContent',
+            navigationStack.navigate("ForumContent",
                 { post: mainPost, sclass }
             );
         } else {
-            navigationStack.navigate('ForumContent',
+            navigationStack.navigate("ForumContent",
                 { post, sclass }
             );
         }
@@ -229,7 +231,7 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps,) {
     const formatDatetime = (datetime: string) => {
         const date = new Date(datetime);
 
-        const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'long', day: 'numeric' });
+        const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", day: "numeric" });
 
         return formatter.format(date);
     };
@@ -317,7 +319,7 @@ function PostCard({ post, sclass, tempPosts }: PostCardProps,) {
                     >
                         <Box
                             position="absolute"
-                            left={'80%'}
+                            left={"80%"}
                             backgroundColor="graySix"
                             paddingVertical="xs"
                             paddingHorizontal="s"

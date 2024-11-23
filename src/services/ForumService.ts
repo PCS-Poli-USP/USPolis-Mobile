@@ -48,7 +48,8 @@ export const fetchFilteredPosts = async (
     setPosts: React.Dispatch<React.SetStateAction<Post[]>>
 ) => {
     try {
-        const filters = filterTags.map((filterTag) => { return filterTag.tag })
+        const filters = filterTags.map((filterTag) => { return filterTag.tag });
+        searchKeyword = searchKeyword=="" ? undefined : searchKeyword;
         const response = await api.get<PostResponse[]>('forum/posts', {
             params: {
                 subject_id: sclass?.subject_id,

@@ -1,25 +1,22 @@
-import { IClass } from "@/dtos";
-import { 
+import {
     type PostRequest,
-    type PostResponse, 
-    type ReportPostRequest, 
-    type ForumPostReplyResponse, 
-    type ForumPostReply, 
+    type PostResponse,
+    type ReportPostRequest,
+    type ForumPostReplyResponse,
+    type ForumPostReply,
 } from "@/dtos/forum";
 import api from "@/services/api";
-import { useQuery } from "react-query";
 
 
 export function useCreatePost() {
-    const handlePost = async (postDTO: PostRequest, idToken: string |  null) => {
-
+    const handlePost = async (postDTO: PostRequest, idToken: string | null) => {
         const response = await api.post<PostResponse>(
-            'forum/posts',
+            "forum/posts",
             postDTO,
             {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `${idToken}`,
+                    "Content-Type": "application/json",
+                    "Authorization": `${idToken}`,
                 },
             }
         );
@@ -29,9 +26,8 @@ export function useCreatePost() {
 }
 
 export function useReportPost() {
-
     const handleReportPost = async (reportPostDTO: ReportPostRequest) => {
-        const response = await api.post<ReportPostRequest>('forum/reportPosts', reportPostDTO);
+        const response = await api.post<ReportPostRequest>("forum/reportPosts", reportPostDTO);
         return response.data;
     };
     return handleReportPost;
@@ -45,8 +41,8 @@ export function useCreatePostReply() {
             forumPostReplyDTO,
             {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `${idToken}`,
+                    "Content-Type": "application/json",
+                    "Authorization": `${idToken}`,
                 },
             }
         );

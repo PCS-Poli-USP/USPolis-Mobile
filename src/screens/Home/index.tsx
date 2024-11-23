@@ -9,6 +9,7 @@ import {
   FullSearchContextProvider,
   useFullSearch,
 } from './FullSearchDrawer/context'
+import { MemoGeneralForumCard } from './GeneralForumCard'
 
 const HomeClassesMemo = React.memo(HomeClasses)
 
@@ -55,6 +56,7 @@ export const HomeContent = () => {
             activeBuilding={selectedBuilding}
             selectBuilding={selectBuilding}
           />
+          <MemoGeneralForumCard />
           <HomeClassesMemo
             buildingFilter={debouncedBuilding}
             nameFilter={nameFilter}
