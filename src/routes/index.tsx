@@ -55,13 +55,14 @@ export const Routes = () => {
           component={AppRoutes}
         />
         <Screen options={({ route }) => ({
-          headerTitle: "Fórum de " + route.params.sclass?.subject_code
+          // subject_id == -1 means it is the General Forum
+          headerTitle: "Fórum " + `${route.params.sclass?.subject_id == -1 ? "Geral" : `de ${route.params.sclass?.subject_code}`}`
         })}
           name="Forum"
           component={Forum}
         />
         <Screen options={({ route }) => ({
-          headerTitle: "Fórum de " + route.params.sclass?.subject_code
+          headerTitle: "Fórum " + `${route.params.sclass?.subject_id == -1 ? "Geral" : `de ${route.params.sclass?.subject_code}`}`
         })}
           name="ForumContent"
           component={ForumContent}

@@ -17,6 +17,7 @@ export type PostResponse = {
     replies_count: number;
     likes_count: number;
     user_liked: boolean;
+    reply_of_post_id: number | null;
 };
 
 export type ReportPostRequest = {
@@ -38,7 +39,7 @@ export type ForumPostReplyResponse = {
 };
 
 export type ForumPostReply = {
-    class_id: number;
+    class_id?: number;
     content: string;
     user_id: number;
     subject_id: number;

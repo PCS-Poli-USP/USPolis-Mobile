@@ -4,47 +4,50 @@ import { useGoogleAuthContext } from "@/hooks/useAuth";
 import { StackRoutesType } from "@/routes";
 import api from "@/services/api";
 import { useCreatePostReply } from "@/hooks/react-query/usePosts";
-import { TouchableOpacity, Dimensions, ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from "react-native"
 
 import { ForumPostReplyModal } from "@/components/ForumPostReplyModal"
-import FeatherIcons from '@expo/vector-icons/Feather'
+import FeatherIcons from "@expo/vector-icons/Feather"
 
 import { RouteProp, useRoute, useFocusEffect } from "@react-navigation/native";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Toast from "react-native-toast-message";
 import { logger } from "@/services/logger";
 
 export function ForumContent() {
-    const { authUser, getUserToken } = useGoogleAuthContext()
-    const [isForumPostReplyModalOpen, setIsForumPostReplyModalOpen] = useState(false)
+    const { authUser, getUserToken } = useGoogleAuthContext();
+    const [isForumPostReplyModalOpen, setIsForumPostReplyModalOpen] = useState(false);
     const { params } = useRoute<RouteProp<StackRoutesType, "ForumContent">>();
-    const post = params.post
-    const sclass = params.sclass
+    const post = params.post;
+    const sclass = params.sclass;
 
-    const { width, height } = Dimensions.get('window');
-    const [likeCount, setLikeCount] = useState<number>(post? post.likes_count? post.likes_count : 0 : 0)
-    const [likedState, setLikedState] = useState<boolean>(post? post.user_liked : false)
-        
+    // subject_id == -1 means it is the General Forum
+    const isGeneralForum = params.sclass?.id == -1;
+
+    const { width, height } = Dimensions.get("window");
+    const [likeCount, setLikeCount] = useState<number>(post ? post.likes_count ? post.likes_count : 0 : 0);
+    const [likedState, setLikedState] = useState<boolean>(post ? post.user_liked : false);
+
     const handlePostReply = useCreatePostReply();
 
     const openReplyModal = () => {
-        setIsForumPostReplyModalOpen(true)
+        setIsForumPostReplyModalOpen(true);
     }
 
     const closeReplyModal = () => {
-        setIsForumPostReplyModalOpen(false)
+        setIsForumPostReplyModalOpen(false);
     }
 
     const [postReplies, setPostReplies] = useState<ForumPostReplyResponse[]>([]);
-   
+
     const fetchPostReplies = async () => {
         try {
-            const response = await api.get<ForumPostReplyResponse[]>(`forum/posts/${post? post.id : -1}`, {
+            const response = await api.get<ForumPostReplyResponse[]>(`forum/posts/${post ? post.id : -1}`, {
                 params: {
-                    user_id: authUser? authUser.id : -1
+                    user_id: authUser ? authUser.id : -1
                 }
             })
-            
+
             if (response.data) {
                 setPostReplies(response.data.map((postReply) => {
                     return {
@@ -59,11 +62,11 @@ export function ForumContent() {
                         likes_count: postReply.likes_count,
                         user_liked: postReply.user_liked
                     }
-    
+
                 }))
             }
         } catch (error) {
-            console.log('erro:', error)
+            console.log("erro:", error)
         }
     }
 
@@ -80,8 +83,13 @@ export function ForumContent() {
                 class_id: sclass ? sclass.id : -1,
                 content: body,
                 user_id: authUser.id,
-                subject_id: sclass ? sclass?.subject_id : -1,
+                subject_id: sclass ? sclass?.subject_id : -2,
             }
+
+            if (isGeneralForum) {
+                newPostReplyDTO.class_id = undefined;
+            }
+            
             const userToken = await getUserToken()
             const newPostReply = await handlePostReply(post ? post.id : -1, newPostReplyDTO, `${userToken}`)
 
@@ -103,9 +111,9 @@ export function ForumContent() {
             logger.logEvent("Novo reply de um post no forum", { user_id: authUser.id, subject: params.sclass?.subject_code, reply_of_post_id: post?.id });
         } else {
             Toast.show({
-                type: 'error',
-                text1: 'Ops!',
-                text2: 'É preciso logar para postar!'
+                type: "error",
+                text1: "Ops!",
+                text2: "É preciso logar para postar!"
             });
         }
     }
@@ -120,32 +128,32 @@ export function ForumContent() {
             };
 
             try {
-                await api.post('/forum/report', reportPostDTO)
+                await api.post("/forum/report", reportPostDTO)
                 Toast.show({
-                    type: 'info',
-                    text1: 'Muito obrigado!',
-                    text2: 'Sua solicitação foi enviada para análise.'
+                    type: "info",
+                    text1: "Muito obrigado!",
+                    text2: "Sua solicitação foi enviada para análise."
                 });
 
             } catch (e) {
                 Toast.show({
-                    type: 'error',
-                    text1: 'Ops!',
-                    text2: 'Ocorreu um erro, tente novamente mais tarde.'
+                    type: "error",
+                    text1: "Ops!",
+                    text2: "Ocorreu um erro, tente novamente mais tarde."
                 });
             }
 
         } else {
             Toast.show({
-                type: 'error',
-                text1: 'Ops!',
-                text2: 'É preciso logar para reportar!'
+                type: "error",
+                text1: "Ops!",
+                text2: "É preciso logar para reportar!"
             });
         }
 
     }
 
-    async function changeLikeState (likedPostId: number, newLikeState: boolean) {
+    async function changeLikeState(likedPostId: number, newLikeState: boolean) {
         if (authUser) {
 
             const likedPostDTO: LikedPostRequest = {
@@ -157,20 +165,20 @@ export function ForumContent() {
             try {
                 await api.post(`/forum/posts/${likedPostId}/liked`, likedPostDTO)
                 setLikedState(newLikeState)
-                setLikeCount(newLikeState? likeCount+1 : likeCount-1)
+                setLikeCount(newLikeState ? likeCount + 1 : likeCount - 1)
 
             } catch (e) {
                 Toast.show({
-                    type: 'error',
-                    text1: 'Ops!',
-                    text2: 'Ocorreu um erro, tente novamente mais tarde.'
+                    type: "error",
+                    text1: "Ops!",
+                    text2: "Ocorreu um erro, tente novamente mais tarde."
                 });
             }
         } else {
             Toast.show({
-                type: 'error',
-                text1: 'Ops!',
-                text2: 'É preciso logar para reagir à postagem!'
+                type: "error",
+                text1: "Ops!",
+                text2: "É preciso logar para reagir à postagem!"
             });
         }
     }
@@ -178,14 +186,14 @@ export function ForumContent() {
     return (
         <VStack flex={1} marginRight={"xs"}>
             <Box
-                max-height={'90%'}
+                max-height={"90%"}
                 paddingHorizontal="m"
                 paddingVertical="xs"
                 borderRadius={5}
             >
                 <HStack alignItems="center" justifyContent="center" paddingHorizontal="s">
                     <Box
-                        maxWidth={'80%'}
+                        maxWidth={"80%"}
                     >
 
                         <Typography
@@ -241,7 +249,7 @@ export function ForumContent() {
                     >
 
                         {post?.body}
-                        {'\n'}
+                        {"\n"}
                     </Typography>
 
                     <HStack
@@ -251,20 +259,20 @@ export function ForumContent() {
                         margin="xxs"
                     >
                         <Box
-                            backgroundColor=  "graySeven"
+                            backgroundColor="graySeven"
                             paddingVertical="xs"
                             paddingHorizontal="s"
                             borderRadius={10}
                             borderWidth={0.5}
-                            borderColor={likedState? "secondary" : "white"}
-        
-                            onTouchEnd={() => changeLikeState(post? post.id: -1, !likedState)}
+                            borderColor={likedState ? "secondary" : "white"}
+
+                            onTouchEnd={() => changeLikeState(post ? post.id : -1, !likedState)}
                         >
                             <HStack>
-                                <Typography color={likedState? 'primary':'white'} paddingRight={"s"}>
+                                <Typography color={likedState ? "primary" : "white"} paddingRight={"s"}>
                                     {likeCount}
                                 </Typography>
-                                <FeatherIcons name="thumbs-up" color={likedState? '#18DAD7':'#E1E1E6'} size={20} />
+                                <FeatherIcons name="thumbs-up" color={likedState ? "#18DAD7" : "#E1E1E6"} size={20} />
                             </HStack>
                         </Box>
                     </HStack>
@@ -290,10 +298,10 @@ export function ForumContent() {
                                 {postReplies.map((postReply, index) => {
                                     return (
                                         <Box key={index}>
-                                            <ReplyCard 
-                                                index={index} 
-                                                postReply={postReply} 
-                                                reportPost={reportPost} 
+                                            <ReplyCard
+                                                index={index}
+                                                postReply={postReply}
+                                                reportPost={reportPost}
                                             />
                                             {index === postReplies.length - 1 &&
                                                 <Box
@@ -320,7 +328,7 @@ export function ForumContent() {
                 position="absolute"
                 bottom={0}
                 alignItems="center"
-                width={'100%'}
+                width={"100%"}
                 padding="l"
                 flex={1}
             >
@@ -328,7 +336,7 @@ export function ForumContent() {
                     variant="outlined"
                     title={"Responder postagem"}
                     onPress={openReplyModal}
-                    style={{ height: 50, width: '80%' }}
+                    style={{ height: 50, width: "80%" }}
                 />
             </Box>
 
@@ -354,12 +362,12 @@ type ReplyCardProps = {
     reportPost: (reportedPostId: number) => Promise<void>;
 };
 
-const ReplyCard: React.FC<ReplyCardProps>=({postReply, index, reportPost}) => {
-    const { authUser} = useGoogleAuthContext()
+const ReplyCard: React.FC<ReplyCardProps> = ({ postReply, index, reportPost }) => {
+    const { authUser } = useGoogleAuthContext()
     const [isLiked, setIsLiked] = useState<boolean>(postReply.user_liked);
-    const [replyLikeCount, setReplyLikeCount] = useState<number>(postReply? postReply.likes_count :0);
-    
-    async function changeReplyLikeState (likedPostId: number, newLikeState: boolean) {
+    const [replyLikeCount, setReplyLikeCount] = useState<number>(postReply ? postReply.likes_count : 0);
+
+    async function changeReplyLikeState(likedPostId: number, newLikeState: boolean) {
         if (authUser) {
 
             const likedPostDTO: LikedPostRequest = {
@@ -372,27 +380,27 @@ const ReplyCard: React.FC<ReplyCardProps>=({postReply, index, reportPost}) => {
                 await api.post(`/forum/posts/${likedPostId}/liked`, likedPostDTO)
 
                 setIsLiked(newLikeState)
-                setReplyLikeCount(newLikeState? replyLikeCount+1 : replyLikeCount-1)
+                setReplyLikeCount(newLikeState ? replyLikeCount + 1 : replyLikeCount - 1)
 
             } catch (e) {
                 Toast.show({
-                    type: 'error',
-                    text1: 'Ops!',
-                    text2: 'Ocorreu um erro, tente novamente mais tarde.'
+                    type: "error",
+                    text1: "Ops!",
+                    text2: "Ocorreu um erro, tente novamente mais tarde."
                 });
             }
-        } else{
+        } else {
             Toast.show({
-                type: 'error',
-                text1: 'Ops!',
-                text2: 'É preciso logar para curtir!'
+                type: "error",
+                text1: "Ops!",
+                text2: "É preciso logar para curtir!"
             });
         }
     }
 
     const formatDatetime = (datetime: string) => {
         const date = new Date(datetime);
-        const formatter = new Intl.DateTimeFormat('pt-BR', { month: 'short', day: 'numeric' });
+        const formatter = new Intl.DateTimeFormat("pt-BR", { month: "short", day: "numeric" });
 
         return formatter.format(date);
     }
@@ -418,10 +426,10 @@ const ReplyCard: React.FC<ReplyCardProps>=({postReply, index, reportPost}) => {
                                 {postReply.user_name}
                             </Typography>
                             <Typography
-                                    color="grayThree"
-                                    fontSize={16}
-                                >
-                                    {' • ' + formatDatetime(postReply.created_at)}
+                                color="grayThree"
+                                fontSize={16}
+                            >
+                                {" • " + formatDatetime(postReply.created_at)}
                             </Typography>
                         </HStack>
                     </Box>
@@ -431,7 +439,7 @@ const ReplyCard: React.FC<ReplyCardProps>=({postReply, index, reportPost}) => {
                         top={5}
                         padding="xs"
                         paddingTop="xxs"
-                        onTouchEnd={() => { reportPost(postReply.id) }} 
+                        onTouchEnd={() => { reportPost(postReply.id) }}
                     >
                         <FeatherIcons name="flag" color="white" size={12} />
                     </Box>
@@ -440,35 +448,35 @@ const ReplyCard: React.FC<ReplyCardProps>=({postReply, index, reportPost}) => {
                     key={index}
                     color="grayOne"
                     marginVertical="m"
-                    fontSize={18}             
+                    fontSize={18}
                 >
                     {postReply.content}
-                    {'\n'}
+                    {"\n"}
                 </Typography>
 
                 <HStack marginTop="xs">
-                        <Box
-                            position="absolute"
-                            right={10}
-                            bottom={5}
-                            backgroundColor=  "graySeven"
-                            paddingVertical="xs"
-                            paddingHorizontal="s"
-                            borderRadius={10}
-                            borderWidth={0.5}
-                            borderColor={isLiked? "secondary" : "white"}
-                            onTouchEnd={() => {changeReplyLikeState(postReply.id, !isLiked)}}     
-                        >
+                    <Box
+                        position="absolute"
+                        right={10}
+                        bottom={5}
+                        backgroundColor="graySeven"
+                        paddingVertical="xs"
+                        paddingHorizontal="s"
+                        borderRadius={10}
+                        borderWidth={0.5}
+                        borderColor={isLiked ? "secondary" : "white"}
+                        onTouchEnd={() => { changeReplyLikeState(postReply.id, !isLiked) }}
+                    >
 
-                            <HStack >
-                                <Typography color={isLiked? "primary":"white"} paddingRight={"s"}>
-                                    {replyLikeCount}
-                                </Typography>
-                                <FeatherIcons name="thumbs-up" color={isLiked? "#18DAD7":"white"} size={20} />
-                                
-                            </HStack>
+                        <HStack >
+                            <Typography color={isLiked ? "primary" : "white"} paddingRight={"s"}>
+                                {replyLikeCount}
+                            </Typography>
+                            <FeatherIcons name="thumbs-up" color={isLiked ? "#18DAD7" : "white"} size={20} />
 
-                        </Box>
+                        </HStack>
+
+                    </Box>
 
                 </HStack>
             </Box>
