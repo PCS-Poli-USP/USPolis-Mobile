@@ -20,7 +20,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "33",
+      "buildNumber": "34",
       "bundleIdentifier": "Lunadros.Uspolis",
       "infoPlist": {
         "CFBundleURLTypes": [
@@ -38,7 +38,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "uspolis.lunadros",
-      "versionCode": 83
+      "versionCode": 84
     },
     "web": {
       "favicon": "./assets/favicon.png"
